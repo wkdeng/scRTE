@@ -1,0 +1,6 @@
+fasterq*
+SRR*
+log*
+nohup*
+.snakemake
+data/

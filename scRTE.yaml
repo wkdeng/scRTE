@@ -1,0 +1,53 @@
+cellranger_ref: ../universal_data/refdata-gex-GRCh38-2020-A
+scTE_ref: /home/wdeng3/workspace/Codespace/universal_data/rmsk/hg38.exclusive.idx
+solote_annotation: /home/wdeng3/workspace/Codespace/universal_data/rmsk/rmsk_GRCh38_solote.txt
+soloTE_script: /home/wdeng3/workspace/software/SoloTE/SoloTE_pipeline.py
+sample_folder: data/3
+library_type: paired
+nthread: 5
+lib_platform: 10x
+samples: [SRR11422700,
+          SRR11422701,
+          SRR11422702,
+          SRR11422703,
+          SRR11422704,
+          SRR11422705,
+          SRR11422706,
+          SRR11422707,
+          SRR11422708,
+          SRR11422709,
+          SRR11422710,
+          SRR11422711,
+          SRR11422712,
+          SRR11422713,
+          SRR11422714,
+          SRR11422715,
+          SRR11422716,
+          SRR11422717,
+          SRR11422718,
+          SRR11422719]
+# samples:
+#   SRR12994771: SRR12994771_73_male_Control,
+#   SRR12994772: SRR12994772_77_male_Control,
+#   SRR12994773: SRR12994773_68_female_AD,
+#   SRR12994774: SRR12994774_73_male_Control,
+#   SRR12994775: SRR12994775_68_female_AD,
+#   SRR12994776: SRR12994776_87_male_AD,
+#   SRR12994777: SRR12994777_83_male_AD,
+#   SRR12994778: SRR12994778_87_male_AD,
+#   SRR12994779: SRR12994779_83_male_AD,
+#   SRR12994780: SRR12994780_83_male_AD,
+#   SRR12994781: SRR12994781_85_female_AD,
+#   SRR12994782: SRR12994782_77_male_Control,
+#   SRR12994783: SRR12994783_83_male_AD,
+#   SRR12994784: SRR12994784_85_female_AD,
+#   SRR12994785: SRR12994785_81_male_Control,
+#   SRR12994786: SRR12994786_81_male_Control,
+#   SRR12994787: SRR12994787_74_male_Control,
+#   SRR12994788: SRR12994788_79_male_AD,
+#   SRR12994789: SRR12994789_79_male_AD,
+#   SRR12994790: SRR12994790_74_male_Control,
+#   SRR12994791: SRR12994791_91_female_Control,
+#   SRR12994792: SRR12994792_91_female_Control,
+#   SRR12994793: SRR12994793_80_female_Control,
+#   SRR12994794: SRR12994794_80_female_Control
