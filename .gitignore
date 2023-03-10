@@ -4,3 +4,4 @@ log*
 nohup*
 .snakemake
 data/
+__*

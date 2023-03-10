@@ -46,14 +46,16 @@ rule download_fq:
         import sys
         sample=params.sample
         output_folder=params.output_folder
-        if not os.path.isdir(params.sample):
-            subprocess.call(f'prefetch {sample} --max-size u',shell=True)
-        subprocess.call(f'fasterq-dump -O {output_folder} -S --include-technical  {sample}',shell=True)
+
+        if not os.path.isfile(f'{output_folder}/{sample}_1.fastq'):
+            if not os.path.isdir(params.sample):
+                subprocess.call(f'prefetch {sample} --max-size u',shell=True)
+            subprocess.call(f'fasterq-dump -O {output_folder} -S --include-technical  {sample}',shell=True)
 
         if os.path.isfile(f'{output_folder}/{sample}_3.fastq'):
             r1_len=int(open(f'{output_folder}/{sample}_1.fastq').readline().strip().split("length=")[1])
             r2_len=int(open(f'{output_folder}/{sample}_2.fastq').readline().strip().split("length=")[1])
-            r2_len=int(open(f'{output_folder}/{sample}_3.fastq').readline().strip().split("length=")[1])
+            r3_len=int(open(f'{output_folder}/{sample}_3.fastq').readline().strip().split("length=")[1])
             if r1_len < 25 and r2_len >=25 and r3_len >= 10:
                 subprocess.call(f'mv {output_folder}/{sample}_2.fastq {output_folder}/{sample}_S1_L001_R1_001.fastq',shell=True) 
                 subprocess.call(f'mv {output_folder}/{sample}_3.fastq {output_folder}/{sample}_S1_L001_R2_001.fastq',shell=True) 
@@ -65,6 +67,10 @@ rule download_fq:
         else:
             subprocess.call(f'mv {output_folder}/{sample}_1.fastq {output_folder}/{sample}_S1_L001_R1_001.fastq',shell=True) 
             subprocess.call(f'mv {output_folder}/{sample}_2.fastq {output_folder}/{sample}_S1_L001_R2_001.fastq',shell=True) 
+        subprocess.call(f'rm -rf {sample}', shell=True)
+        for file_ in range(1,4):
+            if os.path.isfile(f'{output_folder}/{sample}_{file_}.fastq'):
+                subprocess.call(f'rm {output_folder}/{sample}_{file_}.fastq',shell=True)
 
 rule cell_ranger:
     input:
@@ -81,7 +87,7 @@ rule cell_ranger:
     log:
         'log/cell_ranger_{sample}.log'
     shell:"""\
-    cellranger count --id={params.sample} --transcriptome={params.ref} --fastqs={params.fq_folder} --sample={params.sample} --localcores={params.nthread} --localmem=64 > {log} 2>&1
+    cellranger count --id={params.sample}_S1 --transcriptome={params.ref} --fastqs={params.fq_folder} --sample={params.sample} --localcores={params.nthread} --localmem=64 > {log} 2>&1
     mv {params.sample} {params.sample_folder}/cellcount/
     """
 
