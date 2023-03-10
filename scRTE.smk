@@ -48,7 +48,7 @@ rule download_fq:
         output_folder=params.output_folder
         if not os.path.isdir(params.sample):
             subprocess.call(f'prefetch {sample} --max-size u',shell=True)
-        subprocess.call(f'fasterq-dump -O {output_folder} -S --include-technical  {sample}')
+        subprocess.call(f'fasterq-dump -O {output_folder} -S --include-technical  {sample}',shell=True)
 
         if os.path.isfile(f'{output_folder}/{sample}_3.fastq'):
             r1_len=int(open(f'{output_folder}/{sample}_1.fastq').readline().strip().split("length=")[1])
