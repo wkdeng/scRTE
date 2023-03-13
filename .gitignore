@@ -5,3 +5,4 @@ nohup*
 .snakemake
 data/
 __*
+www/*

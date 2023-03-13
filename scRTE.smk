@@ -88,7 +88,7 @@ rule cell_ranger:
         'log/cell_ranger_{sample}.log'
     shell:"""\
     cellranger count --id={params.sample}_S1 --transcriptome={params.ref} --fastqs={params.fq_folder} --sample={params.sample} --localcores={params.nthread} --localmem=64 > {log} 2>&1
-    mv {params.sample} {params.sample_folder}/cellcount/
+    mv {params.sample}_S1/* {params.sample_folder}/cellcount/{sample}/
     """
 
 rule scTE:
@@ -98,8 +98,8 @@ rule scTE:
         SAMPLE_FOLDER+'/scte/{sample}/{sample}.csv'
     params:
         nthread=NTHREAD,
-        umi="UB" if LIB_PLATFORM=='10x' else 'UR',
-        cb="CB" if LIB_PLATFORM=='10x' else "CR",
+        umi="UR",
+        cb="CR",
         out_prefix=SAMPLE_FOLDER+'/scte/{sample}/{sample}',
         ref_lib=scTE_REF
     log:
