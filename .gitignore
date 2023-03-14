@@ -5,4 +5,4 @@ nohup*
 .snakemake
 data/
 __*
-www/latin*
+www/web/latin
