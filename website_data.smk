@@ -11,7 +11,7 @@
 
 # SAMPLE_GRP=config['sample_group']
 # SAMPLES=config['samples']
-DATA_FOLDER='data/website'
+DATA_FOLDER='wwww/mysql'
 NTHREAD=10
 PYTHON='python3'
 
