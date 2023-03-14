@@ -29,6 +29,7 @@ rule all:
         bam=expand('{sample_folder}/cellcount/{sample}/outs/possorted_genome_bam.bam',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
         scte=expand('{sample_folder}/scte/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
 
+
 rule download_fq:
     input: 
         SAMPLE_FOLDER+'/Meta.csv'
