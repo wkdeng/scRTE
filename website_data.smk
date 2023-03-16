@@ -32,3 +32,13 @@ rule te_fam:
     log:
         'log/te_fam.log'
     shell:"{params.python} {params.script} {input} {output}> {log} 2>&1 "
+
+rule te_basic:
+    input:RMSK
+    output: DATA_FOLDER+'/te_basic.sql'
+    params:
+        script:'scripts/TE_basic.py'
+        python=PYTHON
+    log:
+        'log/te_basic.log'
+    shell:"{params.python} {params.script} {input} {output}> {log} 2>&1 "
