@@ -89,7 +89,7 @@ rule cell_ranger:
         'log/cell_ranger_{sample}.log'
     shell:"""\
     cellranger count --id={params.sample}_S1 --transcriptome={params.ref} --fastqs={params.fq_folder} --sample={params.sample} --localcores={params.nthread} --localmem=64 > {log} 2>&1
-    mv {params.sample}_S1/* {params.sample_folder}/cellcount/{sample}/
+    mv {params.sample}_S1/* {params.sample_folder}/cellcount/{params.sample}/
     """
 
 rule scTE:
