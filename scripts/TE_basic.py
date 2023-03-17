@@ -24,7 +24,7 @@ te_basic=open(output,'w')
 te_basic.write('''CREATE DATABASE IF NOT EXISTS scARE;
 USE scARE;
 DROP TABLE IF EXISTS TE_BASIC;
-CREATE TABLE TE_FAM (
+CREATE TABLE TE_BASIC (
     ID INT NOT NULL AUTO_INCREMENT,
     CLASS varchar(255) NOT NULL,
     FAMILY varchar(255) NOT NULL,
@@ -128,6 +128,6 @@ rte['gene_dist']=[json.dumps(gene_dist[index]) for index in rte['index']]
 
 for i in range(len(rte)):
     class_, family, name, consensus, consensus_len, num_occur, occur_chr, dist_ea_chr, dist_gene =rte.iloc[i,[1,2,0,3,4,6,7,8,9]]
-    te_basic.write(f'INSERT INTO TE_FAM (CLASS,FAMILY,NAME,CONSENSUS,CONSENSUS_LEN,NUM_OCCUR,OCCUR_CHR,DISTRIBUTION_EA_CHR,DISTRIBUTION_TX,DISTRIBUTION_GENE) VALUES \
+    te_basic.write(f'INSERT INTO TE_BASIC (CLASS,FAMILY,NAME,CONSENSUS,CONSENSUS_LEN,NUM_OCCUR,OCCUR_CHR,DISTRIBUTION_EA_CHR,DISTRIBUTION_GENE) VALUES \
         ("{class_}","{family}","{name}","{consensus}","{consensus_len}","{num_occur}","{occur_chr}","{dist_ea_chr}","{dist_gene}");\n')
 te_basic.close()
