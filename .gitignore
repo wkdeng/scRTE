@@ -3,6 +3,6 @@ SRR*
 log*
 nohup*
 .snakemake
-data/
+data
 __*
 www/web/latin

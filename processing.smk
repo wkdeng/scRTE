@@ -108,7 +108,7 @@ rule scTE:
         'log/scte_{sample}.log'
     shell:"""mkdir -p {params.sample_folder}/scte/{params.sample}
           scTE -i {input.bam} -o {params.sample} -x {params.ref_lib} -UMI {params.umi} -CB {params.cb} --min_genes 200 --thread {params.nthread} > {log} 2>&1
-          mv {params.sample}.bed.gz {params.sample_folder}/scte/{params.sample}/  > {log} 2>&1 """
+          mv {params.sample}.csv {params.sample_folder}/scte/{params.sample}/  > {log} 2>&1 """
 
 # rule soloTE:
 #     input:
