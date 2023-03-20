@@ -1,0 +1,56 @@
+library(shiny)
+library(jsonlite)
+library(ggplot2)
+library(networkly)
+library(plotly)
+
+shinyServer(function(input, output,session) {
+  
+  output$network <- renderPlotly({
+
+
+    #set up network structure
+    conn<-1 # average number of conenctions per variable
+    nodes<-10 # number of variables
+    net_size<-conn*nodes
+    edge_type<-2 # number of diffrent connections
+
+
+    #color/size
+    set.seed(555)
+    id<-factor(sample(1:edge_type,net_size,replace = TRUE))
+    id2<-factor(sample(1:10,nodes,replace = TRUE))
+
+    edge.list<-data.frame(source=sample(1:nodes,net_size,replace=TRUE),
+                          target=sample(1:nodes,net_size,replace=TRUE),
+                          color=rainbow(edge_type)[id],
+                          size=sample(seq(1,10,length.out=10),edge_type,replace=TRUE)[id],
+                          names=letters[id],stringsAsFactors = FALSE)
+    node.data<-data.frame(color=sample(rainbow(10),nodes,replace=TRUE)[id2],
+                          size=sample(seq(5,15,length.out=10),nodes,replace=TRUE)[id2],
+                          names=sample(LETTERS[1:5],nodes,replace=TRUE)[id2],stringsAsFactors = FALSE)
+    
+    #net params
+    type<-"3d"
+
+    #create network objects
+    obj<-get_network(edge.list,type=type,layout=layout)
+    net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=FALSE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=FALSE))
+
+    #add legend
+    legend<-format_legend(obj,node.data=node.data)
+
+    net<-c(net,c(get_edges(legend,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(legend,node.data=legend$node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE)))
+
+
+    net<-shiny_ly(net) 
+
+    #add layout options
+    layout(net,
+            scene = list(showlegend=TRUE,
+                          yaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
+                          xaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
+                          zaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title="")))
+    })
+})
+
