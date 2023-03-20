@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+##############################
+ # @author [Wankun Deng]
+ # @email [dengwankun@gmail.com]
+ # @create date 2023-03-17 15:54:50
+ # @modify date 2023-03-17 15:54:50
+ # @desc [description]
+#############################
 import cgitb
 import subprocess
 import os
@@ -24,19 +31,21 @@ table_content='''
     </th>
     </tr>
   </thead>
-  {class_row}
   <tbody>
+  {class_row}
+  </tbody>
+  </table>
 '''
 
 class_content='''
     <tr class="collapsible">
-    <td class='class'>{Class}</td>
-    <td class="family_0">
-    <table>
-        {family_row}
-    </table>
-    </td>
-</tr>
+        <td class='class'>{Class}</td>
+        <td class="family_0">
+            <table>
+                {family_row}
+            </table>
+        </td>
+    </tr>
 '''
 
 family_content='''
@@ -49,18 +58,15 @@ family_content='''
       </td>
       </tr>
 '''
-name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}">{name_name}</li>"""
-
-
-
+name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}"><a href="http://localhost/TE_info.html?Class={Class}&Family={Family}&Name={name_name}" target="_blank">{name_name}</li>"""
 
 
 # Create the connection object
 connection = MySQLdb.connect(
+    host='127.0.0.1',
     user='www-data',
     passwd='www-data-passwd',
-    host='localhost',
-    port=13306,
+    port=3306,
     db='scARE'
 )
 
@@ -122,7 +128,7 @@ for i in range(len(info)):
     name_cls='c1' if first_name else 'c2'
     display='block' if first_name else 'none'
     first_name=False
-    name_row+=name_content.format(name_cls=name_cls,name_name=Name,display=display)
+    name_row+=name_content.format(name_cls=name_cls,name_name=Name,display=display,Family=current_family,Class=current_class)
 
 family_row+=family_content.format(name_row=name_row,Family=current_family)
 class_row+=class_content.format(family_row=family_row,Class=current_class)

@@ -79,85 +79,17 @@
 <body onload='init()'>
 
 <div id="MainContent" style="width: 60%;"></div>
-
-<script>
-    function add_toggle(){
-        let toggleButtons = document.querySelectorAll(".toggle");
-        toggleButtons.forEach(button => {
-            button.addEventListener("click", () => {
-            button.parentElement.parentElement.classList.toggle("active");
-            let content = button.parentElement.nextElementSibling.getElementsByClassName('c2');
-
-            if (content[0].style.display === "block") {
-                for(i=0;i<content.length;i++){
-                content[i].style.display='none'
-                }
-            } else {
-                for(i=0;i<content.length;i++){
-                content[i].style.display='block'
-                }
-            }
-            });
-        });
-    }
-
-</script>
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-     function init(){
-        $.get("/cgi/get_TE_fam.py",
-          function(response){
-          document.getElementById('MainContent').style.display='block'
-          $('#MainContent').html(response)
-          let toggleButtons = document.querySelectorAll(".family:not(.family_0)");
-          toggleButtons.forEach(button => {
-                button.addEventListener("click", () => {
-                // button.parentElement.parentElement.classList.toggle("active");
-                let content = button.parentElement.getElementsByClassName('c2');
-                if(content.length>0){
-                    if (content[0].style.display === "block") {
-                        for(i=0;i<content.length;i++){
-                        content[i].style.display='none'
-                        }
-                    } else {
-                        for(i=0;i<content.length;i++){
-                        content[i].style.display='block'
-                        }
-                    }                   
-                }
-
-                });
-          });
-
-
-
-
-           }
+    function init(){
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+            function(response){
+                document.getElementById('MainContent').style.display='block'
+                $('#MainContent').html(response)
+            }
         );
-     }
+    }
 </script>
-        <script type="text/javascript">
-            function check_submit()
-            {
-                   document.getElementById('linkdiv').style.display='block'
-                   $.get("/cgi/get_TE_fam.py",
-                     function(response){
-                     document.getElementById('linkdiv').style.display='none'
-                     document.getElementById('result').style.display='block'
-                     $('#result').html(response)
-                     alert(document.getElementById('result'))
-                      }
-                   );
-            }
-            function refresh()
-            {
-              $('#result').html('')
-                  document.getElementById('form').style.display='block'
-            }
-            function clear_form()
-            {
-       $('#seq').html('')
-       $('#mutation').html('')
-            }
-        </script>
 </body>

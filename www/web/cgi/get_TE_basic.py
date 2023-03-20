@@ -1,0 +1,105 @@
+#!/usr/bin/python3
+##############################
+ # @author [Wankun Deng]
+ # @email [dengwankun@gmail.com]
+ # @create date 2023-03-17 15:55:22
+ # @modify date 2023-03-17 15:55:22
+ # @desc [description]
+#############################
+import cgitb
+import subprocess
+import os
+import MySQLdb
+import pandas as pd
+import cgi
+import urllib.parse
+import tempfile
+import json
+
+cgitb.enable()
+print( 'Content_Type:text/html; charset=utf-8\r\n\n')
+
+
+# Create the connection object
+connection = MySQLdb.connect(
+    user='www-data',
+    passwd='www-data-passwd',
+    host='127.0.0.1',
+    port=3306,
+    db='scARE'
+)
+form = cgi.FieldStorage()
+Class=form['Class'].value
+Family=form['Family'].value
+Name=form['Name'].value
+# Create cursor and use it to execute SQL command
+cursor = connection.cursor()
+
+cursor.execute(f"select * from TE_BASIC WHERE CLASS = '{Class}' AND FAMILY = '{Family}' AND NAME = '{Name}'")
+info=cursor.fetchone()
+
+Num_locus=info[6]
+Cons_len=info[5]
+Cons=info[4]
+
+chr_dist=urllib.parse.quote(info[7])
+
+
+## basic row
+basic_row=f'''
+<ul>
+<li>{Class}</li>
+<li>{Family}</li>
+<li>{Name}</li>
+<li>{Num_locus}</li>
+<li>{Cons_len}</li>
+<li>{Cons}</li>
+</ul>
+'''
+
+## distribution of locus number in chromosome
+chr_dist=f'''
+<br/>
+Distribution on Chromosomes<br/>
+<iframe src="http://localhost:13838/Brain_scARE/chr_dist/?chr_dist={chr_dist}" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
+'''
+
+## distribution of locus in each chromosome
+chr_ea=info[8]
+
+tmp_file=next(tempfile._get_candidate_names())
+fp=open('/tmp/chr_ea_%s'%tmp_file,'w')
+fp.write(chr_ea)
+fp.close()
+
+subprocess.check_output(f"echo 'sleep 30; rm /tmp/chr_ea_{tmp_file}' | at now ",shell=True).decode('utf-8')
+
+chr_ea=f'''
+<br/><br/>
+Distribution on each Chomosome<br/>
+<iframe src="http://localhost:13838/Brain_scARE/chr_ea/?tmp_file=chr_ea_{tmp_file}" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
+'''
+
+## distribution of gene/intergenic region
+gene_inter=urllib.parse.quote(info[9])
+gene_inter=f'''
+<br/><br/>
+Distribution on genic/intergenic regions<br/>
+<iframe src="http://localhost:13838/Brain_scARE/gene_inter/?gene_inter={gene_inter}" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
+'''
+
+
+table_content=f'''
+<table >
+    <thead>
+        Overview
+    </thead>
+    <tbody>
+        <tr>{basic_row}</tr>
+        <tr>{chr_dist}</tr>
+        <tr>{chr_ea}</tr>
+        <tr>{gene_inter}</tr>
+    </tbody>
+</table>
+'''
+print(table_content)
