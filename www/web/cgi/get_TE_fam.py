@@ -1,4 +1,11 @@
 #!/usr/bin/python3
+##############################
+ # @author [Wankun Deng]
+ # @email [dengwankun@gmail.com]
+ # @create date 2023-03-17 15:54:50
+ # @modify date 2023-03-17 15:54:50
+ # @desc [description]
+#############################
 import cgitb
 import subprocess
 import os
@@ -24,19 +31,21 @@ table_content='''
     </th>
     </tr>
   </thead>
-  {class_row}
   <tbody>
+  {class_row}
+  </tbody>
+  </table>
 '''
 
 class_content='''
     <tr class="collapsible">
-    <td class='class'>{Class}</td>
-    <td class="family_0">
-    <table>
-        {family_row}
-    </table>
-    </td>
-</tr>
+        <td class='class'>{Class}</td>
+        <td class="family_0">
+            <table>
+                {family_row}
+            </table>
+        </td>
+    </tr>
 '''
 
 family_content='''
@@ -52,15 +61,12 @@ family_content='''
 name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}">{name_name}</li>"""
 
 
-
-
-
 # Create the connection object
 connection = MySQLdb.connect(
+    host='127.0.0.1',
     user='www-data',
     passwd='www-data-passwd',
-    host='localhost',
-    port=13306,
+    port=3306,
     db='scARE'
 )
 
