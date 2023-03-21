@@ -12,11 +12,21 @@ library(igraph)
 
 
 shinyServer(function(input, output,session) {
-  
-  output$network <- renderPlot({
+    rv<-reactiveValues(te_node='')
 
+  
+    output$network <- renderPlot({
+
+    observe({
+      query <- parseQueryString(session$clientData$url_search)
+        if (!is.null(query[['te_node']])) {
+          rv$te_node=query[['te_node']]
+        }
+      })
     
-    # create data:
+    df<-read.csv('network.txt')
+      
+          # create data:
     links <- data.frame(
         source=c("A","A", "A", "A", "A","J", "B", "B", "C", "C", "D","I"),
         target=c("B","B", "C", "D", "J","A","E", "F", "G", "H", "I","I"),
