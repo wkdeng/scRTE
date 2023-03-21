@@ -8,56 +8,37 @@
 library(shiny)
 library(jsonlite)
 library(ggplot2)
-library(networkly)
-library(plotly)
+library(igraph)
+
 
 shinyServer(function(input, output,session) {
   
-  output$network <- renderPlotly({
+  output$network <- renderPlot({
 
-
-    #set up network structure
-    conn<-1 # average number of conenctions per variable
-    nodes<-10 # number of variables
-    net_size<-conn*nodes
-    edge_type<-2 # number of diffrent connections
-
-
-    #color/size
-    set.seed(555)
-    id<-factor(sample(1:edge_type,net_size,replace = TRUE))
-    id2<-factor(sample(1:10,nodes,replace = TRUE))
-
-    edge.list<-data.frame(source=sample(1:nodes,net_size,replace=TRUE),
-                          target=sample(1:nodes,net_size,replace=TRUE),
-                          color=rainbow(edge_type)[id],
-                          size=sample(seq(1,10,length.out=10),edge_type,replace=TRUE)[id],
-                          names=letters[id],stringsAsFactors = FALSE)
-    node.data<-data.frame(color=sample(rainbow(10),nodes,replace=TRUE)[id2],
-                          size=sample(seq(5,15,length.out=10),nodes,replace=TRUE)[id2],
-                          names=sample(LETTERS[1:5],nodes,replace=TRUE)[id2],stringsAsFactors = FALSE)
     
-    #net params
-    type<-"3d"
-
-    #create network objects
-    obj<-get_network(edge.list,type=type,layout=layout)
-    net<-c(get_edges(obj,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=FALSE),get_nodes(obj,node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=FALSE))
-
-    #add legend
-    legend<-format_legend(obj,node.data=node.data)
-
-    net<-c(net,c(get_edges(legend,color=color,width=size,name=name,type=type,hoverinfo="none",showlegend=TRUE),get_nodes(legend,node.data=legend$node.data,color=color,size=size,name=name,type=type,hoverinfo="name",showlegend=TRUE)))
-
-
-    net<-shiny_ly(net) 
-
-    #add layout options
-    layout(net,
-            scene = list(showlegend=TRUE,
-                          yaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
-                          xaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title=""),
-                          zaxis=list(showgrid=FALSE,showticklabels=FALSE,zeroline=FALSE,title="")))
+    # create data:
+    links <- data.frame(
+        source=c("A","A", "A", "A", "A","J", "B", "B", "C", "C", "D","I"),
+        target=c("B","B", "C", "D", "J","A","E", "F", "G", "H", "I","I"),
+        importance=(sample(1:4, 12, replace=T))
+        )
+    nodes <- data.frame(
+        name=LETTERS[1:10],
+        carac=c( rep("young",3),rep("adult",2), rep("old",5))
+        )
+    
+    # Turn it into igraph object
+    network <- graph_from_data_frame(d=links, vertices=nodes, directed=F) 
+    
+    # Make a palette of 3 colors
+    library(RColorBrewer)
+    coul  <- brewer.pal(3, "Set1") 
+    
+    # Create a vector of color
+    my_color <- coul[as.numeric(as.factor(V(network)$carac))]
+    
+    plot(network, vertex.color=my_color, edge.width=E(network)$importance*2 )
+    legend("bottomleft", legend=levels(as.factor(V(network)$carac))  , col = coul , bty = "n", pch=20 , pt.cex = 3, cex = 1.5, text.col=coul , horiz = FALSE, inset = c(0.1, 0.1))
     })
 })
 

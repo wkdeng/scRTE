@@ -8,5 +8,5 @@
 library(shiny)
 
 shinyUI(bootstrapPage(
-    plotlyOutput("network")
+    plotOutput("network")
 ))
