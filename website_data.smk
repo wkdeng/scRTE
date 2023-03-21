@@ -6,22 +6,21 @@
  # @desc [description]
 ###
 
-# nohup snakemake --snakefile website).smk --latency-wait 60 --jobs 50 --rerun-incomplete &
-# configfile: "scRTE.yaml"
-
-# SAMPLE_GRP=config['sample_group']
-# SAMPLES=config['samples']
 DATA_FOLDER='wwww/mysql'
 INTERMEDIATE='data/website'
 NTHREAD=10
 PYTHON='python3'
 
 RMSK='../universal_data/rmsk/rmsk_GRCh38.txt'
+GENE_BED='../universal_data/ref/GRCh38/genes.bed'
 
 
 rule all:
     input:
-        DATA_FOLDER+'/te_fam.sql'
+        DATA_FOLDER+'/te_fam.sql',
+        'www/shiny-app/gene_te_net/network.txt',
+        DATA_FOLDER+'/te_basic.sql'
+
 
 rule te_fam:
     input:RMSK
@@ -47,11 +46,25 @@ rule download_consensus:
 rule te_basic:
     input:
         rmsk=RMSK,
-        consensus=INTERMEDIATE+'/Dfam.embl.gz'
+        consensus=INTERMEDIATE+'/Dfam.embl'
     output: DATA_FOLDER+'/te_basic.sql'
     params:
-        script:'scripts/TE_basic.py'
+        script='scripts/TE_basic.py',
         python=PYTHON
     log:
         'log/te_basic.log'
     shell:"{params.python} {params.script} {input.rmsk} {input.consensus} {output}> {log} 2>&1 "
+
+
+rule te_gene_net:
+    input:
+        rmsk=RMSK,
+        gene_bed=GENE_BED
+    output:
+        'www/shiny-app/gene_te_net/network.txt'
+    log:
+        'log/te_gene_net.log'
+    params:
+        script='script/TE_net.py',
+        python=PYTHON
+    shell:"{params.python} {params.script} {input.rmsk} {input.gene_bed} {output} > {log} 2>&1"  
