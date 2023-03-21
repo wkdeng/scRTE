@@ -7,6 +7,7 @@
 ###
 library(shiny)
 
-shinyUI(bootstrapPage(
+shinyUI(fluidPage(
+    numericInput('OrderN', 'Order', value = 1),
     plotOutput("network")
 ))

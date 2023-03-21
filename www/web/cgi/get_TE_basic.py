@@ -48,12 +48,12 @@ chr_dist=urllib.parse.quote(info[7])
 ## basic row
 basic_row=f'''
 <ul>
-<li>{Class}</li>
-<li>{Family}</li>
-<li>{Name}</li>
-<li>{Num_locus}</li>
-<li>{Cons_len}</li>
-<li>{Cons}</li>
+<li>Class: {Class}</li>
+<li>Family: {Family}</li>
+<li>Name: {Name}</li>
+<li>Number of locus: {Num_locus}</li>
+<li>Consensus sequence length: {Cons_len}</li>
+<li>Consensus sequence: {Cons}</li>
 </ul>
 '''
 
@@ -89,11 +89,11 @@ Distribution on genic/intergenic regions<br/>
 '''
 
 ## gene-te connection
-gene_te_net=urllib.parse.quote(info[9])
+te_node=urllib.parse.quote(f'{Class}:{Family}:{Name}')
 gene_te_net=f'''
 <br/><br/>
-Distribution on gene-te connection map<br/>
-<iframe src="http://localhost:13838/Brain_scARE/gene_te_net/" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
+Gene-TE connection map<br/>
+<iframe src="http://localhost:13838/Brain_scARE/gene_te_net/?te_node={te_node}" style="border: 1px solid #AAA; width: 700px; height: 500px"></iframe>
 '''
 
 table_content=f'''
