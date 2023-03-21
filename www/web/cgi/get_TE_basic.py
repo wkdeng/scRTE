@@ -88,6 +88,13 @@ Distribution on genic/intergenic regions<br/>
 <iframe src="http://localhost:13838/Brain_scARE/gene_inter/?gene_inter={gene_inter}" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
 '''
 
+## gene-te connection
+gene_te_net=urllib.parse.quote(info[9])
+gene_te_net=f'''
+<br/><br/>
+Distribution on gene-te connection map<br/>
+<iframe src="http://localhost:13838/Brain_scARE/gene_te_net/" style="border: 1px solid #AAA; width: 500px; height: 250px"></iframe>
+'''
 
 table_content=f'''
 <table >
@@ -99,6 +106,7 @@ table_content=f'''
         <tr>{chr_dist}</tr>
         <tr>{chr_ea}</tr>
         <tr>{gene_inter}</tr>
+        <tr>{gene_te_net}</tr>
     </tbody>
 </table>
 '''

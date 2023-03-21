@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Table with Collapsible Rows</title>
+  <title>TE infomation</title>
   <style>
     table {
       border-collapse: collapse;
@@ -88,6 +88,7 @@
             function(response){
                 document.getElementById('MainContent').style.display='block'
                 $('#MainContent').html(response)
+                document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
             }
         );
     }
