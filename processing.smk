@@ -27,7 +27,8 @@ rule all:
     input:
         # fq=expand('{sample_folder}/raw/{sample}/{sample}_1.fastq',sample_folder=SAMPLE_FOLDER,sample=SAMPLES )#,
         bam=expand('{sample_folder}/cellcount/{sample}/outs/possorted_genome_bam.bam',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
-        scte=expand('{sample_folder}/scte/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
+        scte=expand('{sample_folder}/scte/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
+        solote=expand('{sample_folder}/solote/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
 
 
 rule download_fq:
@@ -110,17 +111,17 @@ rule scTE:
           scTE -i {input.bam} -o {params.sample} -x {params.ref_lib} -UMI {params.umi} -CB {params.cb} --min_genes 200 --thread {params.nthread} > {log} 2>&1
           mv {params.sample}.csv {params.sample_folder}/scte/{params.sample}/  > {log} 2>&1 """
 
-# rule soloTE:
-#     input:
-#         bam=SAMPLE_FOLDER+'/cellcount/{sample}/outs/possorted_genome_bam.bam'
-#     output:
-
-#     params:
-#         nthread=NTHREAD,
-#         output_folder=SAMPLE_FOLDER+'/solote/{sample}',
-#         sample='{sample}',
-#         te_anno=soloTE_ANNOTATION,
-#         soloTE_script=soloTE_SCRIPT
-#     log:
-#         'log/solote_{sample}.log'
-#     shell:"python3 {params.soloTE_script} --threads {params.nthread} --bam {input.bam} --teannotation {params.te_anno} --outputprefix {params.sample} --outputdir {params.output_folder}"
+rule soloTE:
+    input:
+        bam=SAMPLE_FOLDER+'/cellcount/{sample}/outs/possorted_genome_bam.bam'
+    output:
+        SAMPLE_FOLDER+'/solote/{sample}/result.txt'
+    params:
+        nthread=NTHREAD,
+        output_folder=SAMPLE_FOLDER+'/solote/{sample}',
+        sample='{sample}',
+        te_anno=soloTE_ANNOTATION,
+        soloTE_script=soloTE_SCRIPT
+    log:
+        'log/solote_{sample}.log'
+    shell:"python3 {params.soloTE_script} --threads {params.nthread} --bam {input.bam} --teannotation {params.te_anno} --outputprefix {params.sample} --outputdir {params.output_folder}"
