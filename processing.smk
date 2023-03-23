@@ -28,7 +28,7 @@ rule all:
         # fq=expand('{sample_folder}/raw/{sample}/{sample}_1.fastq',sample_folder=SAMPLE_FOLDER,sample=SAMPLES )#,
         bam=expand('{sample_folder}/cellcount/{sample}/outs/possorted_genome_bam.bam',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
         scte=expand('{sample_folder}/scte/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
-        solote=expand('{sample_folder}/solote/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
+        solote=expand('{sample_folder}/solote/{sample}/result.txt',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
 
 
 rule download_fq:
