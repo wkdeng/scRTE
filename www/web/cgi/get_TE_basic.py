@@ -72,7 +72,7 @@ fp=open('/tmp/chr_ea_%s'%tmp_file,'w')
 fp.write(chr_ea)
 fp.close()
 
-_=subprocess.call(f"echo 'sleep 300; rm /tmp/chr_ea_{tmp_file}' | at now ",shell=True).decode('utf-8')
+_=subprocess.check_output(f"echo 'sleep 300; rm /tmp/chr_ea_{tmp_file}' | at now ",shell=True).decode('utf-8')
 
 chr_ea=f'''
 <br/><br/>

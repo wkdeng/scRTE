@@ -18,7 +18,7 @@ GENE_BED='../universal_data/ref/GRCh38/genes.bed'
 rule all:
     input:
         DATA_FOLDER+'/te_fam.sql',
-        'www/shiny-app/gene_te_net/network.txt',
+        DATA_FOLDER+'/te_net.sql',
         DATA_FOLDER+'/te_basic.sql'
 
 
@@ -61,7 +61,7 @@ rule te_gene_net:
         rmsk=RMSK,
         gene_bed=GENE_BED
     output:
-        'www/shiny-app/gene_te_net/network.txt'
+        DATA_FOLDER+'/te_net.sql'
     log:
         'log/te_gene_net.log'
     params:
