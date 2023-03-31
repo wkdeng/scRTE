@@ -5,26 +5,79 @@
  # @modify date 2023-03-21 14:16:13
  # @desc [description]
 ###
-from pybedtools import BedTool
-import sys
+# from pybedtools import BedTool
+# import sys
+# import pandas as pd
+# # sys.argv=['test.opy','../../universal_data/rmsk/rmsk_GRCh38.txt','../../universal_data/ref/GRCh38/genes.bed']
+# rmsk=sys.argv[1]
+# gene_anno=sys.argv[2]
+# out=sys.argv[3]
+
+# rmsk=sys.argv[1]
+# gene_anno=sys.argv[2]
+
+# rmsk_df=pd.read_csv(rmsk,sep='\t')
+# rmsk_df['index']=rmsk_df[['repClass','repFamily','repName']].agg(':'.join,axis=1)
+
+# rmsk_bed=BedTool.from_dataframe(rmsk_df[['genoName','genoStart','genoEnd','index','swScore','strand']])
+# conn=rmsk_bed.intersect(anno_bed,s=True,wa=True,wb=True).to_dataframe()
+# conn[['ensg','gn']]=[x.split(':') for x in conn['blockCount']]
+
+# print(len(conn))
+# conn['class']=[x.split(':')[0] for x in conn['name']]
+# conn=conn.loc[conn['class'].isin(['SINE','LTR','LINE'])]
+# conn=conn[['name','gn']].drop_duplicates()
+# conn[['name','gn']].to_csv('network.txt',header=True,index=False)
+
 import pandas as pd
-# sys.argv=['test.opy','../../universal_data/rmsk/rmsk_GRCh38.txt','../../universal_data/ref/GRCh38/genes.bed']
-rmsk=sys.argv[1]
-gene_anno=sys.argv[2]
-out=sys.argv[3]
+from collections import defaultdict
+import networkx as nx
+from networkx.readwrite import json_graph
 
-rmsk=sys.argv[1]
-gene_anno=sys.argv[2]
+out='../www/mysql/te_net.sql'
+network=pd.read_csv('../www/shiny-app/gene_te_net/network.txt',sep=',')
+idx=list(set(network['name']))
 
-rmsk_df=pd.read_csv(rmsk,sep='\t')
-rmsk_df['index']=rmsk_df[['repClass','repFamily','repName']].agg(':'.join,axis=1)
+g=nx.read_adjlist('../www/shiny-app/gene_te_net/network.txt',delimiter=',',nodetype=str)
 
-rmsk_bed=BedTool.from_dataframe(rmsk_df[['genoName','genoStart','genoEnd','index','swScore','strand']])
-conn=rmsk_bed.intersect(anno_bed,s=True,wa=True,wb=True).to_dataframe()
-conn[['ensg','gn']]=[x.split(':') for x in conn['blockCount']]
 
-print(len(conn))
-conn['class']=[x.split(':')[0] for x in conn['name']]
-conn=conn.loc[conn['class'].isin(['SINE','LTR','LINE'])]
-conn=conn[['name','gn']].drop_duplicates()
-conn[['name','gn']].to_csv(out,header=True,index=False)
+te_net=open(out,'w')
+te_net.write('''CREATE DATABASE IF NOT EXISTS scARE;
+USE scARE;
+DROP TABLE IF EXISTS TE_NET;
+CREATE TABLE TE_NET (
+    ID INT NOT NULL AUTO_INCREMENT,
+    CLASS varchar(255) NOT NULL,
+    FAMILY varchar(255) NOT NULL,
+    NAME varchar(255) NOT NULL,
+    D1 longtext NOT NULL,
+    D2 longtext NOT NULL,
+    PRIMARY KEY (ID) 
+);
+''')
+
+
+import tqdm
+
+for node_id in tqdm.tqdm(idx):
+    
+    Ds=[]
+    for i in range(2):
+        subgraph = g.subgraph(nx.single_source_shortest_path_length(g, node_id, cutoff=i+1).keys())
+        data = json_graph.node_link_data(subgraph)
+        for item in data['nodes']:
+            if item['id'].startswith('SINE') or item['id'].startswith('LINE') or item['id'].startswith('LTR'):
+                item['group']=1
+            else:
+                item['group']=0
+                                
+        # remove 'directed','multigraph','graph' from data
+        data.pop('directed')
+        data.pop('multigraph')
+        data.pop('graph')
+        data=str(data).replace("'", '\\"')
+        Ds.append(data)
+    class_, family, name =node_id.split(':')
+    D1,D2=Ds
+    te_net.write(f'INSERT INTO TE_NET (CLASS,FAMILY,NAME,D1,D2) VALUES ("{class_}","{family}","{name}","{D1}","{D2}");\n')
+te_net.close()
