@@ -124,4 +124,14 @@ rule soloTE:
         soloTE_script=soloTE_SCRIPT
     log:
         'log/solote_{sample}.log'
-    shell:"python3 {params.soloTE_script} --threads {params.nthread} --bam {input.bam} --teannotation {params.te_anno} --outputprefix {params.sample} --outputdir {params.output_folder}"
+    shell:"""python3 {params.soloTE_script} --threads {params.nthread} --bam {input.bam} --teannotation {params.te_anno} --outputprefix {params.sample} --outputdir {params.output_folder}
+    mv {params.output_folder}__SoloTE_temp/{params.output_folder}_SoloTE_output/* {params.output_folder}/"""
+
+rule scTE_normalize:
+    input: SAMPLE_FOLDER+'/scte/{sample}/{sample}.csv'
+    output: SAMPLE_FOLDER+'/scte/{sample}/{sample}_normalized.csv'
+    params: sample='{sample}'
+    log: 'log/scte_normalize_{sample}.log'
+    shell:"""\
+    python3 {SCRIPT_FOLDER}/TE_scTE_normalize.py -i {input} -o {output} > {log} 2>&1
+    """
