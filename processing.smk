@@ -125,3 +125,4 @@ rule soloTE:
     log:
         'log/solote_{sample}.log'
     shell:"python3 {params.soloTE_script} --threads {params.nthread} --bam {input.bam} --teannotation {params.te_anno} --outputprefix {params.sample} --outputdir {params.output_folder} > {log} 2>&1"
+
