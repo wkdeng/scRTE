@@ -1,7 +1,7 @@
 cellranger_ref: ../universal_data/refdata-gex-GRCh38-2020-A
 scTE_ref: /home/wdeng3/workspace/Codespace/universal_data/rmsk/hg38.exclusive.idx
 solote_annotation: /home/wdeng3/workspace/Codespace/universal_data/rmsk/rmsk_GRCh38_solote.txt
-soloTE_script: /home/wdeng3/workspace/software/SoloTE/SoloTE_pipeline.py
+soloTE_script: /home/wdeng3/workspace/software/SoloTE/SoloTE_pipeline_developmental_20230215.py
 sample_folder: data/3
 library_type: paired
 nthread: 5

@@ -28,7 +28,7 @@ rule all:
         # fq=expand('{sample_folder}/raw/{sample}/{sample}_1.fastq',sample_folder=SAMPLE_FOLDER,sample=SAMPLES )#,
         bam=expand('{sample_folder}/cellcount/{sample}/outs/possorted_genome_bam.bam',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
         scte=expand('{sample_folder}/scte/{sample}/{sample}.csv',sample_folder=SAMPLE_FOLDER,sample=SAMPLES),
-        solote=expand('{sample_folder}/solote/{sample}/result.txt',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
+        solote=expand('{sample_folder}/solote/{sample}/matrix.mtx',sample_folder=SAMPLE_FOLDER,sample=SAMPLES)
 
 
 rule download_fq:
@@ -115,10 +115,10 @@ rule soloTE:
     input:
         bam=SAMPLE_FOLDER+'/cellcount/{sample}/outs/possorted_genome_bam.bam'
     output:
-        SAMPLE_FOLDER+'/solote/{sample}/result.txt'
+        SAMPLE_FOLDER+'/solote/{sample}/matrix.mtx'
     params:
         nthread=NTHREAD,
-        output_folder=SAMPLE_FOLDER+'/solote/{sample}',
+        output_folder=SAMPLE_FOLDER+'/solote',
         sample='{sample}',
         te_anno=soloTE_ANNOTATION,
         soloTE_script=soloTE_SCRIPT
