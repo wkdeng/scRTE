@@ -43,6 +43,7 @@ rule download_consensus:
     shell:"""wget -O {params.intermediate}/Dfam.embl.gz https://www.dfam.org/releases/Dfam_3.7/families/Dfam_curatedonly.embl.gz > {log} 2>&1
     gunzip {params.intermediate}/Dfam.embl.gz"""
 
+
 rule te_basic:
     input:
         rmsk=RMSK,
