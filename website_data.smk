@@ -6,20 +6,21 @@
  # @desc [description]
 ###
 
-DATA_FOLDER='wwww/mysql'
+DATA_FOLDER='www/mysql'
 INTERMEDIATE='data/website'
 NTHREAD=10
 PYTHON='python3'
 
 RMSK='../universal_data/rmsk/rmsk_GRCh38.txt'
 GENE_BED='../universal_data/ref/GRCh38/genes.bed'
-
+CHR_LEN='../universal_data/ref/GRCh38/STAR/chrNameLength.txt'
 
 rule all:
     input:
         DATA_FOLDER+'/te_fam.sql',
         DATA_FOLDER+'/te_net.sql',
-        DATA_FOLDER+'/te_basic.sql'
+        DATA_FOLDER+'/te_basic.sql',
+        DATA_FOLDER+'/cell_umap.sql'
 
 
 rule te_fam:
@@ -47,14 +48,16 @@ rule download_consensus:
 rule te_basic:
     input:
         rmsk=RMSK,
-        consensus=INTERMEDIATE+'/Dfam.embl'
+        consensus=INTERMEDIATE+'/Dfam.embl',
+        gene_bed=GENE_BED
     output: DATA_FOLDER+'/te_basic.sql'
     params:
         script='scripts/TE_basic.py',
-        python=PYTHON
+        python=PYTHON,
+        chr_len=CHR_LEN
     log:
         'log/te_basic.log'
-    shell:"{params.python} {params.script} {input.rmsk} {input.consensus} {output}> {log} 2>&1 "
+    shell:"{params.python} {params.script} {input.rmsk} {input.consensus} {output} {params.chr_len} {input.gene_bed}> {log} 2>&1 "
 
 
 rule te_gene_net:
@@ -66,6 +69,18 @@ rule te_gene_net:
     log:
         'log/te_gene_net.log'
     params:
-        script='script/TE_net.py',
+        script='scripts/TE_net.py',
         python=PYTHON
     shell:"{params.python} {params.script} {input.rmsk} {input.gene_bed} {output} > {log} 2>&1"  
+
+rule cell_umap:
+    input:
+        'data/3/cell_umap.txt'
+    output:
+        DATA_FOLDER+'/cell_umap.sql'
+    log:
+        'log/cell_umap.log'
+    params:
+        script='scripts/Data_Cell_Umap.py',
+        python=PYTHON
+    shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
