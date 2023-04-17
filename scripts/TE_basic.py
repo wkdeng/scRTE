@@ -12,6 +12,7 @@ import re
 import numpy as np
 from tqdm import tqdm
 import json
+from pybedtools import BedTool
 
 # sys.argv=['script.py','../../universal_data/rmsk/rmsk_GRCh38.txt','../data/website/Dfam.embl','../www/mysql/te_basic.sql','../../universal_data/ref/GRCh38/STAR/chrNameLength.txt']
 rmsk=sys.argv[1]
@@ -19,6 +20,7 @@ consensus=sys.argv[2]
 output=sys.argv[3]
 chr_len_f=sys.argv[4]
 te_table=pd.read_csv(rmsk,sep='\t')
+gene_anno=sys.argv[5]
 
 te_basic=open(output,'w')
 te_basic.write('''CREATE DATABASE IF NOT EXISTS scARE;
@@ -77,13 +79,13 @@ for i in range(len(rte)):
     seq_len=len(seq)
     if seq_len == 0:
         seq='N/A'
-        seq_len=np.nan
+        # seq_len=np.nan
         count+=1
     rte.iloc[i,[3,4]]=[seq,seq_len]
 
 ## get index for te in gene/intergenic region
 genes=BedTool(gene_anno)
-cdss=BedTool(cds_anno)
+# cdss=BedTool(cds_anno)
 # utrs=BedTool(utr_anno)
 # utrs=utrs.subtract(cdss,s=True)
 te_table['order']=range(len(te_table))
