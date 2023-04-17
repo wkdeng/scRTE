@@ -30,11 +30,11 @@ connection = MySQLdb.connect(
 
 cursor = connection.cursor()
 
-cursor.execute(f"select NAME, {Degree} from DATA_CELLUMAP WHERE CLASS = '{Class}' AND FAMILY = '{Family}' AND NAME = '{Name}'")
-info=cursor.fetchone()
+cursor.execute(f"select CELL, CELL_TYPE, UMAP_1, UMAP_2 from DATA_CELLUMAP WHERE DATASET = '{Dataset}' ")
+info=cursor.fetchall()
 
 
-if info is None:
-    print('{"nodes":[{"id":"%s","label":"%s","group":1}],"links":[{ "source":"%s","target":"%s","value":1}]}'%(Name,Name,Name,Name))
-else:
-    print(info[1])
+info=pd.DataFrame(info,columns=['CELL','CELL_TYPE','UMAP_1','UMAP_2'])
+# info.index=info['CELL']
+# info=info.drop(columns=['CELL'])
+print(json.dumps(list(info.transpose().to_dict().values())))
