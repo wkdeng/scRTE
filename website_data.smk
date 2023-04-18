@@ -20,7 +20,8 @@ rule all:
         DATA_FOLDER+'/te_fam.sql',
         DATA_FOLDER+'/te_net.sql',
         DATA_FOLDER+'/te_basic.sql',
-        DATA_FOLDER+'/cell_umap.sql'
+        DATA_FOLDER+'/cell_umap.sql',
+        DATA_FOLDER+'/gene_dict.sql'
 
 
 rule te_fam:
@@ -84,3 +85,16 @@ rule cell_umap:
         script='scripts/Data_Cell_Umap.py',
         python=PYTHON
     shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
+
+rule cell_exp:
+    input:
+        'data/3/cell_exp.txt'
+    output:
+        DATA_FOLDER+'/gene_dict.sql'
+    log:
+        'log/cell_exp.log'
+    params:
+        script='scripts/Data_Cell_Exp.py',
+        python=PYTHON,
+        out_path=DATA_FOLDER
+    shell:"{params.python} {params.script} {input} {params.out_path} > {log} 2>&1"
