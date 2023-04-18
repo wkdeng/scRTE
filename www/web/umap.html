@@ -16,12 +16,8 @@
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 
-<body onload='init()'>
-
-<div id="MainContent" style="width: 60%;"></div>
-<div id="network"> </div>
-<div id="TE_quant"> </div>
-<div id="Cell_umap"> 
+<body >
+<div id="Cell_umap" style="width: 30%;"> 
   <figure class="highcharts-figure">
     <div id="container"></div>
     <!-- <p class="highcharts-description">
@@ -40,7 +36,7 @@
     </select>
   </figure>
 </div>
-<div id="Gene_exp"> 
+<div id="Gene_exp" style="width: 30%;"> 
   <figure class="highcharts-figure">
     <div id="container_gene_exp"></div>
     <!-- <p class="highcharts-description">
@@ -59,40 +55,7 @@
 <script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
 
 <script src="js/forceGraph.js"> </script>
-
-<script type="text/javascript">
-    function init(){
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
-            function(response){
-                document.getElementById('MainContent').style.display='block'
-                $('#MainContent').html(response)
-                document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
-                // document.getElementById()
-            }
-        );
-        // // get josn data from cgi script get_network.py
-        // $.get("/cgi/get_network.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name'),Degree:'D2'},
-        //     function(response){
-        //         // console.log(response)
-        //         const data = JSON.parse(response)
-        //         // console.log(data)
-        //         const graph = ForceGraph(data,
-        //             {nodeId: d => d.id,
-        //             nodeGroup: d => d.group,
-        //             nodeLabel: d => d.id,
-        //             nodeColor: d => d.group})
-        //         // hover on node will show node id
-        //         // graph.onNodeHover(node => { 
-        //         //     graph.getElementById('node').textContent = node ? node.id : '';
-        //         // });
-        //         // insert graph to div network
-        //         document.getElementById('network').appendChild(graph);
-        //     });
-        
-    }
-</script>
 <script src="js/umap.js" ></script>
 <script src="js/umap_gene.js" ></script>
 </body>
+</html>
