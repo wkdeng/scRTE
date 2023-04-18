@@ -11,7 +11,7 @@ import pandas as pd
 
 # sys.argv=['th','../data/3/cell_umap.txt','../www/mysql/cell_umap.sql']
 out_path=sys.argv[2]
-cell_umap=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
+cell_umap=pd.read_csv(sys.argv[1],sep='\t')
 
 
 data_cellumap=open(out_path,'w')
