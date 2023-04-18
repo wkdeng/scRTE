@@ -98,7 +98,7 @@ Highcharts.setOptions({
       },
       yAxis: {
         title: {
-          text: 'UMAP_1'
+          text: 'UMAP_2'
         },
         labels: {
           format: '{value}'
@@ -155,6 +155,5 @@ Highcharts.setOptions({
 
 
       });
-  }
-  );
+  });
 
