@@ -23,7 +23,31 @@ rule all:
         DATA_FOLDER+'/cell_umap.sql',
         DATA_FOLDER+'/gene_dict.sql'
 
+rule cell_umap:
+    input:
+        'data/3/cell_umap.txt'
+    output:
+        DATA_FOLDER+'/cell_umap.sql'
+    log:
+        'log/cell_umap.log'
+    params:
+        script='scripts/Data_Cell_Umap.py',
+        python=PYTHON
+    shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
 
+rule cell_exp:
+    input:
+        'data/3/cell_exp.txt'
+    output:
+        DATA_FOLDER+'/gene_dict.sql'
+    log:
+        'log/cell_exp.log'
+    params:
+        script='scripts/Data_Cell_Exp.py',
+        python=PYTHON,
+        out_path=DATA_FOLDER
+    shell:"{params.python} {params.script} {input} {params.out_path} > {log} 2>&1"
+    
 rule te_fam:
     input:RMSK
     output:DATA_FOLDER+'/te_fam.sql'
@@ -74,27 +98,3 @@ rule te_gene_net:
         python=PYTHON
     shell:"{params.python} {params.script} {input.rmsk} {input.gene_bed} {output} > {log} 2>&1"  
 
-rule cell_umap:
-    input:
-        'data/3/cell_umap.txt'
-    output:
-        DATA_FOLDER+'/cell_umap.sql'
-    log:
-        'log/cell_umap.log'
-    params:
-        script='scripts/Data_Cell_Umap.py',
-        python=PYTHON
-    shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
-
-rule cell_exp:
-    input:
-        'data/3/cell_exp.txt'
-    output:
-        DATA_FOLDER+'/gene_dict.sql'
-    log:
-        'log/cell_exp.log'
-    params:
-        script='scripts/Data_Cell_Exp.py',
-        python=PYTHON,
-        out_path=DATA_FOLDER
-    shell:"{params.python} {params.script} {input} {params.out_path} > {log} 2>&1"
