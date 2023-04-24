@@ -18,6 +18,7 @@ from networkx.readwrite import json_graph
 rmsk=sys.argv[1]
 gene_anno=sys.argv[2]
 out=sys.argv[3]
+net_out=sys.argv[4]
 
 rmsk_df=pd.read_csv(rmsk,sep='\t')
 rmsk_df['index']=rmsk_df[['repClass','repFamily','repName']].agg(':'.join,axis=1)
@@ -30,12 +31,12 @@ print(len(conn))
 conn['class']=[x.split(':')[0] for x in conn['name']]
 conn=conn.loc[conn['class'].isin(['SINE','LTR','LINE'])]
 conn=conn[['name','gn']].drop_duplicates()
-conn[['name','gn']].to_csv('www/shiny-app/gene_te_net/network.txt',header=True,index=False)
+conn[['name','gn']].to_csv(net_out,header=True,index=False)
 
-network=pd.read_csv('www/shiny-app/gene_te_net/network.txt',sep=',')
+network=pd.read_csv(net_out,sep=',')
 idx=list(set(network['name']))
 
-g=nx.read_adjlist('www/shiny-app/gene_te_net/network.txt',delimiter=',',nodetype=str)
+g=nx.read_adjlist(net_out,delimiter=',',nodetype=str)
 
 te_net=open(out,'w')
 te_net.write('''CREATE DATABASE IF NOT EXISTS scARE;

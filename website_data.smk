@@ -21,7 +21,8 @@ rule all:
         DATA_FOLDER+'/te_net.sql',
         DATA_FOLDER+'/te_basic.sql',
         DATA_FOLDER+'/cell_umap.sql',
-        DATA_FOLDER+'/gene_dict.sql'
+        DATA_FOLDER+'/gene_dict.sql',
+        DATA_FOLDER+'/te_gene.sql'
 
 rule cell_umap:
     input:
@@ -90,11 +91,24 @@ rule te_gene_net:
         rmsk=RMSK,
         gene_bed=GENE_BED
     output:
-        DATA_FOLDER+'/te_net.sql'
+       sql=DATA_FOLDER+'/te_net.sql',
+       txt=DATA_FOLDER+'/network.txt'
     log:
         'log/te_gene_net.log'
     params:
         script='scripts/TE_net.py',
         python=PYTHON
-    shell:"{params.python} {params.script} {input.rmsk} {input.gene_bed} {output} > {log} 2>&1"  
+    shell:"{params.python} {params.script} {input.rmsk} {input.gene_bed} {output.sql} {output.txt} > {log} 2>&1"  
 
+
+rule te_gene:
+    input:
+        DATA_FOLDER+'/network.txt'
+    output:
+        DATA_FOLDER+'/te_gene.sql'
+    log:
+        'log/te_gene.log'
+    params:
+        script='scripts/TE_gene.py',
+        python=PYTHON
+    shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
