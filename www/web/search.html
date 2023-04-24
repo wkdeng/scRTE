@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TE infomation</title>
+  <style>
+  @import url('css/search.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+</head>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+<body>
+
+
+<div id="search"> 
+    <div id="simple_search"></div>
+    <label for="simple_field">Search field:</label>
+    <select name="simple_field" id="simple_field">
+      <option value='RTE'>RTE</option>
+      <option value='Gene'>Gene</option>
+      <option value='Disease'>Disease</option>
+      <option value='Cell'>Cell</option>
+      <option value='Dataset'>Dataset</option>
+    </select>
+    <label for="simple_kw">Keyword:</label>
+    <input type="text" id="simple_kw" name="Keyword">
+    <input type="button" value="Search" onclick="simple_search()">
+</div>
+<div id="result"></div>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
+
+<script src="js/forceGraph.js"> </script>
+
+<script type="text/javascript">
+    function simple_search(){
+        const field = document.getElementById("simple_field").value;
+        const kw = document.getElementById("simple_kw").value;
+        response=$.get("cgi/search.py", {field:field, kw:kw}, function(data){
+            console.log(data);
+            document.getElementById("result").innerHTML = data;
+            
+        });
+        
+    }
+</script>
+
+</body>
