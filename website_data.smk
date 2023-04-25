@@ -14,6 +14,7 @@ PYTHON='python3'
 RMSK='../universal_data/rmsk/rmsk_GRCh38.txt'
 GENE_BED='../universal_data/ref/GRCh38/genes.bed'
 CHR_LEN='../universal_data/ref/GRCh38/STAR/chrNameLength.txt'
+DATASET_ID='AD_HS_00001'
 
 rule all:
     input:
@@ -22,7 +23,9 @@ rule all:
         DATA_FOLDER+'/te_basic.sql',
         DATA_FOLDER+'/cell_umap.sql',
         DATA_FOLDER+'/gene_dict.sql',
-        DATA_FOLDER+'/te_gene.sql'
+        DATA_FOLDER+'/te_gene.sql',
+        DATA_FOLDER+'/meta.sql',
+        DATA_FOLDER+'/sample2dataset.sql'
 
 rule cell_umap:
     input:
@@ -33,21 +36,24 @@ rule cell_umap:
         'log/cell_umap.log'
     params:
         script='scripts/Data_Cell_Umap.py',
-        python=PYTHON
-    shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
+        python=PYTHON,
+        dataset_id=DATASET_ID
+    shell:"{params.python} {params.script} {input} {output} {params.dataset_id} > {log} 2>&1"
 
 rule cell_exp:
     input:
         'data/3/cell_exp.txt'
     output:
-        DATA_FOLDER+'/gene_dict.sql'
+        DATA_FOLDER+'/gene_dict.sql',
+        DATA_FOLDER+'/cell_exp_0.sql'
     log:
         'log/cell_exp.log'
     params:
         script='scripts/Data_Cell_Exp.py',
         python=PYTHON,
-        out_path=DATA_FOLDER
-    shell:"{params.python} {params.script} {input} {params.out_path} > {log} 2>&1"
+        out_path=DATA_FOLDER,
+        dataset_id=DATASET_ID
+    shell:"{params.python} {params.script} {input} {params.out_path} {params.dataset_id}> {log} 2>&1"
     
 rule te_fam:
     input:RMSK
@@ -112,3 +118,16 @@ rule te_gene:
         script='scripts/TE_gene.py',
         python=PYTHON
     shell:"{params.python} {params.script} {input} {output} > {log} 2>&1"
+
+rule meta:
+    input:
+        'data/Dataset.meta.txt'
+    output:
+        meta=DATA_FOLDER+'/meta.sql',
+        sample2dataset=DATA_FOLDER+'/sample2dataset.sql'
+    log:
+        'log/meta.log'
+    params:
+        script='scripts/Dataset_meta.py',
+        python=PYTHON
+    shell:"{params.python} {params.script} {input} {output.meta} {output.sample2dataset} > {log} 2>&1"

@@ -13,6 +13,7 @@ import pandas as pd
 # sys.argv=['th','../data/3/cell_exp.txt','../www/mysql']
 out_path=sys.argv[2]
 cell_exp=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
+dataset_id=sys.argv[3]
 
 umap=cell_exp[['UMAP_1','UMAP_2']]
 cell_exp=cell_exp.drop(['UMAP_1','UMAP_2'],axis=1)
@@ -32,9 +33,10 @@ header=cell_exp.columns
 for i in range(len(exp_tables)):
     exp_tables[i].write('''CREATE DATABASE IF NOT EXISTS scARE;
 USE scARE;
-DROP TABLE IF EXISTS CELL_EXP_{i};
+DROP TABLE IF EXISTS CELL_EXP_{i}; 
 CREATE TABLE CELL_EXP_{i} (
 ID INT NOT NULL,
+scARE_ID varchar(255) NOT NULL,
 CELL varchar(255) NOT NULL,\n'''.format(i=i))
 
 for i in range(len(cell_exp.columns)):
@@ -55,7 +57,7 @@ for j in tqdm.tqdm(range(len(cell_exp.index))):
     for i in range(len(exp_tables)):
         values=','.join([str(i) for i in cell_exp.loc[cell][i*1000:(i+1)*1000]])
         values+=','+str(umap.loc[cell][0])+','+str(umap.loc[cell][1])
-        exp_tables[i].write(f'INSERT INTO CELL_EXP_{i} values({j},"{cell}",{values});\n')
+        exp_tables[i].write(f'INSERT INTO CELL_EXP_{i} values({j},"{dataset_id}","{cell}",{values});\n')
 
 for i in range(len(exp_tables)):
     exp_tables[i].close()

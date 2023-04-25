@@ -12,7 +12,7 @@ import random
 # sys.argv=['th','../data/3/cell_umap.txt','../www/mysql/cell_umap.sql']
 out_path=sys.argv[2]
 cell_umap=pd.read_csv(sys.argv[1],sep='\t')
-
+dataset=sys.argv[3]
 
 data_cellumap=open(out_path,'w')
 data_cellumap.write('''CREATE DATABASE IF NOT EXISTS scARE;
@@ -20,7 +20,7 @@ USE scARE;
 DROP TABLE IF EXISTS DATA_CELLUMAP;
 CREATE TABLE DATA_CELLUMAP (
     ID INT NOT NULL AUTO_INCREMENT,
-    DATASET varchar(255) NOT NULL,
+    scARE_ID varchar(255) NOT NULL,
     CELL varchar(255) NOT NULL,
     CELL_TYPE varchar(255) NOT NULL,
     DISEASE varchar(255) NOT NULL,
@@ -38,7 +38,7 @@ import tqdm
 cell_umap['stage']=cell_umap['stage'].astype(str)
 for i in tqdm.tqdm(range(cell_umap.shape[0])):
     cell=cell_umap.index[i]
-    dataset,cell_type,disease,stage,gender,age,umap_1,umap_2=cell_umap.loc[cell,['orig.ident','predicted.celltype','disease','stage','gender','age','UMAP_1','UMAP_2']]
+    cell_type,disease,stage,gender,age,umap_1,umap_2=cell_umap.loc[cell,['predicted.celltype','disease','stage','gender','age','UMAP_1','UMAP_2']]
     disease=random.choice(['Control','AD','PD','ALS'])
-    data_cellumap.write(f'INSERT INTO DATA_CELLUMAP (DATASET,CELL,CELL_TYPE,DISEASE,STAGE,GENDER,AGE,UMAP_1,UMAP_2) values("{dataset}","{cell}","{cell_type}","{disease}","{stage}","{gender}","{age}","{umap_1}","{umap_2}");\n')
+    data_cellumap.write(f'INSERT INTO DATA_CELLUMAP (scARE_ID,CELL,CELL_TYPE,DISEASE,STAGE,GENDER,AGE,UMAP_1,UMAP_2) values("{dataset}","{cell}","{cell_type}","{disease}","{stage}","{gender}","{age}","{umap_1}","{umap_2}");\n')
 data_cellumap.close()
