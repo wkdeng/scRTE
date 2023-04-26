@@ -17,6 +17,7 @@ print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
 form = cgi.FieldStorage()
 gene=form['Gene'].value
+dataset=form['Dataset'].value
 
 
 # Create the connection object
@@ -32,7 +33,7 @@ cursor = connection.cursor()
 
 cursor.execute(f"select TABLE_ID from GENE_DICT WHERE GENE='{gene}' ")
 table_id=cursor.fetchone()[0]
-cursor.execute(f"select CELL, UMAP_1, UMAP_2, `{gene}` from CELL_EXP_{table_id} ")
+cursor.execute(f"select CELL, UMAP_1, UMAP_2, `{gene}` from CELL_EXP_{table_id} where scARE_ID='{dataset}';")
 info=cursor.fetchall()
 
 info=pd.DataFrame(info,columns=['CELL','x','y','value'])

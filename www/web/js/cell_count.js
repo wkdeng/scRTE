@@ -1,52 +1,15 @@
+/**
+ * @author [Wankun Deng]
+ * @email [dengwankun@gmail.com]
+ * @create date 2023-04-24 16:47:12
+ * @modify date 2023-04-24 17:46:37
+ * @desc [description]
+ */
 Highcharts.setOptions({
     colors: ["#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99"]
   });
   
-//   const series = [{
-//     name: 'Excitatory Neurons',
-//     id: 'Ex',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },
-//   {
-//     name: 'Inhibitory Neurons',
-//     id: 'In',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },{
-//     name: 'Oligodentrocyte Progenitor Cells',
-//     id: 'Opc',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },{
-//     name: 'Oligodendrocytes',
-//     id: 'Oli',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },{
-//     name: 'Astrocytes',
-//     id: 'Ast',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },{
-//     name: 'Microglia',
-//     id: 'Mic',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   },{
-//     name: 'Pericytes',
-//     id: 'Per',
-//     marker: {
-//       symbol: 'circle'
-//     }
-//   }];
-  const series=[{
+  const series2=[{
         name:'Alzheimer\'s Disease',
         id:'AD',
         marker: {
@@ -71,11 +34,13 @@ Highcharts.setOptions({
             symbol:'circle'
     }}]
 
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  async function getData() {
+  const uparams2 = new URLSearchParams(window.location.search);
+  if(dataset==null){
+    var dataset = uparams2.get('KW');
+  }
+  async function getCellCountData() {
       const response = await fetch(
-          '/cgi/get_TE_cell_count.py?Name='+urlParams.get('Name')
+          '/cgi/get_cell_count.py?KW='+dataset+'&Cata='+uparams2.get('Cata')
       );
       return response.json();
     }
@@ -83,8 +48,8 @@ Highcharts.setOptions({
   
   const cell_map={'Ex':0,'In':1,'Opc':2,'Oli':3,'Ast':4,'Mic':5,'Per':6}
 
-  getData().then(data => {
-    const getData = disease => {
+  getCellCountData().then(data => {
+    const parseCellCount = disease => {
       const temp = [0,0,0,0,0,0,0];
       data.forEach(elm => {
         if (elm.disease === disease) {
@@ -93,8 +58,8 @@ Highcharts.setOptions({
       });
       return temp;
     };
-    series.forEach(s => {
-      s.data = getData(s.id);
+    series2.forEach(s => {
+      s.data = parseCellCount(s.id);
     });
   
     const chart = Highcharts.chart('container_cell_count', {
@@ -107,7 +72,7 @@ Highcharts.setOptions({
       },
       subtitle: {
         text:
-        'Random generated data',
+        dataset,
         align: 'left'
       },
       xAxis: {
@@ -142,7 +107,7 @@ Highcharts.setOptions({
             shared: true,
             useHTML: true
         },
-      series
+        series:series2
     });
 
 
@@ -163,22 +128,5 @@ Highcharts.setOptions({
           }
         });
       });
-      
-    //   document.getElementById('polar').addEventListener('click', () => {
-    //     chart.update({
-    //       chart: {
-    //         inverted: false,
-    //         polar: true
-    //       },
-    //       subtitle: {
-    //         text: 'Chart option: Polar | Source: ' +
-    //           '<a href="https://www.nav.no/no/nav-og-samfunn/statistikk/arbeidssokere-og-stillinger-statistikk/helt-ledige"' +
-    //           'target="_blank">NAV</a>'
-    //       }
-    //     });
-    //   });
-
-
-
   });
 

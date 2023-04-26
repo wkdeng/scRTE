@@ -2,12 +2,15 @@ Highcharts.setOptions({
     colors: ["#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99"]
   });
  
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-  async function getData(gene) {
-
+const qstring = window.location.search;
+const uparams = new URLSearchParams(qstring);
+var dataset=uparams.get('KW');
+  async function getGeneExpData(gene) {
+    if(gene == null){
+      gene='AluY'
+    }
     const response = await fetch(
-        '/cgi/get_gene_umap.py?Gene='+gene
+        '/cgi/get_gene_umap.py?Gene='+gene+'&Dataset='+dataset
     );
     return response.json();
   }
@@ -26,7 +29,7 @@ const urlParams = new URLSearchParams(queryString);
       }
   }
   
-  getData(urlParams.get('Name')).then(data => {
+  getGeneExpData(document.getElementById('Gene').value).then(data => {
     var [min, max] = d3.extent(data.flatMap(d => d.value));
     var data_s=[];
     data.forEach(elm => {
@@ -44,7 +47,7 @@ const urlParams = new URLSearchParams(queryString);
       },
       subtitle: {
         text:
-        'SRR11422700',
+        dataset,
         align: 'left'
       },
       xAxis: {
@@ -111,7 +114,7 @@ const urlParams = new URLSearchParams(queryString);
     document.getElementById('Gene').addEventListener('change', () => {
         var gene=document.getElementById('Gene').value;
 
-        getData(gene).then(data2 => {
+        getGeneExpData(gene).then(data2 => {
         var [min, max] = d3.extent(data2.flatMap(d => d.value));
         var data2_s=[];
         data2.forEach(elm => {

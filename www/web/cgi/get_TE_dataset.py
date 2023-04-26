@@ -15,10 +15,6 @@ cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
 
-form = cgi.FieldStorage()
-Dataset=form['Dataset'].value
-
-
 # Create the connection object
 connection = MySQLdb.connect(
     user='www-data',
@@ -30,11 +26,10 @@ connection = MySQLdb.connect(
 
 cursor = connection.cursor()
 
-cursor.execute(f"select CELL, CELL_TYPE, UMAP_1, UMAP_2 from DATA_CELLUMAP WHERE scARE_ID = '{Dataset}' ")
+cursor.execute(f"select scARE_ID from DATASET_META; ")
+
 info=cursor.fetchall()
 
-
-info=pd.DataFrame(info,columns=['CELL','CELL_TYPE','UMAP_1','UMAP_2'])
-# info.index=info['CELL']
-# info=info.drop(columns=['CELL'])
-print(json.dumps(list(info.transpose().to_dict().values())))
+for dataset in info:
+    dataset=dataset[0]
+    print(f'<iframe width="100%" height="500px" src="dataset.html?Cata=Dataset&KW={dataset}"></iframe>')

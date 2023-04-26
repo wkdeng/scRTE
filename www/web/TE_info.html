@@ -21,40 +21,8 @@
 <div id="MainContent" style="width: 60%;"></div>
 <div id="network"> </div>
 <div id="TE_quant"> </div>
-<div id="Cell_umap"> 
-  <figure class="highcharts-figure">
-    <div id="container"></div>
-    <!-- <p class="highcharts-description">
-      Cell type and clustering in dataset 3.
-    </p> -->
-    <label for="cell_types">Cell type:</label>
-    <select name="Cell types" id="cell_types">
-      <option value=-1>All</option>
-      <option value=0>Excitatory Neuron</option>
-      <option value=1>Inhibitory Neuron</option>
-      <option value=2>Oligodendrocyte Progenitor Cell</option>
-      <option value=3>Oligodendrocyte</option>
-      <option value=4>Astrocyte</option>
-      <option value=5>Microglia</option>
-      <option value=6>Pericyte</option>
-    </select>
-  </figure>
-</div>
-<div id="Gene_exp"> 
-  <figure class="highcharts-figure">
-    <div id="container_gene_exp"></div>
-    <!-- <p class="highcharts-description">
-      Cell type and clustering in dataset 3.
-    </p> -->
-    <label for="Gene">Gene/TE:</label>
-    <select name="Gene" id="Gene">
-      <option value='AluY'>AluY</option>
-      <option value='SYT1'>SYT1</option>
-      <option value='SLC17A7'>SLC17A7</option>
-      <option value='MBP'>MBP</option>
-    </select>
-  </figure>
-</div>
+<div id="Datasets"></div>
+
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
 
@@ -62,8 +30,7 @@
 
 <script type="text/javascript">
     function init(){
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
+        const urlParams = new URLSearchParams(window.location.search);
         $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
             function(response){
                 document.getElementById('MainContent').style.display='block'
@@ -72,6 +39,10 @@
                 // document.getElementById()
             }
         );
+        $.get("/cgi/get_TE_dataset.py",{},function(response){
+            document.getElementById('Datasets').style.display='block'
+            $('#Datasets').html(response)
+        });
         // // get josn data from cgi script get_network.py
         // $.get("/cgi/get_network.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name'),Degree:'D2'},
         //     function(response){
@@ -93,6 +64,9 @@
         
     }
 </script>
+<!--
 <script src="js/umap.js" ></script>
 <script src="js/umap_gene.js" ></script>
+  -->
+
 </body>

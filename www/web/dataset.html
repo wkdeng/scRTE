@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dataset view</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+</head>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+<body onload='init()'>
+
+<div id="Overview" style="width: 60%;"></div>
+<div id="cell_count" style="width: 30%;"> 
+    <figure class="highcharts-figure">
+      <div id="container_cell_count"></div>
+      <!-- <p class="highcharts-description">
+        Cell type and clustering in dataset 3.
+      </p> -->
+      <button id="plain">Plain</button>
+      <button id="inverted">Inverted</button>
+      <!-- <button id="polar">Polar</button> -->
+    </figure>
+  </div>
+<div id="Cell_umap"> 
+  <figure class="highcharts-figure">
+    <div id="container"></div>
+    <!-- <p class="highcharts-description">
+      Cell type and clustering in dataset 3.
+    </p> -->
+    <label for="cell_types">Cell type:</label>
+    <select name="Cell types" id="cell_types">
+      <option value=-1>All</option>
+      <option value=0>Excitatory Neuron</option>
+      <option value=1>Inhibitory Neuron</option>
+      <option value=2>Oligodendrocyte Progenitor Cell</option>
+      <option value=3>Oligodendrocyte</option>
+      <option value=4>Astrocyte</option>
+      <option value=5>Microglia</option>
+      <option value=6>Pericyte</option>
+    </select>
+  </figure>
+</div>
+<div id="Gene_exp"> 
+  <figure class="highcharts-figure">
+    <div id="container_gene_exp"></div>
+    <!-- <p class="highcharts-description">
+      Cell type and clustering in dataset 3.
+    </p> -->
+    <label for="Gene">Gene/TE:</label>
+    <select name="Gene" id="Gene">
+      <option value='AluY'>AluY</option>
+      <option value='SYT1'>SYT1</option>
+      <option value='SLC17A7'>SLC17A7</option>
+      <option value='MBP'>MBP</option>
+    </select>
+  </figure>
+</div>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
+
+<script src="js/forceGraph.js"> </script>
+
+<script type="text/javascript">
+    function init(){
+        var queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var cata=urlParams.get('Cata')
+        console.log(urlParams.values().length)
+        if(cata == null){
+            cata='Dataset'
+            var href=window.location.href
+            if(!queryString.includes('?')){
+                href=href+'?Cata='+cata
+            }else{
+                href=href+'&Cata='+cata
+            }
+            window.history.pushState({},0,href)
+            window.history.replaceState({},0,href)
+            urlParams.set('Cata',cata)
+        }
+        var kw=urlParams.get('KW')
+        if(kw == null){
+            kw='AD_HS_00001'
+            var href=window.location.href
+            href=href+'&KW='+kw
+            window.history.pushState({},0,href)
+            window.history.replaceState({},0,href)
+            urlParams.set('KW',kw)
+        }
+        // $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+        //     function(response){
+        //         document.getElementById('MainContent').style.display='block'
+        //         $('#MainContent').html(response)
+        //         document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
+        //         // document.getElementById()
+        //     }
+        // );
+        
+    }
+</script>
+<script src="js/umap.js" ></script>
+<script src="js/umap_gene.js" ></script>
+<script src="js/cell_count.js"></script>
+<script src="js/forceGraph.js"> </script>
+
+</body>

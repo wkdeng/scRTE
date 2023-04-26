@@ -47,28 +47,30 @@ Highcharts.setOptions({
     }
   }];
   
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
   const serries_map={'Ex':0,'In':1,'Opc':2,'Oli':3,'Ast':4,'Mic':5,'Per':6}
-  async function getData() {
+  async function getCellUMAPData() {
     const response = await fetch(
-        '/cgi/get_data_umap.py?Dataset=SRR11422700'
+        '/cgi/get_data_umap.py?Dataset='+urlParams.get('KW')
     );
     return response.json();
   }
   
   
-  getData().then(data => {
-    const getData = CellType => {
+  getCellUMAPData().then(data => {
+    const parseCellUMAP = CellType => {
       const temp = [];
       data.forEach(elm => {
         if (elm.CELL_TYPE === CellType) {
           temp.push({ x:elm.UMAP_1,y:elm.UMAP_2,cell_id:elm.CELL});
-        //   temp.push([elm.UMAP_1,elm.UMAP_2]);
         }
       });
       return temp;
     };
     series.forEach(s => {
-      s.data = getData(s.id);
+      s.data = parseCellUMAP(s.id);
     });
   
     const chart = Highcharts.chart('container', {
@@ -82,7 +84,7 @@ Highcharts.setOptions({
       },
       subtitle: {
         text:
-        'SRR11422700',
+        dataset,
         align: 'left'
       },
       xAxis: {

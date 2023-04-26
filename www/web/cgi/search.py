@@ -34,7 +34,7 @@ connection = MySQLdb.connect(
 cursor = connection.cursor()
 
 table_content='''<table >  <caption>{caption}</caption><thead><th>Class</th><th>Family</th><th>Name</th></thead><tbody>{table_row}</tbody></table>'''
-disease_table_content='''<table >  <caption>{caption}</caption><thead><th>Disease</th><th>Dataset</th><th>Dataset</th></thead><tbody>{table_row}</tbody></table>'''
+disease_table_content='''<table >  <caption>{caption}</caption><thead><th>Dataset</th><th>Disease</th><th>Cell type</th><th>Accession</th></thead><tbody>{table_row}</tbody></table>'''
 if field=='RTE':
     ## Search name
     cursor.execute(f"select * from TE_FAM WHERE NAME LIKE '%{kw}%' OR FAMILY LIKE '%{kw}%' OR CLASS LIKE '%{kw}%'")
@@ -73,11 +73,34 @@ elif field=='Disease':
         caption='Dataset of disease {kw}'.format(kw=kw)
         table_row=''
         for row in info:
-            Disease=row[1]
-            Dataset=row[2]
-            table_row+=f'''<tr><td>{Disease}</td><td>{Dataset}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td></tr>'''
-        print(table_content.format(table_row=table_row,caption=caption))
+            Disease=row[4]
+            Dataset=row[0]
+            CellType=', '.join(row[7].split(';'))
+            Accession=row[8]
+            accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
+            table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+        print(disease_table_content.format(table_row=table_row,caption=caption))
     else:
         print('No such disease in database')
+elif field=='Dataset':
+    cursor.execute(f"select * from DATASET_META WHERE scARE_ID LIKE '%{kw}%'")
+    info=cursor.fetchall()
+    if info:
+        caption='Dataset of {kw}'.format(kw=kw)
+        table_row=''
+        if len(info)>1:
+            for row in info:
+                Disease=row[4]
+                Dataset=row[0]
+                CellType=', '.join(row[7].split(';'))
+                Accession=row[8]
+                accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
+                table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+        else:
+            print('Redirect to dataset page')
+            print(f'<meta http-equiv="refresh" content="0;url=dataset.html?KW={kw}&Cata=Dataset">',end='')
+        print(disease_table_content.format(table_row=table_row,caption=caption))
+    else:
+        print('No such dataset in database')
 else:
     print('Implement later')
