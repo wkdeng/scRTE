@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:46
-@modify date 2023-04-27 15:32:47
+@modify date 2023-04-28 15:34:02
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -80,19 +80,19 @@
     function init(){
         var queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
-        var cata=urlParams.get('Cata')
+        var cate=urlParams.get('Cate')
         console.log(urlParams.values().length)
-        if(cata == null){
-            cata='Dataset'
+        if(cate == null){
+          cate='Dataset'
             var href=window.location.href
             if(!queryString.includes('?')){
-                href=href+'?Cata='+cata
+                href=href+'?Cate='+cate
             }else{
-                href=href+'&Cata='+cata
+                href=href+'&Cate='+cate
             }
             window.history.pushState({},0,href)
             window.history.replaceState({},0,href)
-            urlParams.set('Cata',cata)
+            urlParams.set('Cate',cate)
         }
         var kw=urlParams.get('KW')
         if(kw == null){

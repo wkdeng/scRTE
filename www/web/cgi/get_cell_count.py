@@ -17,7 +17,7 @@ print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
 form = cgi.FieldStorage()
 kw=form['KW'].value
-cata=form['Cata'].value
+cate=form['Cate'].value
 
 # Create the connection object
 connection = MySQLdb.connect(
@@ -28,7 +28,7 @@ connection = MySQLdb.connect(
     db='scARE'
 )
 
-if cata=='TE':
+if cate=='TE':
     cursor = connection.cursor()
 
     cursor.execute(f"select TABLE_ID from GENE_DICT WHERE GENE='{kw}' ")
@@ -40,7 +40,7 @@ if cata=='TE':
 
     info=pd.DataFrame(info,columns=['disease','cell_type','number_of_cells'])
     print(json.dumps(list(info.transpose().to_dict().values())))
-elif cata=='Dataset':
+elif cate=='Dataset':
     cursor = connection.cursor()
     # sql=f"select DATA_CELLUMAP.disease, DATA_CELLUMAP.cell_type, COUNT(*) AS number_of_cells FROM DATA_CELLUMAP JOIN SAMPLE2DATASET ON DATA_CELLUMAP.DATASET = SAMPLE2DATASET.SAMPLE_ID WHERE SAMPLE2DATASET.scARE_ID = '{kw}' GROUP by disease, cell_type; "
     sql=f"select disease, cell_type, COUNT(*) AS number_of_cells FROM DATA_CELLUMAP where scARE_ID = '{kw}' GROUP by disease, cell_type; "
@@ -49,5 +49,32 @@ elif cata=='Dataset':
 
     info=pd.DataFrame(info,columns=['disease','cell_type','number_of_cells'])
     print(json.dumps(list(info.transpose().to_dict().values())))
+elif cate=='Cell':
+    cursor = connection.cursor()
+    # sql=f"select DATA_CELLUMAP.disease, DATA_CELLUMAP.cell_type, COUNT(*) AS number_of_cells FROM DATA_CELLUMAP JOIN SAMPLE2DATASET ON DATA_CELLUMAP.DATASET = SAMPLE2DATASET.SAMPLE_ID WHERE SAMPLE2DATASET.scARE_ID = '{kw}' GROUP by disease, cell_type; "
+    sql=f"select disease, COUNT(*) AS number_of_cells FROM DATA_CELLUMAP where cell_type = '{kw}' GROUP by disease; "
+    cursor.execute(sql)
+    info=cursor.fetchall()
+
+    info=pd.DataFrame(info,columns=['disease','number_of_cells'])
+    for disease in ['AD','PD','ALS','Control']:
+        if disease not in list(info['disease']):
+            info=info.append({'disease':disease,'number_of_cells':0},ignore_index=True)
+    disease_cate=['AD','PD','ALS','Control']
+    info['disease']=pd.Categorical(info['disease'],categories=disease_cate,ordered=True)
+    info=info.sort_values(by=['disease'])
+    info.columns=['name','y']
+    print('[{values}]'.format(values=','.join(info['y'].astype(str).values.tolist())))
+    # print(json.dumps(list(info.transpose().to_dict().values())))
+elif cate=='Cell_Dataset':
+    cursor = connection.cursor()
+    sql=f" select scARE_ID, COUNT(*)  AS number_of_cells from DATA_CELLUMAP where CELL_TYPE='{kw}' group by scARE_ID;"
+    cursor.execute(sql)
+    info=cursor.fetchall()
+
+    info=pd.DataFrame(info,columns=['name','y'])
+
+    print(json.dumps(list(info.transpose().to_dict().values())))
+
 else:
-    print('Wrong catagoery!')
+    print('Wrong categoery!')

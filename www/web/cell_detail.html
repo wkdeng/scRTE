@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:36
-@modify date 2023-04-27 15:50:22
+@modify date 2023-04-28 16:20:25
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -18,17 +18,32 @@
 </head>
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 
-<body onload='init()'>
+<body onload="init()">
 
 <div id="desc" style="width: 60%;"></div>
-<div id="overview"> </div>
-<div id="TE_quant"> </div>
-<div id="Datasets"></div>
+<div id="overview" style="width: 60%;"> 
+    <figure class="highcharts-figure">
+        <div id="cellCountDisease"></div>
+        <button id="plain_dis">Plain</button>
+        <button id="inverted_dis">Inverted</button>
+        <button id="polar_dis">Polar</button>
+    </figure>
+    <figure class="highcharts-figure">
+        <div id="cellCountDataset"></div>
+        <button id="plain_dat">Plain</button>
+        <button id="inverted_dat">Inverted</button>
+        <button id="polar_dat">Polar</button>
+    </figure>
+    <div id="cellCountTEFam"></div>
+    <div id="cellCountTESubFam"></div>
+</div>
+<div id="datasets" style="width: 60%;"></div>
 
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
@@ -36,39 +51,21 @@
 <script src="js/forceGraph.js"> </script>
 
 <script type="text/javascript">
+    const uparams = new URLSearchParams(window.location.search);
     function init(){
-        const urlParams = new URLSearchParams(window.location.search);
-        $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
-            function(response){
-                document.getElementById('MainContent').style.display='block'
-                $('#MainContent').html(response)
-                document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
-                // document.getElementById()
-            }
-        );
-        $.get("/cgi/get_TE_dataset.py",{},function(response){
-            document.getElementById('Datasets').style.display='block'
-            $('#Datasets').html(response)
-        });
-        // // get josn data from cgi script get_network.py
-        // $.get("/cgi/get_network.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name'),Degree:'D2'},
+        
+        // $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
         //     function(response){
-        //         // console.log(response)
-        //         const data = JSON.parse(response)
-        //         // console.log(data)
-        //         const graph = ForceGraph(data,
-        //             {nodeId: d => d.id,
-        //             nodeGroup: d => d.group,
-        //             nodeLabel: d => d.id,
-        //             nodeColor: d => d.group})
-        //         // hover on node will show node id
-        //         // graph.onNodeHover(node => { 
-        //         //     graph.getElementById('node').textContent = node ? node.id : '';
-        //         // });
-        //         // insert graph to div network
-        //         document.getElementById('network').appendChild(graph);
-        //     });
+        //         document.getElementById('MainContent').style.display='block'
+        //         $('#MainContent').html(response)
+        //         document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
+        //         // document.getElementById()
+            // }
+        // );
+
         
     }
 </script>
+<script src="js/cell_count_disease.js"></script>
+<script src="js/cell_count_dataset.js"></script>
 </body>

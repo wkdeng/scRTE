@@ -32,4 +32,4 @@ info=cursor.fetchall()
 
 for dataset in info:
     dataset=dataset[0]
-    print(f'<iframe width="100%" height="500px" src="dataset.html?Cata=Dataset&KW={dataset}"></iframe>')
+    print(f'<iframe width="100%" height="500px" src="dataset.html?Cate=Dataset&KW={dataset}"></iframe>')
