@@ -2,8 +2,8 @@
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
- # @create date 2023-04-14 14:57:27
- # @modify date 2023-04-14 14:57:27
+ # @create date 2023-05-01 14:37:55
+ # @modify date 2023-05-01 14:37:55
  # @desc [description]
 #############################
 import cgitb
@@ -24,11 +24,14 @@ connection = MySQLdb.connect(
     db='scARE'
 )
 
+form=cgi.FieldStorage()
+cell=form['Cell'].value
 cursor = connection.cursor()
 
-cursor.execute(f"select scARE_ID from DATASET_META; ")
+cursor.execute(f"select scARE_ID from DATASET_META where CELL_TYPE like '%{cell}%'; ")
 
 info=cursor.fetchall()
+
 
 for dataset in info:
     dataset=dataset[0]

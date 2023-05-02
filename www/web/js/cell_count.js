@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-04-24 16:47:12
- * @modify date 2023-04-24 17:46:37
+ * @modify date 2023-04-28 15:34:08
  * @desc [description]
  */
 Highcharts.setOptions({
@@ -40,7 +40,7 @@ Highcharts.setOptions({
   }
   async function getCellCountData() {
       const response = await fetch(
-          '/cgi/get_cell_count.py?KW='+dataset+'&Cata='+uparams2.get('Cata')
+          '/cgi/get_cell_count.py?KW='+dataset+'&Cate='+uparams2.get('Cate')
       );
       return response.json();
     }
@@ -116,6 +116,13 @@ Highcharts.setOptions({
           chart: {
             inverted: false,
             polar: false
+          },
+          xAxis: {
+            title: {
+              text: 'Cell Type'
+            },
+            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+            crosshair: true
           }
         });
       });
@@ -125,8 +132,32 @@ Highcharts.setOptions({
           chart: {
             inverted: true,
             polar: false
+          },
+          xAxis: {
+            title: {
+              text: 'Cell Type'
+            },
+            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+            crosshair: true
           }
         });
       });
+
+      // document.getElementById('polar').addEventListener('click', () => {
+      //   console.log('polar');
+      //   chart.update({
+      //     chart: {
+      //       polar: true
+      //     },
+      //     xAxis: {
+      //       title: {
+      //         text: ''
+      //       },
+      //       categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+      //       // crosshair: true
+      //     }
+          
+      //   });
+      // });
   });
 

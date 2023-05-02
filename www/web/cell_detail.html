@@ -1,0 +1,88 @@
+<!--
+@author [Wankun Deng]
+@email [dengwankun@gmail.com]
+@create date 2023-04-27 15:32:36
+@modify date 2023-05-01 17:41:44
+@desc [description]
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cell type</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+</head>
+
+<style>
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}  
+</style>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+<body onload="init()">
+
+<div id="desc" style="width: 60%;"></div>
+<div id="overview" style="width: 60%;"> 
+    <figure class="highcharts-figure">
+        <div id="cellCountDisease"></div>
+        <button id="plain_dis">Plain</button>
+        <button id="inverted_dis">Inverted</button>
+        <button id="polar_dis">Polar</button>
+    </figure>
+    <figure class="highcharts-figure">
+        <div id="cellCountDataset"></div>
+        <button id="plain_dat">Plain</button>
+        <button id="inverted_dat">Inverted</button>
+        <!-- <button id="polar_dat">Polar</button> -->
+    </figure>
+    <figure class="highcharts-figure">
+        <div id="cellCountTE"></div>
+        <button id="plain_te">Plain</button>
+        <button id="inverted_te">Inverted</button>
+        <button id="polar_te">Polar</button>
+    </figure>
+</div>
+<div id="datasets" style="width: 60%;"></div>
+
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
+
+<script src="js/forceGraph.js"> </script>
+
+<script type="text/javascript">
+    const uparams = new URLSearchParams(window.location.search);
+    function init(){
+        $.get('cgi/get_cell_desc.py',{Cell: uparams.get('KW')},
+            function(response){
+                document.getElementById('desc').style.display='block'
+                $('#desc').html(response)
+            }
+        );
+        $.get("/cgi/get_Cell_dataset.py",{Cell: uparams.get('KW')},
+            function(response){
+                document.getElementById('datasets').style.display='block'
+                $('#datasets').html(response)
+            }
+        );
+
+        
+    }
+</script>
+<script src="js/cell_count_disease.js"></script>
+<script src="js/cell_count_dataset.js"></script>
+<script src="js/cell_count_te.js"></script>
+</body>

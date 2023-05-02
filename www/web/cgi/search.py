@@ -98,7 +98,7 @@ elif field=='Dataset':
                 table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
         else:
             print('Redirect to dataset page')
-            print(f'<meta http-equiv="refresh" content="0;url=dataset.html?KW={kw}&Cata=Dataset">',end='')
+            print(f'<meta http-equiv="refresh" content="0;url=dataset.html?KW={kw}&Cate=Dataset">',end='')
         print(disease_table_content.format(table_row=table_row,caption=caption))
     else:
         print('No such dataset in database')
