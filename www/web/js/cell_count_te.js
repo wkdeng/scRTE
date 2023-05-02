@@ -1,10 +1,11 @@
 /**
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
- * @create date 2023-04-28 15:36:56
- * @modify date 2023-05-01 11:42:11
+ * @create date 2023-05-01 11:42:21
+ * @modify date 2023-05-01 14:35:20
  * @desc [description]
  */
+
 
 Highcharts.setOptions({
     colors: ["#386cb0","#fdb462","#7fc97f","#ef3b2c","#662506","#a6cee3","#fb9a99"]
@@ -14,24 +15,19 @@ Highcharts.setOptions({
   if(!cellType){
     var cellType = uparams.get('KW');
   }
-  async function getCellCountData() {
+  async function getTECellCountData() {
       const response = await fetch(
-          '/cgi/get_cell_count.py?KW='+cellType+'&Cate=Cell_Dataset'
+          '/cgi/get_cell_count.py?KW='+cellType+'&Cate=Cell_TE'
       );
       return response.json();
     }
 
 
-  getCellCountData().then(data => {
+    getTECellCountData().then(data => {
     categories=[];
-    // dataset_count=data[0]
-    
-    data.forEach(element => {
-        categories.push(element.name);
-    });
-    console.log(categories);
+    dataset_count=data[0]
 
-    const chartDatasetCount = Highcharts.chart('cellCountDataset', {
+    const chartTECount = Highcharts.chart('cellCountTE', {
       title: {
         text: 'Number of Cells',
         align: 'left'
@@ -42,10 +38,9 @@ Highcharts.setOptions({
       },
       xAxis: {
         title: {
-          text: 'Dataset'
+          text: 'TE Family'
         },
-        categories: categories
-        // crosshair: true
+        type: 'category'
       },
       yAxis: {
         title: {
@@ -58,11 +53,12 @@ Highcharts.setOptions({
       legend: {
         enabled: false
       },
-        series:[{name:'Cell number',type:'column',colorByPoint: true,data:data}]
+        series:[{name:'Cell number',type:'column',colorByPoint: true,data:dataset_count}],
+        drilldown: {breadcrumbs:{position:{align:'right'}},series: data[1]}
     });
 
-    document.getElementById('plain_dat').addEventListener('click', () => {
-        chartDatasetCount.update({
+    document.getElementById('plain_te').addEventListener('click', () => {
+        chartTECount.update({
             chart: {
             inverted: false,
             polar: false
@@ -70,13 +66,21 @@ Highcharts.setOptions({
         });
       });
       
-      document.getElementById('inverted_dat').addEventListener('click', () => {
-        chartDatasetCount.update({
+      document.getElementById('inverted_te').addEventListener('click', () => {
+        chartTECount.update({
           chart: {
             inverted: true,
             polar: false
           }
         });
       });
+    //   document.getElementById('polar_te').addEventListener('click', () => {
+    //     chartTECount.update({
+    //       chart: {
+    //         inverted: false,
+    //         polar: true
+    //       }
+    //     });
+    //   });
   });
 

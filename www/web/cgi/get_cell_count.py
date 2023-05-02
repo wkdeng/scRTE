@@ -75,6 +75,24 @@ elif cate=='Cell_Dataset':
     info=pd.DataFrame(info,columns=['name','y'])
 
     print(json.dumps(list(info.transpose().to_dict().values())))
+elif cate=='Cell_TE':
+    cursor = connection.cursor()
+    sql=f" select TE,{kw} from FAM_CELL_COUNT;"
+    cursor.execute(sql)
+    info=cursor.fetchall()
+    info=pd.DataFrame(info,columns=['name','y'])
+    info=info.loc[info.iloc[:,1]>0,:]
+    info['drilldown']=info['name']
 
+    drilldown=[]
+    for te_fam in info['name']:
+        sql=f" select TE, {kw} from SUBFAM_CELL_COUNT where TE_FAM='{te_fam}';"
+        cursor.execute(sql)
+        info2=cursor.fetchall()
+        info2=pd.DataFrame(info2,columns=['name','y'])
+        drilldown.append({'name':te_fam,'type':'column','id':te_fam,'data':list(info2.transpose().to_dict().values())})
+    ret=[list(info.transpose().to_dict().values()),drilldown]
+    print(json.dumps(ret))
+    # print([json.dumps(),json.dumps(drilldown)])
 else:
     print('Wrong categoery!')
