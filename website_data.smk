@@ -25,7 +25,8 @@ rule all:
         DATA_FOLDER+'/gene_dict.sql',
         DATA_FOLDER+'/te_gene.sql',
         DATA_FOLDER+'/meta.sql',
-        DATA_FOLDER+'/sample2dataset.sql'
+        DATA_FOLDER+'/sample2dataset.sql',
+        DATA_FOLDER+'/subfam_cellcount.sql'
 
 rule cell_umap:
     input:
@@ -131,3 +132,21 @@ rule meta:
         script='scripts/Dataset_meta.py',
         python=PYTHON
     shell:"{params.python} {params.script} {input} {output.meta} {output.sample2dataset} > {log} 2>&1"
+
+rule te_cellcount:
+    input:
+        rmsk=RMSK,
+        cell_exp='data/3/cell_exp.txt',
+        cell_umap='data/3/cell_umap.txt'
+    output:
+        DATA_FOLDER+'/subfam_cellcount.sql',
+        DATA_FOLDER+'/fam_cellcount.txt'
+    log:
+        'log/te_cellcount.log'
+    params:
+        script='scripts/Data_TE_cell_count.py',
+        python=PYTHON,
+        out_path=DATA_FOLDER
+    log:
+        'log/te_cellcount.log'
+    shell:"{params.python} {params.script} {input.rmsk} {params.out_path} {input.cell_exp} {input.cell_umap} > {log} 2>&1"
