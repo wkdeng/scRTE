@@ -1,20 +1,26 @@
 <!--
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
-@create date 2023-04-27 15:33:01
-@modify date 2023-05-04 17:02:59
+@create date 2023-04-27 15:32:46
+@modify date 2023-05-04 17:00:26
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta name=""author" content="Wankun Deng">
-<title>Dataset view</title>
-<style>@import url('css/te_table.css');</style>
-<style>@import url('css/highcharts.css');</style>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-    
+  <head>
+    <meta charset="utf-8">
+    <meta name=""author" content="Wankun Deng">
+  
+    <title>Dataset view</title>
+    <style>
+    @import url('css/te_table.css');
+    </style>
+    <style>
+    @import url('css/highcharts.css');
+    </style>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
@@ -27,13 +33,10 @@
 <script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 
-</head>
-
 <body onload='init()'>
-<div  w3-include-html="navigation.html"></div>
+  <div  w3-include-html="navigation.html"></div>
 
-
-<div style="width: 60%; min-width: 1100px;" class="container-fluid">
+  <div style="width: 60%; min-width: 1100px;" class="container-fluid">
     <div class="row" id="Overview">
       <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="Desc_container" >
         <div class="card " >
@@ -96,60 +99,48 @@
     </div>
   </div>
 
-
-
-
-
-
-
-<div id="MainContent" style="width: 60%;"></div>
-<div id="network"> </div>
-<div id="TE_quant"> </div>
-<div id="Datasets"></div>
-
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
-
-<script src="js/forceGraph.js"> </script>
-
 <script type="text/javascript">
     function init(){
-        const urlParams = new URLSearchParams(window.location.search);
-        $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+        var queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        var cate=urlParams.get('Cate')
+        if(cate == null){
+          cate='Dataset'
+            var href=window.location.href
+            if(!queryString.includes('?')){
+                href=href+'?Cate='+cate
+            }else{
+                href=href+'&Cate='+cate
+            }
+            window.history.pushState({},0,href)
+            window.history.replaceState({},0,href)
+            urlParams.set('Cate',cate)
+        }
+        var kw=urlParams.get('KW')
+        if(kw == null){
+            kw='AD_HS_00001'
+            var href=window.location.href
+            href=href+'&KW='+kw
+            window.history.pushState({},0,href)
+            window.history.replaceState({},0,href)
+            urlParams.set('KW',kw)
+        }
+        $.get("/cgi/get_dataset_basic.py",{Cate: urlParams.get('Cate') , KW: urlParams.get('KW')},
             function(response){
-                document.getElementById('MainContent').style.display='block'
-                $('#MainContent').html(response)
-                document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
+                document.getElementById('desc').style.display='block'
+                $('#desc').html(response)
+                document.title='scARE: '+urlParams.get('KW')
                 // document.getElementById()
             }
         );
-        $.get("/cgi/get_TE_dataset.py",{},function(response){
-            document.getElementById('Datasets').style.display='block'
-            $('#Datasets').html(response)
-        });
         var content_only=urlParams.get('CL')
         if(content_only==null || content_only=='' || content_only=='F'){
           includeHTML();
         }
-        // // get josn data from cgi script get_network.py
-        // $.get("/cgi/get_network.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name'),Degree:'D2'},
-        //     function(response){
-        //         // console.log(response)
-        //         const data = JSON.parse(response)
-        //         // console.log(data)
-        //         const graph = ForceGraph(data,
-        //             {nodeId: d => d.id,
-        //             nodeGroup: d => d.group,
-        //             nodeLabel: d => d.id,
-        //             nodeColor: d => d.group})
-        //         // hover on node will show node id
-        //         // graph.onNodeHover(node => { 
-        //         //     graph.getElementById('node').textContent = node ? node.id : '';
-        //         // });
-        //         // insert graph to div network
-        //         document.getElementById('network').appendChild(graph);
-        //     });
-        
     }
 </script>
+<script src="js/cell_count.js"></script>
+<script src="js/umap.js" ></script>
+<script src="js/umap_gene.js" ></script>
+
 </body>

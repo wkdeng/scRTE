@@ -73,7 +73,7 @@ var dataset=uparams.get('KW');
         enabled: false
       },
       legend: {
-        enabled: true
+        enabled: false
       },
       plotOptions: {
         series: {
