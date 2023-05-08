@@ -1,3 +1,10 @@
+/**
+ * @author [Wankun Deng]
+ * @email [dengwankun@gmail.com]
+ * @create date 2023-05-08 14:06:20
+ * @modify date 2023-05-08 14:06:51
+ * @desc [Modified from https://observablehq.com/@d3/force-directed-graph]
+ */
 // Copyright 2021 Observable, Inc.
 // Released under the ISC license.
 // https://observablehq.com/@d3/force-directed-graph
@@ -25,7 +32,8 @@ function ForceGraph({
     colors = d3.schemeTableau10, // an array of color strings, for the node groups
     width = 640, // outer width, in pixels
     height = 400, // outer height, in pixels
-    invalidation // when this promise resolves, stop the simulation
+    invalidation, // when this promise resolves, stop the simulation
+    showLabel
   } = {}) {
     // Compute values.
     const N = d3.map(nodes, nodeId).map(intern);
@@ -84,17 +92,28 @@ function ForceGraph({
       .join("circle")
         .attr("r", nodeRadius)
         .call(drag(simulation));
-  
+      const text = svg.append('g')
+        .selectAll('text')
+        .data(nodes)
+        .join('text')
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'central')
+          .attr('font-size', 10)
+          .attr('fill', 'black')
+    if(showLabel){
+        text.text(d => d.id);
+    }
+
     if (W) link.attr("stroke-width", ({index: i}) => W[i]);
     if (L) link.attr("stroke", ({index: i}) => L[i]);
     if (G) node.attr("fill", ({index: i}) => color(G[i]));
-    if (T) node.append("title").text(({index: i}) => T[i]);
+    // if (T) node.append("title").text(({index: i}) => T[i]);
     if (invalidation != null) invalidation.then(() => simulation.stop());
   
     function intern(value) {
       return value !== null && typeof value === "object" ? value.valueOf() : value;
     }
-  
+
     function ticked() {
       link
         .attr("x1", d => d.source.x)
@@ -105,6 +124,12 @@ function ForceGraph({
       node
         .attr("cx", d => d.x)
         .attr("cy", d => d.y);
+
+      text
+        .attr('x', d => d.x)
+        .attr('y', d => d.y);
+      
+  
     }
   
     function drag(simulation) {    

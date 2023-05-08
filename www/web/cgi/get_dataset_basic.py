@@ -53,13 +53,13 @@ elif sample_acc[0].startswith('syn'):
 sample_acc='; '.join(sample_acc)
 ## basic row
 basic_row='''
-<div class="row">
-<label class="col-md-4 {2}"><strong>{0}:</strong></label>
+<div class="row mb-3">
+<span class="col-md-4 {2}"><strong>{0}:</strong></span>
 <span class="col-md-8 {2}" style="word-wrap: break-word;">{1}</span>
 </div>
 '''
 ret=""
-ret+=basic_row.format('scARE ID',dataset,'')
+ret+=basic_row.format('scARE ID',dataset,'bg-light')
 ret+=basic_row.format('Title',title,'')
 ret+=basic_row.format('Brain region',brain_region,'bg-light')
 ret+=basic_row.format('Sample #',sampleN,'')
