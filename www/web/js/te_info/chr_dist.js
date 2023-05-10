@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-04 18:19:24
- * @modify date 2023-05-05 17:11:59
+ * @modify date 2023-05-09 15:30:56
  * @desc [description]
  */
 
@@ -97,7 +97,7 @@ function showChrEaDist(data) {
             maxColor: Highcharts.getOptions().colors[0]
         },
         title: {
-            text: 'Number of Locuses in Each Chromosome',
+            text: 'Number of Locus in Each Chromosome',
             align: 'left'
         },
         subtitle: {
@@ -162,7 +162,7 @@ function showChrEaDist(data) {
 function showRegionDist(data) {
     Highcharts.chart('container_region_dist', {
         title: {
-            text: 'Number of Locuses in Genomic Regions',
+            text: 'Number of Locus in Genomic Regions',
             align: 'left'
         },
         subtitle: {

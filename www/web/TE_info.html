@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-05-08 14:07:16
+@modify date 2023-05-09 15:30:08
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -10,7 +10,7 @@
 <head>
 <meta charset="utf-8">
 <meta name=""author" content="Wankun Deng">
-<title>Dataset view</title>
+<title>TE view</title>
 <style>@import url('css/te_table.css');</style>
 <style>@import url('css/highcharts.css');</style>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
@@ -34,7 +34,7 @@
 <body onload='init()'>
 <div w3-include-html="navigation.html"></div>
 
-<div style="width: 60%; min-width: 1100px;" class="container-fluid">
+<div style="width: 60%; min-width: 1100px;margin-block:100px" class="container-fluid">
     <!--first row-->
     <div class="row" id="Overview">
       <!--Basic information-->
@@ -48,7 +48,7 @@
       <!--TE distribution across chromosome-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="'chr_dist_container">
         <div class="card mb-0">
-          <h5 class="card-header">Number of Cells</h5>
+          <h5 class="card-header">Distribution of Locus</h5>
           <div class="card-body" id="chr_dist" style="height: 500px;">
             <figure class="highcharts-figure">
               <div id="container_chr_dist"></div>

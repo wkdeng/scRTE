@@ -47,7 +47,7 @@ if field=='RTE':
             Class=row[1]
             Family=row[2]
             Name=row[3]
-            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='TE_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
+            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
         print(table_content.format(table_row=table_row,caption=caption))
     else:
         print('No such TE in database')
@@ -62,7 +62,7 @@ elif field=='Gene':
             Class=row[1]
             Family=row[2]
             Name=row[3]
-            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='TE_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
+            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
         print(table_content.format(table_row=table_row,caption=caption))
     else:
         print('No such gene in database')
@@ -78,7 +78,7 @@ elif field=='Disease':
             CellType=', '.join(row[7].split(';'))
             Accession=row[8]
             accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
-            table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+            table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset_detail.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
         print(disease_table_content.format(table_row=table_row,caption=caption))
     else:
         print('No such disease in database')
@@ -95,7 +95,7 @@ elif field=='Dataset':
                 CellType=', '.join(row[7].split(';'))
                 Accession=row[8]
                 accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
-                table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+                table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset_detail.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
         else:
             print('Redirect to dataset page')
             print(f'<meta http-equiv="refresh" content="0;url=dataset.html?KW={kw}&Cate=Dataset">',end='')

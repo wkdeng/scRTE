@@ -49,6 +49,8 @@ if sample_acc[0].startswith('SRR'):
     sample_acc=[f'<a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run={i}" target="_blank">{i}</a>' for i in sample_acc]
 elif sample_acc[0].startswith('syn'):
     sample_acc=[f'<a href="https://www.synapse.org/#!Synapse:{i}" target="_blank">{i}</a>' for i in sample_acc]
+elif sample_acc[0].startswith('GSM'):
+    sample_acc=[f'<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={i}" target="_blank">{i}</a>' for i in sample_acc]
 
 sample_acc='; '.join(sample_acc)
 ## basic row

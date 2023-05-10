@@ -136,9 +136,6 @@ Highcharts.setOptions({
           }
         }
       },
-    //   series:{
-    //     turboThreshold: 0
-    //   },
       tooltip: {
         pointFormat: 'Cell: {point.cell_id} <br/> UMAP_1: {point.x} <br/> UMAP_2: {point.y} </br> '
       },
@@ -154,8 +151,6 @@ Highcharts.setOptions({
                 series[i].hide();
                 }            
         }
-
-
       });
   });
 
