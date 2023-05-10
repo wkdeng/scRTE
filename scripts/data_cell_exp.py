@@ -13,7 +13,7 @@ import pandas as pd
 # sys.argv=['th','../data/3/cell_exp.txt','../www/mysql']
 out_path=sys.argv[2]
 cell_exp=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
-cell_umap=pd.read_csv(sys.argv[3],sep='\t',index_col=0)['dataset_id'].to_dict()
+cell_umap=pd.read_csv(sys.argv[3],sep='\t',index_col=0)['dataset'].to_dict()
 
 umap=cell_exp[['UMAP_1','UMAP_2']]
 cell_exp=cell_exp.drop(['UMAP_1','UMAP_2'],axis=1)

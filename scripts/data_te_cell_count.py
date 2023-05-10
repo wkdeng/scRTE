@@ -11,9 +11,9 @@ import pandas as pd
 import numpy as np
 
 # sys.argv=['th','../data/3/cell_exp.txt','../www/mysql','../../universal_data/rmsk/rmsk_GRCh38.txt','../data/3/cell_umap.txt']
-out_path=sys.argv[2]
-cell_exp=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
 rmsk=pd.read_csv(sys.argv[3],sep='\t')
+cell_exp=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
+out_path=sys.argv[2]
 rmsk=rmsk.loc[rmsk['repClass'].isin(['LINE','SINE','LTR']),:]
 cell_anno=pd.read_csv(sys.argv[4],sep='\t',index_col=0)
 
@@ -36,11 +36,11 @@ for x in fam_dic:
 for x in fam_dic:
     fam_cell_count[x]=list(set(fam_cell_count[x]))
 
-subfam_cell_count_mtx=pd.DataFrame(np.zeros([len(subfams),len(['Ex','In','Oli','Opc','Ast','Mic','Per'])]),columns=['Ex','In','Oli','Opc','Ast','Mic','Per'],index=subfams)
+subfam_cell_count_mtx=pd.DataFrame(np.zeros([len(subfams),len(['Ex','In','Oli','OPC','Ast','Mic','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','VLMC'],index=subfams)
 for x in subfam_cell_count:
     for y in subfam_cell_count[x]:
         subfam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
-fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','Opc','Ast','Mic','Per'])]),columns=['Ex','In','Oli','Opc','Ast','Mic','Per'],index=families)
+fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','OPC','Ast','Mic','Per'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','VLMC'],index=families)
 for x in fam_cell_count:
     for y in fam_cell_count[x]:
         fam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
@@ -56,10 +56,10 @@ CREATE TABLE SUBFAM_CELL_COUNT (
     Ex FLOAT NOT NULL,
     `In` FLOAT NOT NULL,
     Oli FLOAT NOT NULL,
-    Opc FLOAT NOT NULL,
+    OPC FLOAT NOT NULL,
     Ast FLOAT NOT NULL,
     Mic FLOAT NOT NULL,
-    Per FLOAT NOT NULL,
+    VLMC FLOAT NOT NULL,
     PRIMARY KEY (ID)
 );
 ''')
@@ -67,7 +67,7 @@ for i in range(subfam_cell_count_mtx.shape[0]):
     values=','.join([str(i) for i in subfam_cell_count_mtx.iloc[i,:]])
     te_fam=te2family[subfam_cell_count_mtx.index[i]]
     values='"'+subfam_cell_count_mtx.index[i]+'",'+f'"{te_fam}",'+values
-    subfam_mtx_out.write(f'INSERT INTO SUBFAM_CELL_COUNT (TE,TE_FAM,Ex,`In`,Oli,Opc,Ast,Mic,Per) values({values});\n')
+    subfam_mtx_out.write(f'INSERT INTO SUBFAM_CELL_COUNT (TE,TE_FAM,Ex,`In`,Oli,OPC,Ast,Mic,VLMC) values({values});\n')
 subfam_mtx_out.close()
 
 fam_mtx_out=open(out_path+'/fam_cellcount.sql','w')
@@ -80,16 +80,16 @@ CREATE TABLE FAM_CELL_COUNT (
     Ex FLOAT NOT NULL,
     `In` FLOAT NOT NULL,
     Oli FLOAT NOT NULL,
-    Opc FLOAT NOT NULL,
+    OPC FLOAT NOT NULL,
     Ast FLOAT NOT NULL,
     Mic FLOAT NOT NULL,
-    Per FLOAT NOT NULL,
+    VLMC FLOAT NOT NULL,
     PRIMARY KEY (ID)
 );
 ''')
 for i in range(fam_cell_count_mtx.shape[0]):
     values=','.join([str(i) for i in fam_cell_count_mtx.iloc[i,:]])
     values='"'+fam_cell_count_mtx.index[i]+'",'+values
-    fam_mtx_out.write(f'INSERT INTO FAM_CELL_COUNT (TE,Ex,`In`,Oli,Opc,Ast,Mic,Per) values({values});\n')
+    fam_mtx_out.write(f'INSERT INTO FAM_CELL_COUNT (TE,Ex,`In`,Oli,OPC,Ast,Mic,VLMC) values({values});\n')
 fam_mtx_out.close()
 

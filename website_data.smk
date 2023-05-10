@@ -177,4 +177,4 @@ rule te_cellcount:
         out_path=DATA_FOLDER
     log:
         'log/te_cellcount.log'
-    shell:"{params.python} {params.script} {input.rmsk} {params.out_path} {input.cell_exp} {input.cell_umap} > {log} 2>&1"
+    shell:"{params.python} {params.script} {input.cell_exp} {params.out_path} {input.rmsk} {input.cell_umap} > {log} 2>&1"
