@@ -73,13 +73,13 @@ Highcharts.setOptions({
       s.data = parseCellUMAP(s.id);
     });
   
-    const chart = Highcharts.chart('container', {
+    const chart = Highcharts.chart('container_umap', {
       chart: {
         type: 'scatter',
         zoomType: 'xy'
       },
       title: {
-        text: 'Cell Type UMAP',
+        text: 'Cell Clutering',
         align: 'left'
       },
       subtitle: {

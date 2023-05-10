@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-04-24 16:47:12
- * @modify date 2023-04-28 15:34:08
+ * @modify date 2023-05-03 16:57:16
  * @desc [description]
  */
 Highcharts.setOptions({
@@ -67,12 +67,11 @@ Highcharts.setOptions({
         type: 'column',
       },
       title: {
-        text: 'Number of Cells',
+        text: dataset,
         align: 'left'
       },
       subtitle: {
-        text:
-        dataset,
+        text:"",
         align: 'left'
       },
       xAxis: {

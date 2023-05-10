@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-04-24 16:47:12
- * @modify date 2023-04-28 16:57:32
+ * @modify date 2023-05-04 11:34:39
  * @desc [description]
  */
 Highcharts.setOptions({
@@ -84,22 +84,5 @@ Highcharts.setOptions({
         });
       });
 
-      document.getElementById('polar_dis').addEventListener('click', () => {
-        console.log('polar');
-        chart.update({
-          chart: {
-            inverted: false,
-            polar: true
-          },
-          xAxis: {
-            title: {
-              text: ''
-            },
-            categories: ['Alzheimer\'s Disease','Pakinson\'s Disease', 'Amyotrophic Lateral Sclerosis', 'Control']
-            // crosshair: true
-          }
-          
-        });
-      });
   });
 

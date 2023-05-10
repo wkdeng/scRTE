@@ -2,73 +2,168 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-04-27 15:33:02
+@modify date 2023-05-08 14:07:16
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TE infomation</title>
-  <style>
-  @import url('css/te_table.css');
-  </style>
-  <style>
-  @import url('css/highcharts.css');
-  </style>
-</head>
-
+<meta charset="utf-8">
+<meta name=""author" content="Wankun Deng">
+<title>Dataset view</title>
+<style>@import url('css/te_table.css');</style>
+<style>@import url('css/highcharts.css');</style>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    
 <script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-
-<body onload='init()'>
-
-<div id="MainContent" style="width: 60%;"></div>
-<div id="network"> </div>
-<div id="TE_quant"> </div>
-<div id="Datasets"></div>
-
+<script src="https://code.highcharts.com/modules/networkgraph.js"></script>
 <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
-
 <script src="js/forceGraph.js"> </script>
+<script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script src="js/te_info/chr_dist.js"></script>
+</head>
+
+<body onload='init()'>
+<div w3-include-html="navigation.html"></div>
+
+<div style="width: 60%; min-width: 1100px;" class="container-fluid">
+    <!--first row-->
+    <div class="row" id="Overview">
+      <!--Basic information-->
+      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="desc_container" >
+        <div class="card " >
+          <h5 class="card-header">TE information</h5>
+          <div class="card-body overflow-auto" id="desc" style="height: 500px;">
+          </div>
+        </div>
+      </div>
+      <!--TE distribution across chromosome-->
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="'chr_dist_container">
+        <div class="card mb-0">
+          <h5 class="card-header">Number of Cells</h5>
+          <div class="card-body" id="chr_dist" style="height: 500px;">
+            <figure class="highcharts-figure">
+              <div id="container_chr_dist"></div>
+              <button id="plain_chrdist">Plain column</button>
+              <button id="inverted_chrdist">Inverted column</button>
+              <button id="line_chrdist">Line</button>
+              <button id="pie_chrdist">Pie</button>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--second row-->
+    <div class="row" id="chr_ea_dist">
+    <!--TE distribution on each chromosome-->
+      <div class="col-xl-12 mb-3 pl-0 pr-0 mr-0 ml-0" id="'chrea_dist_container">
+        <div class="card mb-0">
+          <h5 class="card-header">Distribution on each chromosome</h5>
+          <div class="card-body" id="chrea_dist" style="height: 500px;">
+            <figure class="highcharts-figure">
+              <div id="container_chrea_dist"></div>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--third row-->
+    <div class="row" id="row3">
+    <!--TE genomic region distribution-->
+      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="region_container" >
+        <div class="card " >
+          <h5 class="card-header">Distribution in genomic regions</h5>
+          <div class="card-body overflow-auto" id="region_dist" style="height: 600px;">
+            <figure class="highcharts-figure">
+              <div id="container_region_dist"></div>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <!-- TE-gene network-->
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="network_container">
+        <div class="card mb-0">
+          <h5 class="card-header">TE-Gene network</h5>
+          <div class="card-body" id="te_gene" style="height: 600px;">
+            <figure class="highcharts-figure">
+                <div id="container_network"></div>
+                <label for="degree">Network degree:</label>
+                <select name="degree" id="degree">
+                  <option value='1'>1</option>
+                  <option value='2'>2</option>
+                </select>
+                <label for="showLabel">Show Label:</label>
+                <select name="showLabel" id="showLabel">
+                  <option value='false' selected>Hide</option>
+                  <option value='true' >Show</option>
+                </select>
+            </figure>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
 
 <script type="text/javascript">
     function init(){
         const urlParams = new URLSearchParams(window.location.search);
-        $.get("/cgi/get_TE_basic.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+        var content_only=urlParams.get('CL')
+        if(content_only==null || content_only=='' || content_only=='F'){
+          includeHTML();
+        }
+        $.get('/cgi/te_info/get_te_overview.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
             function(response){
-                document.getElementById('MainContent').style.display='block'
-                $('#MainContent').html(response)
-                document.title='scARE: '+urlParams.get('Class') + '/' + urlParams.get('Family') + '/' + urlParams.get('Name')
-                // document.getElementById()
+                response=JSON.parse(response)
+                document.getElementById('desc').style.display='block'
+                $('#desc').html(response[0]);
+                showChrDist(response[1]);
+                showChrEaDist(response[2]);
+                showRegionDist(response[3]);
             }
         );
-        $.get("/cgi/get_TE_dataset.py",{},function(response){
-            document.getElementById('Datasets').style.display='block'
-            $('#Datasets').html(response)
-        });
-        // // get josn data from cgi script get_network.py
-        // $.get("/cgi/get_network.py",{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name'),Degree:'D2'},
-        //     function(response){
-        //         // console.log(response)
-        //         const data = JSON.parse(response)
-        //         // console.log(data)
-        //         const graph = ForceGraph(data,
-        //             {nodeId: d => d.id,
-        //             nodeGroup: d => d.group,
-        //             nodeLabel: d => d.id,
-        //             nodeColor: d => d.group})
-        //         // hover on node will show node id
-        //         // graph.onNodeHover(node => { 
-        //         //     graph.getElementById('node').textContent = node ? node.id : '';
-        //         // });
-        //         // insert graph to div network
-        //         document.getElementById('network').appendChild(graph);
-        //     });
+        var netData;
+        function updateNetwork(){
+            showLabel=document.getElementById('showLabel').value=='true';
+            console.log(showLabel);
+                // netData=JSON.parse(response);
+            netChart=ForceGraph(netData,{nodeID:d => d.id,
+                            nodeGroup:d => d.group,
+                            nodeTitle:d => d.id,
+                            linkStrokeWidth:d => 1,
+                            width:500,
+                            height:500,
+                            showLabel:showLabel});
+            document.getElementById('container_network').innerHTML='';
+            document.getElementById('container_network').appendChild(netChart);
+    }
+        var name_=urlParams.get('Name');
         
+        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
+                function(response){
+                    netData=JSON.parse(response);
+                    updateNetwork();
+                }
+        );
+        document.getElementById('degree').addEventListener('change',function(){
+        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
+            function(response){
+                    netData=JSON.parse(response);
+                    updateNetwork();
+                }
+            );
+        });
+        document.getElementById('showLabel').addEventListener('change',function(){
+            updateNetwork();
+        });
+    
     }
 </script>
 </body>

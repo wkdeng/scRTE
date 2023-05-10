@@ -52,22 +52,25 @@ elif sample_acc[0].startswith('syn'):
 
 sample_acc='; '.join(sample_acc)
 ## basic row
-basic_row=f'''
-<ul>
-<li>Title: {title}</li>
-<li>Brain region: {brain_region}</li>
-<li>Sample #: {sampleN}</li>
-<li>Cell types: {cell_types}</li>
-<li>Disease: {disease}</li>
-<li>Protocol: {protocol}</li>
-<li>Methodology: {method}</li>
-<li>Accession: {acc}</li>
-<li>Gender: {gender}</li>
-<li>Age: {age}</li>
-<li>Stage: {stage}</li>
-<li>Sample accession: {sample_acc}</li>
-</ul>
+basic_row='''
+<div class="row mb-3">
+<span class="col-md-4 {2}"><strong>{0}:</strong></span>
+<span class="col-md-8 {2}" style="word-wrap: break-word;">{1}</span>
+</div>
 '''
-table_content=f'<table><thead>{dataset}</thead><tr>{basic_row}</tr></table>'
+ret=""
+ret+=basic_row.format('scARE ID',dataset,'bg-light')
+ret+=basic_row.format('Title',title,'')
+ret+=basic_row.format('Brain region',brain_region,'bg-light')
+ret+=basic_row.format('Sample #',sampleN,'')
+ret+=basic_row.format('Cell types',cell_types,'bg-light')
+ret+=basic_row.format('Disease',disease,'')
+ret+=basic_row.format('Protocol',protocol,'bg-light')
+ret+=basic_row.format('Methodology',method,'')
+ret+=basic_row.format('Accession',acc,'bg-light')
+ret+=basic_row.format('Gender',gender,'')
+ret+=basic_row.format('Age',age,'bg-light')
+ret+=basic_row.format('Stage',stage,'')
+ret+=basic_row.format('Sample accession',sample_acc,'bg-light')
 
-print(table_content)
+print(ret)

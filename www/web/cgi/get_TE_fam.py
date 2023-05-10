@@ -58,7 +58,7 @@ family_content='''
       </td>
       </tr>
 '''
-name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}"><a href="http://localhost/TE_info.html?Class={Class}&Family={Family}&Name={name_name}" target="_blank">{name_name}</li>"""
+name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}"><a href="http://localhost/te_info.html?Class={Class}&Family={Family}&Name={name_name}" target="_blank">{name_name}</li>"""
 
 
 # Create the connection object
