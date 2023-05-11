@@ -8,6 +8,7 @@
 
 import sys
 import math
+import tqdm
 import pandas as pd
 
 # sys.argv=['th','../data/3/cell_exp.txt','../www/mysql']
@@ -49,8 +50,6 @@ for i in range(len(exp_tables)):
     exp_tables[i].write('UMAP_2 FLOAT NOT NULL,\n')
     exp_tables[i].write('PRIMARY KEY (ID) );\n')
 
-
-import tqdm
 
 for j in tqdm.tqdm(range(len(cell_exp.index))):
     cell=cell_exp.index[j]
