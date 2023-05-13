@@ -1,22 +1,24 @@
 <!--
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
-@create date 2023-04-27 15:32:36
-@modify date 2023-05-12 14:57:57
+@create date 2023-05-11 16:30:23
+@modify date 2023-05-12 14:57:15
 @desc [description]
 -->
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
   <meta name=""author" content="Wankun Deng">
 
-  <title>Cell type</title>
+  <title>Browse by Cell</title>
   <style>
   @import url('css/te_table.css');
   </style>
   <style>
   @import url('css/highcharts.css');
+
   </style>
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -40,85 +42,60 @@ ul {
 <script src="js/third_party/forceGraph.js"> </script>
 <script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
-
+<script type="text/javascript" src="js/third_party/jquery.maphilight.min.js"></script>
+<script type="text/javascript">
+        $(function () {
+            $('.mappingjq').maphilight();
+        });
+    </script>
 <body onload="init()">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="card mb-3">
-        <div class="card-header" ><strong><span id="desc_header"></span>Cell Description</strong></div>
-        <div class="card-body" id="desc"></div>
-    </div>
-    <div class="row" id="cell_number">
-    <div class="col-md-6" id="cell_number_disease">
-        <div class="card mb-3">
-            <div class="card-body">
-            <figure class="highcharts-figure">
-                <div id="cellCountDisease"></div>
-                <button id="plain_dis">Plain</button>
-                <button id="inverted_dis">Inverted</button>
-            </figure>   
-            </div>
+        <div class="card-header"><strong>Brain Cells</strong></div>
+        <div class="card-body" id="desc">
+            
         </div>
+    </div>
 
-    </div>
-    <div class="col-md-6" id="cell_number_Dataset">
-        <div class="card mb-3">
-            <div class="card-body">
-            <figure class="highcharts-figure">
-                <div id="cellCountDataset"></div>
-                <button id="plain_dat">Plain</button>
-                <button id="inverted_dat">Inverted</button>
-            </figure>  
-            </div>
-        </div>
-    </div>
-    </div>
     <div class="row" >
-        <div class="col-xl-12" id="cell_number_TE">
+        <div class="col-xl-12" id="cell_demo">
             <div class="card mb-3">
-            <div class="card-body">
-                <figure class="highcharts-figure">
-                    <div id="cellCountTE"></div>
-                    <button id="plain_te">Plain</button>
-                    <button id="inverted_te">Inverted</button>
-                </figure>     
+                <div class="card-header"><strong>Choose a Cell Type to View</strong></div>
+            <div class="card-body " style="align-items: center;">
+                <img src="images/cells.jpeg" alt="brain_cells" usemap="#cellmap" class='mappingjq'>
+                <map name="cellmap">
+                <area  shape="poly" coords="140,120,55,190,35,260,20,385,85,420,160,396,185,300,250,215" alt="Microglia" href="cell_detail.html?Cate=Cell&KW=Mic" target="_blank">
+                <area  shape="poly" coords="65,570,60,800,330,800,330,620,138,559" alt="Inhibitory Neuron" href="cell_detail.html?Cate=Cell&KW=In" target="_blank">
+                <area  shape="poly" coords="621,157,667,321,779,288,935,254,935,7,620,7" alt="Excitatory Neuron" href="cell_detail.html?Cate=Cell&KW=Ex" target="_blank">
+                <!--area shape="poly" coords="358,224,449,193," alt="Inhibitory Neuron" href="cell_detail.html?Cate=Cell&KW=In" target="_blank"-->
+                <area  shape="poly" coords="434,484,440,460,356,412,318,312,263,291,199,478," alt="Oligodendrocyte" href="cell_detail.html?Cate=Cell&KW=Oli" target="_blank">
+                <area  shape="poly" coords="538,477,541,435,665,367,780,300,794,351,778,478" alt="Oligodendrocyte" href="cell_detail.html?Cate=Cell&KW=Oli" target="_blank">
+                <area  shape="poly" coords="326,326,441,386,536,401,618,259,564,202,480,183" alt="Astrocyte" href="cell_detail.html?Cate=Cell&KW=Ast" target="_blank">
+                </map>  
             </div>
             </div>
         </div>
     </div>
-    <div class="row" >
-        <div class="col-xl-12 mb-3 pl-0 pr-0 mr-0 ml-0 card" id="datasets">
 
-        </div>
-    </div>
 </div>
 
 <script type="text/javascript">
     const uparams = new URLSearchParams(window.location.search);
-    cell_dict={'Ex':'Excitatory Neuron','In':'Inhibitory Neuron','Mic':'Microglia','Oli':'Oligodendrocyte','Ast':'Astrocyte','End':'Brain Endothelia','OPC':'OPC','VLMC':'VLMC'}
     function init(){
         var content_only=uparams.get('CL')
         if(content_only==null || content_only=='' || content_only=='F'){
           includeHTML();
         }
-        $.get('cgi/get_cell_desc.py',{Cell: uparams.get('KW')},
+        $.get('cgi/get_cell_desc.py',{Cell: 'BrainCell'},
             function(response){
                 document.getElementById('desc').style.display='block'
                 $('#desc').html(response)
-                $('#desc_header').html(cell_dict[uparams.get('KW')]+' ')
             }
         );
-        $.get("/cgi/get_Cell_dataset.py",{Cell: uparams.get('KW')},
-            function(response){
-                document.getElementById('datasets').style.display='block'
-                $('#datasets').html(response)
-            }
-        );
+
     }
 </script>
-<script src="js/cell_count/cell_count_disease.js"></script>
-<script src="js/cell_count/cell_count_dataset.js"></script>
-<script src="js/cell_count/cell_count_te.js"></script>
 <footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
 		  <hr>
 		    <div class=" container-fluid">
