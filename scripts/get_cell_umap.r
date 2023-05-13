@@ -30,4 +30,5 @@ for(file_name in list.files(data_folder,pattern = 'rds')){
         cell_meta<-rbind(cell_meta,seurat_obj@meta.data[,c('predicted.celltype','Diagnosis','stage','msex','age_death','UMAP_1','UMAP_2','dataset')])
     }
 }
+cell_meta[cell_meta$predicted.celltype=='Opcs','predicted.celltype']<-'OPC'
 write.table(cell_meta,paste0(out_folder,'/cell_umap.txt'),row.names = ,quote = F,sep = '\t',col.names = T)

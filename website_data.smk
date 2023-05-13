@@ -95,15 +95,15 @@ rule te_fam:
     shell:"{params.python} {params.script} {input} {output}> {log} 2>&1 "
 
 
-rule download_consensus:
-    input:RMSK
-    output: INTERMEDIATE+'/Dfam.embl'
-    params:
-        intermediate=INTERMEDIATE
-    log:
-        "log/download_te_consensus.log"
-    shell:"""wget -O {params.intermediate}/Dfam.embl.gz https://www.dfam.org/releases/Dfam_3.7/families/Dfam_curatedonly.embl.gz > {log} 2>&1
-    gunzip {params.intermediate}/Dfam.embl.gz"""
+# rule download_consensus:
+#     input:RMSK
+#     output: INTERMEDIATE+'/Dfam.embl'
+#     params:
+#         intermediate=INTERMEDIATE
+#     log:
+#         "log/download_te_consensus.log"
+#     shell:"""wget -O {params.intermediate}/Dfam.embl.gz https://www.dfam.org/releases/Dfam_3.7/families/Dfam_curatedonly.embl.gz > {log} 2>&1
+#     gunzip {params.intermediate}/Dfam.embl.gz"""
 
 
 rule te_basic:
@@ -150,7 +150,7 @@ rule te_gene:
 
 rule meta:
     input:
-        'data/Dataset.meta.txt'
+        DATASET_META
     output:
         meta=DATA_FOLDER+'/meta.sql',
         sample2dataset=DATA_FOLDER+'/sample2dataset.sql'

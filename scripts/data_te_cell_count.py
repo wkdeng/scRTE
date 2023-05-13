@@ -40,7 +40,7 @@ subfam_cell_count_mtx=pd.DataFrame(np.zeros([len(subfams),len(['Ex','In','Oli','
 for x in subfam_cell_count:
     for y in subfam_cell_count[x]:
         subfam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
-fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','OPC','Ast','Mic','Per'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','VLMC'],index=families)
+fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','OPC','Ast','Mic','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','VLMC'],index=families)
 for x in fam_cell_count:
     for y in fam_cell_count[x]:
         fam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
