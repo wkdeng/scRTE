@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-05-15 16:03:41
+@modify date 2023-05-16 11:31:28
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -64,7 +64,7 @@
     <!--second row-->
     <div class="row" id="chr_ea_dist">
     <!--TE distribution on each chromosome-->
-      <div class="col-xl-12 mb-3 pl-0 pr-0 mr-0 ml-0" id="'chrea_dist_container">
+      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="'chrea_dist_container">
         <div class="card mb-0">
           <h5 class="card-header">Distribution on each chromosome</h5>
           <div class="card-body" id="chrea_dist" style="height: 500px;">
@@ -74,20 +74,23 @@
           </div>
         </div>
       </div>
-    </div>
-    <!--third row-->
-    <div class="row" id="row3">
-    <!--TE genomic region distribution-->
-      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="region_container" >
+
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="region_container" >
         <div class="card " >
           <h5 class="card-header">Distribution in genomic regions</h5>
-          <div class="card-body overflow-auto" id="region_dist" style="height: 600px;">
+          <div class="card-body overflow-auto" id="region_dist" style="height: 500px;">
             <figure class="highcharts-figure">
               <div id="container_region_dist"></div>
             </figure>
           </div>
         </div>
       </div>
+      
+    </div>
+    <!--third row-->
+    <div class="row" id="row3">
+    <!--TE genomic region distribution-->
+
       <!-- TE-gene network-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="network_container">
         <div class="card mb-0">
@@ -116,7 +119,7 @@
     function init(){
         const urlParams = new URLSearchParams(window.location.search);
         var content_only=urlParams.get('CL')
-        if(content_only==null || content_only=='' || content_only=='F'){
+        if(content_only==null || content_only=='T' || content_only=='F'){
           includeHTML();
         }
         $.get('/cgi/te_info/get_te_overview.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},

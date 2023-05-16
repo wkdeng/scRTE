@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-04 18:19:24
- * @modify date 2023-05-09 15:30:56
+ * @modify date 2023-05-16 00:26:07
  * @desc [description]
  */
 
@@ -85,7 +85,7 @@ function showChrEaDist(data) {
     const chartChrEaDist = Highcharts.chart('container_chrea_dist', {
         chart: {
             type: 'heatmap',
-            inverted: true,
+            // inverted: true,
             spacingBottom: 15,
             spacingTop: 10,
             spacingLeft: 10,
@@ -139,22 +139,22 @@ function showChrEaDist(data) {
             data: data,
             datalabels: { enabled: false }
         }],
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
-                },
-                chartOptions: {
-                    yAxis: {
-                        labels: {
-                            formatter: function () {
-                                return this.value.charAt(0);
-                            }
-                        }
-                    }
-                }
-            }]
-        }
+        // responsive: {
+            // rules: [{
+            //     condition: {
+            //         maxWidth: 500
+            //     },
+            //     chartOptions: {
+            //         yAxis: {
+            //             labels: {
+            //                 formatter: function () {
+            //                     return this.value.charAt(0);
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }]
+        // }
 
     });
 }

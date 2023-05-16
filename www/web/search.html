@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:56
-@modify date 2023-05-15 16:03:33
+@modify date 2023-05-16 00:06:23
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -22,6 +22,9 @@
 <script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"
   integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
 
 <body onload="init()">
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
@@ -70,7 +73,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="card mb-3" id="multiple_section">
       <div class="card-header"><strong><span></span>Search Multiple Terms</strong></div>
@@ -150,6 +152,7 @@
           document.getElementById("result_row").style.display = "block";
           document.getElementById("multiple_section").style.display = "none";
           document.getElementById("result").innerHTML = data;
+          let table = new DataTable('#result_table', {response:true});  
         });
       }
       function reset_field(field_id) {
@@ -182,6 +185,7 @@
           document.getElementById("result_row").style.display = "block";
           document.getElementById("simple_section").style.display = "none";
           document.getElementById("result").innerHTML = data;
+          let table = new DataTable('#result_table', {response:true});  
         });
       }
       function init() {

@@ -50,8 +50,9 @@ connection = MySQLdb.connect(
 # Create the cursor object
 cursor = connection.cursor()
 
-table_content = '''<table class="table table-striped">  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th></tr></thead><tbody>{table_row}</tbody></table>'''
-disease_table_content = '''<table class="table table-striped">  <caption>{caption}</caption><thead><th scope="col">Dataset</th><th scope="col">Disease</th><th scope="col">Cell type</th><th scope="col">Accession</th><tbody>{table_row}</tbody></table>'''
+table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th></tr></thead><tbody>{table_row}</tbody></table>'''
+disease_table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><th scope="col">Dataset</th><th scope="col">Disease</th><th scope="col">Cell type</th><th scope="col">Accession</th><tbody>{table_row}</tbody></table>'''
+gene_table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th><th scope="col">Gene</th></tr></thead><tbody>{table_row}</tbody></table>'''
 if field == 'RTE':
     table_row = ''
     row_fmt = '''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
@@ -77,8 +78,6 @@ if field == 'RTE':
         print(table_content.format(table_row=table_row, caption=caption))
 
 elif field == 'Gene':
-    gene_table_content = '''<table class="table table-striped">  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th><th scope="col">Gene</th></tr></thead><tbody>{table_row}</tbody></table>'''
-
     table_row = ''
     row_fmt = '''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td><td>{Gene}</td></tr>'''
 
