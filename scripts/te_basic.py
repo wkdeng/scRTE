@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-03-17 14:53:15
- # @modify date 2023-03-17 14:53:15
+ # @modify date 2023-05-22 15:42:35
  # @desc [description]
 ###
 import pandas as pd 
@@ -21,6 +21,7 @@ output=sys.argv[3]
 chr_len_f=sys.argv[4]
 te_table=pd.read_csv(rmsk,sep='\t')
 gene_anno=sys.argv[5]
+
 
 te_basic=open(output,'w')
 te_basic.write('''CREATE DATABASE IF NOT EXISTS scARE;
@@ -42,7 +43,7 @@ CREATE TABLE TE_BASIC (
 ''')
 
 rte=te_table.loc[te_table['repClass'].isin(['LINE','SINE','LTR']),['repName','repClass','repFamily']].drop_duplicates()
-
+rte['repFamily']=rte['repFamily'].apply(lambda x: x.replace('?',''))
 ## get consensus squence from Dfam, need to align TE names.
 rte_consensus=defaultdict(lambda:defaultdict(str))
 cname=''

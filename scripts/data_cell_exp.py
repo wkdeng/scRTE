@@ -1,64 +1,97 @@
 ###
- # @author [Wankun Deng]
- # @email [dengwankun@gmail.com]
- # @create date 2023-04-17 15:52:18
- # @modify date 2023-04-17 15:52:18
- # @desc [description]
+# @author [Wankun Deng]
+# @email [dengwankun@gmail.com]
+# @create date 2023-04-10 14:41:40
+# @modify date 2023-05-25 17:46:09
+# @desc [description]
 ###
 
 import sys
 import math
 import tqdm
 import pandas as pd
+import os
+import json
+from collections import defaultdict
 
-# sys.argv=['th','../data/3/cell_exp.txt','../www/mysql']
+# sys.argv=['th','../data/all_datasets','../www/mysql','overwrite','../../universal_data/ref/GRCh38/gencode.v43.basic.annotation.gtf','../../universal_data/rmsk/rmsk_GRCh38.txt']
+inpath=sys.argv[1]
 out_path=sys.argv[2]
-cell_exp=pd.read_csv(sys.argv[1],sep='\t',index_col=0)
-cell_umap=pd.read_csv(sys.argv[3],sep='\t',index_col=0)['dataset'].to_dict()
+mode='append' if sys.argv[3]=='append' else 'overwrite'
+gtf=sys.argv[4]
+rmsk_f=sys.argv[5]
 
-umap=cell_exp[['UMAP_1','UMAP_2']]
-cell_exp=cell_exp.drop(['UMAP_1','UMAP_2'],axis=1)
+if mode=='overwrite':
+    genes=[]
+    for line in open(gtf):
+        if not line.startswith('#'):
+            info=line.strip().split('\t')
+            if info[2]=='gene' and ('lncRNA' in info[-1] or 'protein_coding' in info[-1]):
+                split_='gene_name "' if 'gene_name' in info[-1] else 'gene_id "'
+                genes.append(info[-1].split(split_)[1].split('"')[0])            
 
-exp_tables=[open(f'{out_path}/cell_exp_{i}.sql','w') for i in range(math.ceil((len(cell_exp.columns))/1000.0))]
-gene_dict=open(f'{out_path}/gene_dict.sql','w')
-gene_dict.write('''CREATE DATABASE IF NOT EXISTS scARE;
-USE scARE;
-DROP TABLE IF EXISTS GENE_DICT;
-CREATE TABLE GENE_DICT (
-    ID INT NOT NULL,
-    GENE varchar(255) NOT NULL,
-    TABLE_ID INT NOT NULL,
-    PRIMARY KEY (ID) );\n''')
+    rmsk=pd.read_csv(rmsk_f,sep='\t',header=None)
+    rmsk=rmsk[rmsk[11].isin(['LINE','SINE','LTR'])]
+    genes.extend(rmsk[10].unique())
+    genes=list(set(genes))
 
-header=cell_exp.columns
-for i in range(len(exp_tables)):
-    exp_tables[i].write('''CREATE DATABASE IF NOT EXISTS scARE;
-USE scARE;
-DROP TABLE IF EXISTS CELL_EXP_{i}; 
-CREATE TABLE CELL_EXP_{i} (
-ID INT NOT NULL,
-scARE_ID varchar(255) NOT NULL,
-CELL varchar(255) NOT NULL,\n'''.format(i=i))
-
-for i in range(len(cell_exp.columns)):
-    index=math.floor(i/1000.0)
-    exp_tables[index].write(f'`{header[i]}` FLOAT NOT NULL,\n')
-    gene_dict.write(f'INSERT INTO GENE_DICT values({i},"{header[i]}","{index}");\n')
-
-for i in range(len(exp_tables)):
-    exp_tables[i].write('UMAP_1 FLOAT NOT NULL,\n')
-    exp_tables[i].write('UMAP_2 FLOAT NOT NULL,\n')
-    exp_tables[i].write('PRIMARY KEY (ID) );\n')
-
-
-for j in tqdm.tqdm(range(len(cell_exp.index))):
-    cell=cell_exp.index[j]
-    dataset_id=cell_umap[cell]
+    exp_tables=[open(f'{out_path}/cell_exp_{i}.sql','w') for i in range(math.ceil((len(genes))/1000.0))]
     for i in range(len(exp_tables)):
-        values=','.join([str(i) for i in cell_exp.loc[cell][i*1000:(i+1)*1000]])
-        values+=','+str(umap.loc[cell][0])+','+str(umap.loc[cell][1])
-        exp_tables[i].write(f'INSERT INTO CELL_EXP_{i} values({j},"{dataset_id}","{cell}",{values});\n')
+        exp_tables[i].write('''CREATE DATABASE IF NOT EXISTS scARE;
+                                USE scARE;
+                                DROP TABLE IF EXISTS CELL_EXP_{i}; 
+                                CREATE TABLE CELL_EXP_{i} (
+                                scARE_ID varchar(255) NOT NULL,
+                                CELL varchar(255) NOT NULL,\n'''.format(i=i))
+        
+    gene_dict=open(f'{out_path}/gene_dict.sql','w') 
+    gene_dict.write('''\
+            CREATE DATABASE IF NOT EXISTS scARE;
+            USE scARE;
+            DROP TABLE IF EXISTS GENE_DICT;
+            CREATE TABLE GENE_DICT (
+                GENE varchar(255) NOT NULL,
+                TABLE_ID INT NOT NULL);\n''')
 
-for i in range(len(exp_tables)):
-    exp_tables[i].close()
-gene_dict.close()
+    table_genes=defaultdict(list)
+    for i in range(len(genes)):
+        index=math.floor(i/1000.0)
+        exp_tables[index].write(f'`{genes[i]}` FLOAT DEFAULT 0,\n')
+        table_genes[index].append(genes[i])
+        gene_dict.write(f'INSERT INTO GENE_DICT values("{genes[i]}","{index}");\n')
+    for i in range(len(exp_tables)):
+        exp_tables[i].write('UMAP_1 FLOAT NOT NULL,\n')
+        exp_tables[i].write('UMAP_2 FLOAT NOT NULL);\n')
+        exp_tables[i].flush()
+    json.dump(table_genes,open(f'{out_path}/table_genes.json','w'))
+else:
+    table_genes=json.load(open(f'{out_path}/table_genes.json','r'))
+    exp_tables=[open(f'{out_path}/cell_exp_{i}.sql','a') for i in range(len(table_genes))]
+
+
+def one_table(i):
+    expressed_i=[x for x in cell_exp.columns if x in table_genes[i]]+['UMAP_1','UMAP_2']
+    tmp_exp=pd.DataFrame(columns=(['scARE_ID','CELL']+expressed_i),index=cell_exp.index)
+    tmp_exp['scARE_ID']=['"%s"'%cell_dataset[x] for x in cell_exp.index]
+    tmp_exp['CELL']=['"%s"'%x for x in cell_exp.index]
+    tmp_exp.loc[:,expressed_i]=cell_exp.loc[:,expressed_i]
+    all_values=tmp_exp.agg(lambda x:  ','.join(x.astype(str)), axis=1).values
+    expressed_i_c=','.join(expressed_i)
+    template='''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,{expressed_i_c}) values ({values});\n'''
+    to_write='\n'.join([template.format(i=i,expressed_i_c=expressed_i_c,values=x) for x in all_values])+'\n'
+    # lock.acquire()
+    exp_tables[i].write(to_write)
+    # lock.release()
+
+from multiprocessing import Pool
+for file_ in os.listdir(inpath):
+    if file_.endswith('.cell_exp.txt'):
+        cell_exp=pd.read_csv(os.path.join(inpath,file_),sep='\t',index_col=0)
+        cell_dataset=pd.read_csv(os.path.join(inpath,file_.replace('cell_exp','cell_umap')),sep='\t',index_col=0)['dataset'].to_dict()
+        pool=Pool(40)
+        pool.map(one_table,range(len(exp_tables)))
+        pool.close()
+        pool.join()
+
+[x.flush() for x in exp_tables]
+[x.close() for x in exp_tables]
