@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-03-21 14:16:13
- # @modify date 2023-03-21 14:16:13
+ # @modify date 2023-05-22 15:45:59
  # @desc [description]
 ###
 import sys
@@ -21,7 +21,9 @@ out=sys.argv[3]
 net_out=sys.argv[4]
 
 rmsk_df=pd.read_csv(rmsk,sep='\t')
+rmsk_df['repFamily']=rmsk_df['repFamily'].apply(lambda x: x.replace('?',''))
 rmsk_df['index']=rmsk_df[['repClass','repFamily','repName']].agg(':'.join,axis=1)
+
 
 rmsk_bed=BedTool.from_dataframe(rmsk_df[['genoName','genoStart','genoEnd','index','swScore','strand']])
 conn=rmsk_bed.intersect(gene_anno,s=True,wa=True,wb=True).to_dataframe()
