@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-05-09 15:30:08
+@modify date 2023-05-16 11:31:28
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -23,16 +23,16 @@
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
 <script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
-<script src="js/forceGraph.js"> </script>
+<script src="js/third_party/forceGraph.js"> </script>
 <script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script src="js/te_info/chr_dist.js"></script>
 </head>
 
 <body onload='init()'>
-<div w3-include-html="navigation.html"></div>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 
 <div style="width: 60%; min-width: 1100px;margin-block:100px" class="container-fluid">
     <!--first row-->
@@ -64,7 +64,7 @@
     <!--second row-->
     <div class="row" id="chr_ea_dist">
     <!--TE distribution on each chromosome-->
-      <div class="col-xl-12 mb-3 pl-0 pr-0 mr-0 ml-0" id="'chrea_dist_container">
+      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="'chrea_dist_container">
         <div class="card mb-0">
           <h5 class="card-header">Distribution on each chromosome</h5>
           <div class="card-body" id="chrea_dist" style="height: 500px;">
@@ -74,20 +74,23 @@
           </div>
         </div>
       </div>
-    </div>
-    <!--third row-->
-    <div class="row" id="row3">
-    <!--TE genomic region distribution-->
-      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="region_container" >
+
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="region_container" >
         <div class="card " >
           <h5 class="card-header">Distribution in genomic regions</h5>
-          <div class="card-body overflow-auto" id="region_dist" style="height: 600px;">
+          <div class="card-body overflow-auto" id="region_dist" style="height: 500px;">
             <figure class="highcharts-figure">
               <div id="container_region_dist"></div>
             </figure>
           </div>
         </div>
       </div>
+      
+    </div>
+    <!--third row-->
+    <div class="row" id="row3">
+    <!--TE genomic region distribution-->
+
       <!-- TE-gene network-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="network_container">
         <div class="card mb-0">
@@ -116,7 +119,7 @@
     function init(){
         const urlParams = new URLSearchParams(window.location.search);
         var content_only=urlParams.get('CL')
-        if(content_only==null || content_only=='' || content_only=='F'){
+        if(content_only==null || content_only=='T' || content_only=='F'){
           includeHTML();
         }
         $.get('/cgi/te_info/get_te_overview.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
@@ -166,4 +169,24 @@
     
     }
 </script>
+<footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
+		  <hr>
+		    <div class=" container-fluid">
+		        <div class="row">
+              <div class="col-md-1"></div>
+		            <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
+		                <img src="images/SBMI.png" width="100%" alt="@"></a>
+		            </div>
+		            <div class="col-md-7">
+		                <p style="align:left;font-size: 14px;">
+		                <span style="font-size:1.20em;"><strong>Copyright ©</strong>
+		                <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
+		                <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
+		                <span style="font-family: Arial;"> | </span>
+		                <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
+		                </p>
+		            </div>
+		        </div>
+		    </div>
+		</footer>
 </body>

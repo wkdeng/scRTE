@@ -1,0 +1,294 @@
+<!--
+@author [Wankun Deng]
+@email [dengwankun@gmail.com]
+@create date 2023-05-11 16:30:23
+@modify date 2023-05-15 23:33:47
+@desc [description]
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name=""author" content="Wankun Deng">
+
+  <title>Browse by TE</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+ /* @import url('css/te_tree.css'); */
+  </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<style>
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}  
+</style>
+
+
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<!--script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"> import * as d3 from "d3"</script-->
+<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
+<script src="js/third_party/treemap.js"> </script>
+<script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+<script type="text/javascript" src="js/utils.js"></script>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+<body onload="init()">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
+<div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
+    <div class="card mb-3">
+        <div class="card-header"><strong>Retrotransposable Elements</strong></div>
+        <div class="card-body" id="desc">
+            
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="col-xl-12" id="cell_demo">
+            <div class="card mb-3">
+                <div class="card-header"><strong>Choose a TE to View</strong></div>
+            <div class="card-body " style="align-items: center;" id="te_tree_container">
+
+
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="treemap-tab" data-bs-toggle="tab" data-bs-target="#treemapview" type="button" role="tab" aria-controls="treemapview" aria-selected="true">Treemap View</button>
+                    <button class="nav-link" id="treeview-tab" data-bs-toggle="tab" data-bs-target="#treeview" type="button" role="tab" aria-controls="treeview" aria-selected="false">Tree View</button>
+                    <button class="nav-link" id="tableview-tab" data-bs-toggle="tab" data-bs-target="#tableview" type="button" role="tab" aria-controls="tableview" aria-selected="false">Table View</button>
+                </div>
+                <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane show active" id="treemapview" role="tabpanel" aria-labelledby="treemap-tab" tabindex="0" style="border-left: 1px;border-right: 1px;border-bottom: 1px;">Loading...</div>
+                <div class="tab-pane" id="treeview" role="tabpanel" aria-labelledby="treeview-tab" tabindex="0">Loading...</div>
+                <div class="tab-pane" id="tableview" role="tabpanel" aria-labelledby="tableview-tab" tabindex="0">Loading...</div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const uparams = new URLSearchParams(window.location.search);
+
+    $('#nav-tabs button').click(function (e) {
+           obj_id = $(this).attr('id');
+           if(obj_id=="treemap-tab") {
+              $("#treemapview").addClass("show active");
+              $("#treeview").removeClass("show active");
+              $("#tableview").removeClass("show active");
+            }
+            if(obj_id=="treeview-tab") {
+              $("#treeview").addClass("show active");
+              $("#treemapview").removeClass("show active");
+              $("#tableview").removeClass("show active");
+            }
+            if(obj_id=="tableview-tab") {
+              $("#tableview").addClass("show active");
+              $("#treemapview").removeClass("show active");
+              $("#treeview").removeClass("show active");
+            }
+        });
+    
+    function init(){
+        var content_only=uparams.get('CL')
+        if(content_only==null || content_only=='' || content_only=='F'){
+          includeHTML();
+          pages=['home','search','browse','faq','contacts']
+          pages.forEach(ele => $("#"+ele).removeClass("active"))
+          $("#browse").addClass("active")
+        }
+        $.get('cgi/get_cell_desc.py',{Cell: 'RTE'},
+            function(response){
+                document.getElementById('desc').style.display='block'
+                $('#desc').html(response)
+            }
+        );
+        $.get('cgi/get_te_treemap.py',{},
+            function(response){
+                var treeData=JSON.parse(response)
+                chart = Treemap(treeData[1], {
+                            path: d => d.name.replace(/\./g, "/"), // e.g., "flare/animate/Easing"
+                            value: d => d?.size, // size of each node (file); null for internal nodes (folders)
+                            group: d => d.name.split(".")[1], // e.g., "animate" in "flare.animate.Easing"; for color
+                            label: (d, n) => [...d.name.split(".").pop().split(/(?=[A-Z][a-z])/g), n.value.toLocaleString("en")].join("\n"),
+                            title: (d, n) => `${d.name}\n${n.value.toLocaleString("en")}`, // text to show on hover
+                            link: (d, n) => `te_info.html?Name=${d.name.split(/\./g)[2]}&Class=${d.name.split(/\./g)[0]}&Family=${d.name.split(/\./g)[1]}&CL=T`,
+                            tile: d3.treemapBinary,// set by input above
+                            width: 1152,
+                            height: 5000
+                        })
+                $('#treemapview').html(chart)
+                $('#tableview').html(treeData[0])
+                let table = new DataTable('#te_table', {response:true}); 
+
+
+                ////////////////////////////////////////////////////////////////////////////
+                margin = ({top: 10, right: 120, bottom: 10, left: 40})
+                width=1100
+                dy = width / 4
+                dx = 25
+                tree = d3.tree().nodeSize([dx, dy])
+                diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x)
+                function get_treeview(data) {
+                        const root = d3.hierarchy(data);
+
+                        root.x0 = dy / 2;
+                        root.y0 = 0;
+                        root.descendants().forEach((d, i) => {
+                            d.id = i;
+                            d._children = d.children;
+                            if (d.depth && d.data.name.length !== 7) d.children = null;
+                        });
+
+                        const svg = d3.create("svg")
+                            .attr("viewBox", [-margin.left, -margin.top, width, dx])
+                            .style("font", "10px sans-serif")
+                            .style("user-select", "none");
+
+                        const gLink = svg.append("g")
+                            .attr("fill", "none")
+                            .attr("stroke", "#555")
+                            .attr("stroke-opacity", 0.4)
+                            .attr("stroke-width", 1.5);
+
+                        const gNode = svg.append("g")
+                            .attr("cursor", "pointer")
+                            .attr("pointer-events", "all");
+
+                        function update(source) {
+                            const duration = d3.event && d3.event.altKey ? 2500 : 250;
+                            const nodes = root.descendants().reverse();
+                            const links = root.links();
+
+                            // Compute the new tree layout.
+                            tree(root);
+
+                            let left = root;
+                            let right = root;
+                            root.eachBefore(node => {
+                            if (node.x < left.x) left = node;
+                            if (node.x > right.x) right = node;
+                            });
+
+                            const height = right.x - left.x + margin.top + margin.bottom;
+
+                            const transition = svg.transition()
+                                .duration(duration)
+                                .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+                                .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
+
+                            // Update the nodes…
+                            const node = gNode.selectAll("g")
+                            .data(nodes, d => d.id);
+
+                            // Enter any new nodes at the parent's previous position.
+                            const nodeEnter = node.enter().append("g")
+                                .attr("transform", d => `translate(${source.y0},${source.x0})`)
+                                .attr("fill-opacity", 0)
+                                .attr("stroke-opacity", 0)
+                                .on("click", (event, d) => {
+                                d.children = d.children ? null : d._children;
+                                update(d);
+                                });
+
+                            nodeEnter.append("circle")
+                                .attr("r", d => d._children ? 10 : 2)
+                                .attr("fill", d => d._children ? "#555" : "#999")
+                                .attr("stroke-width", 10)
+
+                            nodeEnter.append('a')
+                                .attr("xlink:href", d => d.data._children ? null : d.data.link)
+                                .attr("target", "_blank")
+                            .append("text")
+                                .attr("dy", "0.31em")
+                                .attr("x", d => d._children ? -6 : 6)
+                                .attr("text-anchor", d => d._children ? "end" : "start")
+                                .text(d => d.data.name)
+                            .clone(true).lower()
+                                .attr("stroke-linejoin", "round")
+                                .attr("stroke-width", 3)
+                                .attr("stroke", "white");
+
+                            // Transition nodes to their new position.
+                            const nodeUpdate = node.merge(nodeEnter).transition(transition)
+                                .attr("transform", d => `translate(${d.y},${d.x})`)
+                                .attr("fill-opacity", 1)
+                                .attr("stroke-opacity", 1);
+
+                            // Transition exiting nodes to the parent's new position.
+                            const nodeExit = node.exit().transition(transition).remove()
+                                .attr("transform", d => `translate(${source.y},${source.x})`)
+                                .attr("fill-opacity", 0)
+                                .attr("stroke-opacity", 0);
+
+                            // Update the links…
+                            const link = gLink.selectAll("path")
+                            .data(links, d => d.target.id);
+
+                            // Enter any new links at the parent's previous position.
+                            const linkEnter = link.enter().append("path")
+                                .attr("d", d => {
+                                const o = {x: source.x0, y: source.y0};
+                                return diagonal({source: o, target: o});
+                                });
+
+                            // Transition links to their new position.
+                            link.merge(linkEnter).transition(transition)
+                                .attr("d", diagonal);
+
+                            // Transition exiting nodes to the parent's new position.
+                            link.exit().transition(transition).remove()
+                                .attr("d", d => {
+                                const o = {x: source.x, y: source.y};
+                                return diagonal({source: o, target: o});
+                                });
+
+                            // Stash the old positions for transition.
+                            root.eachBefore(d => {
+                            d.x0 = d.x;
+                            d.y0 = d.y;
+                            });
+                        }
+
+                        update(root);
+
+                        return svg.node();
+                        }
+                treeview_chart=get_treeview(treeData[2])
+                $('#treeview').html(treeview_chart)
+            }
+        );
+    }
+</script>
+    <footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
+        <hr>
+        <div class=" container-fluid">
+            <div class="row">
+        <div class="col-md-1"></div>
+                <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
+                    <img src="images/SBMI.png" width="100%" alt="@"></a>
+                </div>
+                <div class="col-md-7">
+                    <p style="align-content:left;font-size: 14px;">
+                    <span style="font-size:1.20em;"><strong>Copyright ©</strong>
+                    <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
+                    <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
+                    <span style="font-family: Arial;"> | </span>
+                    <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>

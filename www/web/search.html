@@ -2,61 +2,215 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:56
-@modify date 2023-04-27 15:32:57
+@modify date 2023-05-16 00:06:23
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>TE infomation</title>
+  <meta charset="utf-8">
+  <meta name="" author" content="Wankun Deng">
+
+  <title>Search</title>
   <style>
-  @import url('css/search.css');
+    @import url('css/highcharts.css');
   </style>
-  <style>
-  @import url('css/highcharts.css');
-  </style>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
-
-<body>
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"
+  integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
 
-<div id="search"> 
-    <div id="simple_search"></div>
-    <label for="simple_field">Search field:</label>
-    <select name="simple_field" id="simple_field">
-      <option value='RTE'>RTE</option>
-      <option value='Gene'>Gene</option>
-      <option value='Disease'>Disease</option>
-      <option value='Cell'>Cell</option>
-      <option value='Dataset'>Dataset</option>
-    </select>
-    <label for="simple_kw">Keyword:</label>
-    <input type="text" id="simple_kw" name="Keyword">
-    <input type="button" value="Search" onclick="simple_search()">
-</div>
-<div id="result"></div>
-<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
-<script src="https://d3js.org/d3.v7.min.js"> import * as d3 from "d3"</script>
+<body onload="init()">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
+  <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
+    <div class="card mb-3" id="simple_section">
+      <div class="card-header"><strong><span id="desc_header"></span>Search Single Term</strong></div>
+      <div class="card-body" id="desc">
+        <div id="search">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="simple_field">Search field:</label>
+            </div>
+            <select class="custom-select" id="simple_field">
+              <option value='RTE' selected>RTE</option>
+              <option value='Gene'>Gene</option>
+              <option value='Disease'>Disease</option>
+              <option value='Cell'>Cell</option>
+              <option value='Dataset'>Dataset</option>
+            </select>
+          </div>
 
-<script src="js/forceGraph.js"> </script>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="simple_kw">Keyword:</label>
+            </div>
+            <input type="text" id="simple_kw" class="form-control" placeholder="Keyword" aria-label="simple_kw"
+              aria-describedby="basic-addon1">
+          </div>
 
-<script type="text/javascript">
-    function simple_search(){
+          <div class="input-group mb-3">
+            <div class="input-group-text">
+              <input type="checkbox" id="simple_lucky" aria-label="I feel lucky"> <span><strong>&nbsp;&nbsp;I'm feeling
+                  lucky!</strong></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"></div>
+            <div class="col-2">
+              <input type="button" value="Search" class="btn btn-primary" onclick="simple_search()">
+            </div>
+            <div class="col-2"><input type="button" value="Example" class="btn btn-info" onclick="example_simple()">
+            </div>
+            <div class="col-2"><input type="button" value="Reset" class="btn btn-warning"
+                onclick="reset_field('simple_field');reset_kw('simple_kw');reset_check('simple_lucky')"> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3" id="multiple_section">
+      <div class="card-header"><strong><span></span>Search Multiple Terms</strong></div>
+      <div class="card-body">
+        <div>
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="multi_field">Search field:</label>
+            </div>
+            <select class="custom-select" id="multi_field">
+              <option value='RTE' selected>RTE</option>
+              <option value='Gene'>Gene</option>
+              <option value='Disease'>Disease</option>
+              <option value='Cell'>Cell</option>
+              <option value='Dataset'>Dataset</option>
+            </select>
+          </div>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="bool_rel">Matches </label>
+            </div>
+            <select class="custom-select" id="bool_rel">
+              <option value='Any' selected>Any</option>
+              <option value='All'>All</option>
+            </select>
+            <div class="input-group-append">
+              <span class="input-group-text">of the Following:</span>
+            </div>
+          </div>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="multi_kw">Keyword:</label>
+            </div>
+            <textarea rows=4 type="text" id="multi_kw" style="align-content: justify;" class="form-control"
+              placeholder="Keywords by lines" aria-label="multi_kw" aria-describedby="basic-addon1"></textarea>
+          </div>
+
+          <div class="input-group mb-3">
+            <div class="input-group-text">
+              <input type="checkbox" id="multi_lucky" aria-label="I feel lucky"> <span><strong>&nbsp;&nbsp;I'm feeling
+                  lucky!</strong></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3"></div>
+            <div class="col-2">
+              <input type="button" value="Search" class="btn btn-primary" onclick="multi_search()">
+            </div>
+            <div class="col-2 justify-content-center"><input type="button" value="Example" class="btn btn-info"
+                onclick="example_multi()">
+            </div>
+            <div class="col-2 justify-content-start"><input type="button" value="Reset" class="btn btn-warning"
+                onclick="reset_field('multi_field');reset_kw('multi_kw');document.getElementById('bool_rel').selectedIndex=0;reset_check('multi_lucky')"> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" id="result_row" style="display: none;">
+      <div class="col-xl-12" id="result_col">
+        <div class="card mb-3">
+          <div class="card-header"><strong>Search Result</strong></div>
+          <div class="card-body" id="result"> </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+    <script type="text/javascript">
+      function simple_search() {
         const field = document.getElementById("simple_field").value;
         const kw = document.getElementById("simple_kw").value;
-        response=$.get("cgi/search.py", {field:field, kw:kw}, function(data){
-            console.log(data);
-            document.getElementById("result").innerHTML = data;
-            
+        const lucky = document.getElementById("simple_lucky").checked;
+        $.get("cgi/search.py", { field: field, kw: kw, type:'simple',lucky: lucky}, function (data) {
+          document.getElementById("result_row").style.display = "block";
+          document.getElementById("multiple_section").style.display = "none";
+          document.getElementById("result").innerHTML = data;
+          let table = new DataTable('#result_table', {response:true});  
         });
-        
-    }
-</script>
-
+      }
+      function reset_field(field_id) {
+        document.getElementById(field_id).selectedIndex = 0;
+      }
+      function reset_kw(kw_id) {
+        document.getElementById(kw_id).value = "";
+      }
+      function reset_check(check_id) {
+        document.getElementById(check_id).checked = false;
+      }
+      function example_simple() {
+        document.getElementById("simple_field").selectedIndex = 0;
+        document.getElementById("simple_kw").value = "AluY";
+        simple_search();
+      }
+      function example_multi() {
+        document.getElementById("multi_field").selectedIndex = 0;
+        document.getElementById("multi_kw").value = "AluY\nAluSx\nAluSx1";
+        document.getElementById("bool_rel").selectedIndex = 0;
+        document.getElementById("multi_lucky").checked = false;
+        multi_search();
+      }
+      function multi_search(){
+        const field = document.getElementById("multi_field").value;
+        const kw = document.getElementById("multi_kw").value;
+        const bool_rel = document.getElementById("bool_rel").value;
+        const lucky = document.getElementById("multi_lucky").checked;
+        $.get("cgi/search.py", { field: field, kw: kw, bool_rel: bool_rel, type: 'multi',lucky:lucky}, function (data) {
+          document.getElementById("result_row").style.display = "block";
+          document.getElementById("simple_section").style.display = "none";
+          document.getElementById("result").innerHTML = data;
+          let table = new DataTable('#result_table', {response:true});  
+        });
+      }
+      function init() {
+        includeHTML();
+      }
+    </script>
+    <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid"></div>
+    <footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
+		  <hr>
+		    <div class=" container-fluid">
+		        <div class="row">
+              <div class="col-md-1"></div>
+		            <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
+		                <img src="images/SBMI.png" width="100%" alt="@"></a>
+		            </div>
+		            <div class="col-md-7">
+		                <p style="align:left;font-size: 14px;">
+		                <span style="font-size:1.20em;"><strong>Copyright ©</strong>
+		                <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
+		                <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
+		                <span style="font-family: Arial;"> | </span>
+		                <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
+		                </p>
+		            </div>
+		        </div>
+		    </div>
+		</footer>
 </body>

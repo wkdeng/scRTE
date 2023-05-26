@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 ##############################
- # @author [Wankun Deng]
- # @email [dengwankun@gmail.com]
- # @create date 2023-04-21 09:42:45
- # @modify date 2023-04-21 09:42:45
- # @desc [description]
+# @author [Wankun Deng]
+# @email [dengwankun@gmail.com]
+# @create date 2023-04-21 09:42:45
+# @modify date 2023-04-21 09:42:45
+# @desc [description]
 #############################
 
 import cgitb
@@ -15,11 +15,28 @@ import pandas as pd
 import cgi
 
 cgitb.enable()
-print( 'Content_Type:text/html; charset=utf-8\r\n\n')
+print('Content_Type:text/html; charset=utf-8\r\n\n')
 
 form = cgi.FieldStorage()
-field=form['field'].value
-kw=form['kw'].value
+field = form['field'].value
+kw = form['kw'].value
+type_ = form['type'].value
+bool_rel = 'Any'
+lucky=form['lucky'].value
+
+if 'bool_rel' in form:
+    bool_rel = form['bool_rel'].value
+
+bool_rel2 = 'AND' if bool_rel == 'All' else 'OR'
+
+kw_org = kw
+kw = kw.replace("'", "\\'")
+if type_ == 'multi':
+    kw = kw.strip().split('\n')
+    kw_org = kw_org.strip().split('\n')
+else:
+    kw = [kw.strip()]
+    kw_org = [kw_org.strip()]
 
 # Create the connection object
 connection = MySQLdb.connect(
@@ -33,74 +50,110 @@ connection = MySQLdb.connect(
 # Create the cursor object
 cursor = connection.cursor()
 
-table_content='''<table >  <caption>{caption}</caption><thead><th>Class</th><th>Family</th><th>Name</th></thead><tbody>{table_row}</tbody></table>'''
-disease_table_content='''<table >  <caption>{caption}</caption><thead><th>Dataset</th><th>Disease</th><th>Cell type</th><th>Accession</th></thead><tbody>{table_row}</tbody></table>'''
-if field=='RTE':
-    ## Search name
-    cursor.execute(f"select * from TE_FAM WHERE NAME LIKE '%{kw}%' OR FAMILY LIKE '%{kw}%' OR CLASS LIKE '%{kw}%'")
-    info=cursor.fetchall()
+table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th></tr></thead><tbody>{table_row}</tbody></table>'''
+disease_table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><th scope="col">Dataset</th><th scope="col">Disease</th><th scope="col">Cell type</th><th scope="col">Accession</th><tbody>{table_row}</tbody></table>'''
+gene_table_content = '''<table class="table table-striped" id='result_table'>  <caption>{caption}</caption><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th><th scope="col">Gene</th></tr></thead><tbody>{table_row}</tbody></table>'''
+if field == 'RTE':
+    table_row = ''
+    row_fmt = '''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
 
-    table_row=''
+    conditioni = " (NAME LIKE '%{kwi}%' OR FAMILY LIKE '%{kwi}%' OR CLASS LIKE '%{kwi}%') "
+    condition = bool_rel2.join([conditioni.format(kwi=kwi) for kwi in kw])
+    sql = f"select * from TE_FAM WHERE {condition}"
+    cursor.execute(f"select * from TE_FAM WHERE {condition}")
+    info = cursor.fetchall()
     if info:
-        caption='Search result for {kw} in field {field}'.format(kw=kw,field=field)
         for row in info:
-            Class=row[1]
-            Family=row[2]
-            Name=row[3]
-            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
-        print(table_content.format(table_row=table_row,caption=caption))
+            Class = row[1]
+            Family = row[2]
+            Name = row[3]
+            table_row += row_fmt.format(Class=Class, Family=Family, Name=Name)
+            if lucky == 'true':
+                break
+    if len(table_row) == 0:
+        print('No such RTE in database')
     else:
-        print('No such TE in database')
-elif field=='Gene':
-    cursor.execute(f"select * from TE_GENE WHERE GENE LIKE '%{kw}%' OR FAMILY LIKE '%{kw}%' OR CLASS LIKE '%{kw}%'")
-    info=cursor.fetchall()
+        caption = 'Search result in field <strong>{field}</strong> matches <strong>{bool_rel}</strong> of <strong>"{kwi}"</strong> '.format(
+            kwi=';'.join(kw_org), field=field, bool_rel=bool_rel)
+        print(table_content.format(table_row=table_row, caption=caption))
 
-    table_row=''
+elif field == 'Gene':
+    table_row = ''
+    row_fmt = '''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td><td>{Gene}</td></tr>'''
+
+    conditioni = " (GENE LIKE '%{kwi}%') "
+    condition = bool_rel2.join([conditioni.format(kwi=kwi) for kwi in kw])
+    cursor.execute(f"select * from TE_GENE WHERE  {condition}")
+    info = cursor.fetchall()
     if info:
-        caption='RTEs in gene {kw}'.format(kw=kw)
         for row in info:
-            Class=row[1]
-            Family=row[2]
-            Name=row[3]
-            table_row+=f'''<tr><td>{Class}</td><td>{Family}</td><td><a href='te_info.html?Class={Class}&Family={Family}&Name={Name}' target='_blank'>{Name}</td></tr>'''
-        print(table_content.format(table_row=table_row,caption=caption))
+            Class = row[1]
+            Family = row[2]
+            Name = row[3]
+            Gene = row[4]
+            table_row += row_fmt.format(Class=Class,
+                                        Family=Family, Name=Name, Gene=Gene)
+            if lucky == 'true':
+                break
+    if len(table_row) == 0:
+        print('No such RTE in database')
     else:
-        print('No such gene in database')
-elif field=='Disease':
-    cursor.execute(f"select * from DATASET_META WHERE DISEASE LIKE '%{kw}%'")
-    info=cursor.fetchall()
+        caption = 'Search result in field <strong>{field}</strong> matches <strong>{bool_rel}</strong> of <strong>"{kwi}"</strong> '.format(
+            kwi=';'.join(kw_org), field=field, bool_rel=bool_rel)
+        print(gene_table_content.format(table_row=table_row, caption=caption))
+
+elif field == 'Disease':
+    table_row = ''
+    row_fmt = '''<tr><td><a href='dataset_detail.html?KW={Dataset}&Cate=Dataset' target='_blank'>{Dataset}</td><td>{Disease}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+
+    conditioni = " (DISEASE LIKE '%{kwi}%') "
+    condition = bool_rel2.join([conditioni.format(kwi=kwi) for kwi in kw])
+    cursor.execute(f"select * from DATASET_META WHERE  {condition}")
+    info = cursor.fetchall()
     if info:
-        caption='Dataset of disease {kw}'.format(kw=kw)
-        table_row=''
         for row in info:
-            Disease=row[4]
-            Dataset=row[0]
-            CellType=', '.join(row[7].split(';'))
-            Accession=row[8]
-            accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
-            table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset_detail.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
-        print(disease_table_content.format(table_row=table_row,caption=caption))
-    else:
+            Disease = row[4]
+            Dataset = row[0]
+            CellType = ', '.join(row[7].split(';'))
+            Accession = row[8]
+            accession_link = f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith(
+                'GSE') else f'https://synapse.org/#!Synapse:{Accession}'
+            table_row += row_fmt.format(Dataset=Dataset, Disease=Disease,
+                                        CellType=CellType, Accession=Accession, accession_link=accession_link)
+            if lucky == 'true':
+                break
+    if len(table_row) == 0:
         print('No such disease in database')
-elif field=='Dataset':
-    cursor.execute(f"select * from DATASET_META WHERE scARE_ID LIKE '%{kw}%'")
-    info=cursor.fetchall()
-    if info:
-        caption='Dataset of {kw}'.format(kw=kw)
-        table_row=''
-        if len(info)>1:
-            for row in info:
-                Disease=row[4]
-                Dataset=row[0]
-                CellType=', '.join(row[7].split(';'))
-                Accession=row[8]
-                accession_link=f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith('GSE') else f'https://synapse.org/#!Synapse:{Accession}'
-                table_row+=f'''<tr><td>{Dataset}</td><td>{Disease}</td><td><a href='dataset_detail.html?Dataset={Dataset}' target='_blank'>{Dataset}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
-        else:
-            print('Redirect to dataset page')
-            print(f'<meta http-equiv="refresh" content="0;url=dataset.html?KW={kw}&Cate=Dataset">',end='')
-        print(disease_table_content.format(table_row=table_row,caption=caption))
     else:
+        caption = 'Search result in field <strong>{field}</strong> matches <strong>{bool_rel}</strong> of <strong>"{kwi}"</strong> '.format(
+            kwi=';'.join(kw_org), field=field, bool_rel=bool_rel)
+        print(disease_table_content.format(
+            table_row=table_row, caption=caption))
+
+elif field == 'Dataset':
+    table_row = ''
+
+    conditioni = " (scARE_ID LIKE '%{kwi}%') "
+    condition = bool_rel2.join([conditioni.format(kwi=kwi) for kwi in kw])
+    cursor.execute(f"select * from DATASET_META WHERE  {condition}")
+    info = cursor.fetchall()
+    if info:
+        for row in info:
+            Disease = row[4]
+            Dataset = row[0]
+            CellType = ', '.join(row[7].split(';'))
+            Accession = row[8]
+            accession_link = f'https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={Accession}' if Accession.startswith(
+                'GSE') else f'https://synapse.org/#!Synapse:{Accession}'
+            table_row += f'''<tr><td><a href='dataset_detail.html?KW={Dataset}&Cate=Dataset' target='_blank'>{Dataset}</td><td>{Disease}</td><td>{CellType}</td><td><a href='{accession_link}' target='_blank'>{Accession}</a></td></tr>'''
+            if lucky == 'true':
+                break
+    if len(table_row) == 0:
         print('No such dataset in database')
+    else:
+        caption = 'Search result in field <strong>{field}</strong> matches <strong>{bool_rel}</strong> of <strong>"{kwi}"</strong> '.format(
+            kwi=';'.join(kw_org), field=field, bool_rel=bool_rel)
+        print(disease_table_content.format(
+            table_row=table_row, caption=caption))
 else:
     print('Implement later')

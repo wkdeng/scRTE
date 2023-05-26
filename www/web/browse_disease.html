@@ -1,0 +1,193 @@
+<!--
+@author [Wankun Deng]
+@email [dengwankun@gmail.com]
+@create date 2023-04-27 15:32:36
+@modify date 2023-05-16 11:07:11
+@desc [description]
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name=""author" content="Wankun Deng">
+
+  <title>Browse by disease</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<style>
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}  
+</style>
+
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+<body onload="init()">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
+<div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
+    <div class="row" >
+        <div class="col" id="alzheimer">
+            <div class="card mb-3">
+                <div class="card-header" >
+                    <div><strong><span id="desc_header"></span>Alzheimer's Disease (AD):&nbsp;&nbsp;&nbsp;</strong><a onclick="getDataset('AD');" class="btn btn-info">View All AD Dataset</a></div>          
+                    </div>
+                <div class="card-body mr-0 ml-0 pl-0 pr-0">
+                    <table class="table table-stripped"><tbody>
+                        <tr ><td colspan="2" class="infobox-full-data"><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Brain-ALZH.png/1920px-Brain-ALZH.png" class="image">
+                        <img alt="Brain-ALZH.png" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Brain-ALZH.png/300px-Brain-ALZH.png" decoding="async" width="300" height="202"
+                        srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Brain-ALZH.png/450px-Brain-ALZH.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Brain-ALZH.png/600px-Brain-ALZH.png 2x" 
+                        data-file-width="2277" data-file-height="1535"></a></td></tr><tr><td colspan="2" class="infobox-full-data">Diagram of a normal brain compared to the brain of a person with Alzheimer's</td></tr>
+                        <tr><th><a href="https://en.wikipedia.org/wiki/Medical_specialty" title="Medical specialty">Specialty</a></th>
+                            <td class="infobox-data"><a href="https://en.wikipedia.org/wiki/Neurology" title="Neurology">Neurology</a></td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Signs_and_symptoms" title="Signs and symptoms">Symptoms</a></th>
+                            <td class="infobox-data"><a href="https://en.wikipedia.org/wiki/Memory_loss" class="mw-redirect" title="Memory loss">Memory loss</a>, <a href="https://en.wikipedia.org/wiki/Primary_progressive_aphasia" 
+                                title="Primary progressive aphasia">problems with language</a>, <a href="/wiki/Orientation_(mental)" title="Orientation (mental)">disorientation</a>, 
+                                <a href="/wiki/Mood_swing" title="Mood swing">mood swings</a><sup id="cite_ref-Knopman2021_1-0" class="reference"><a href="https://en.wikipedia.org/wiki/Alzheimer%27s_disease#cite_note-Knopman2021-1">[1]</a></sup>
+                                <sup id="cite_ref-WHO2020_2-0" class="reference"><a href="https://en.wikipedia.org/wiki/Alzheimer%27s_disease#cite_note-WHO2020-2">[2]</a></sup></td></tr><tr><th scope="row" class="infobox-label">
+                                    <a href="https://en.wikipedia.org/wiki/Complication_(medicine)" title="Complication (medicine)">Complications</a></th><td class="infobox-data"><a href="https://en.wikipedia.org/wiki/Dehydration" title="Dehydration">Dehydration</a> and 
+                                        <a href="/wiki/Pneumonia" title="Pneumonia">pneumonia</a> in the terminal stage<sup id="cite_ref-pmid15883266_3-0" class="reference"><a href="#cite_note-pmid15883266-3">[3]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Usual onset</th><td class="infobox-data">Over 65 years old<sup id="cite_ref-Mend2012_4-0" class="reference"><a href="#cite_note-Mend2012-4">[4]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Duration</th><td class="infobox-data">Long term<sup id="cite_ref-WHO2020_2-1" class="reference"><a href="#cite_note-WHO2020-2">[2]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Causes</th><td class="infobox-data">Poorly understood<sup id="cite_ref-Knopman2021_1-1" class="reference"><a href="#cite_note-Knopman2021-1">[1]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Risk_factor" title="Risk factor">Risk factors</a></th><td class="infobox-data"><a href="/wiki/Genetics" title="Genetics">Genetics</a>, 
+                            <a href="/wiki/Head_injury" title="Head injury">head injuries</a>, <a href="/wiki/Major_depressive_disorder" title="Major depressive disorder">depression</a>, <a href="/wiki/Hypertension" title="Hypertension">hypertension</a>
+                            <sup id="cite_ref-Knopman2021_1-2" class="reference"><a href="#cite_note-Knopman2021-1">[1]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Medical_diagnosis" title="Medical diagnosis">Diagnostic method</a></th>
+                                <td class="infobox-data">Based on symptoms and <a href="/wiki/Cognitive_test" title="Cognitive test">cognitive testing</a> after ruling out other possible causes<sup id="cite_ref-NICE2014Diag_5-0" class="reference"><a href="#cite_note-NICE2014Diag-5">[5]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Differential_diagnosis" title="Differential diagnosis">Differential diagnosis</a></th><td class="infobox-data"><a href="/wiki/Normal_brain_aging" class="mw-redirect" title="Normal brain aging">Normal brain aging</a>,
+                            <sup id="cite_ref-Knopman2021_1-3" class="reference"><a href="#cite_note-Knopman2021-1">[1]</a></sup> <a href="/wiki/Lewy_body_dementia" class="mw-redirect" title="Lewy body dementia">Lewy body dementia</a>,
+                            <sup id="cite_ref-Gomperts2016_6-0" class="reference"><a href="#cite_note-Gomperts2016-6">[6]</a></sup> <a href="/wiki/Trisomy_21" class="mw-redirect" title="Trisomy 21">Trisomy 21</a>.<sup id="cite_ref-Lott2019_7-0" class="reference">
+                                <a href="#cite_note-Lott2019-7">[7]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Medication" title="Medication">Medication</a></th><td class="infobox-data">
+                                <a href="/wiki/Acetylcholinesterase_inhibitor" title="Acetylcholinesterase inhibitor">Acetylcholinesterase inhibitors</a>, <a href="/wiki/NMDA_receptor_antagonist" title="NMDA receptor antagonist">NMDA receptor antagonists</a> (small benefit)
+                                <sup id="cite_ref-Pres2012_8-0" class="reference"><a href="#cite_note-Pres2012-8">[8]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Prognosis" title="Prognosis">Prognosis</a></th>
+                                    <td class="infobox-data">Life expectancy 3–9 years<sup id="cite_ref-NEJM2010_9-0" class="reference"><a href="#cite_note-NEJM2010-9">[9]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Frequency</th><td class="infobox-data">50 million (2020)<sup id="cite_ref-Breijyeh2020_10-0" class="reference"><a href="#cite_note-Breijyeh2020-10">[10]</a></sup></td></tr>
+                    </tbody></table>
+                </div>
+            </div>
+        </div>
+        <div class="col" id="pakinson">
+            <div class="card mb-3">
+                <div class="card-header" > <div><strong><span id="desc_header"></span>Pakinson's Disease (PD):&nbsp;&nbsp;&nbsp;</strong><a onclick="getDataset('PD');" class="btn btn-info">View All PD Dataset</a></div></div>
+                <div class="card-body mr-0 ml-0 pl-0 pr-0">
+                    <table class="table"><tbody>
+                    
+                        <tr><td colspan="2" class="infobox-full-data"><a href="/wiki/File:Paralysis_agitans_(1907,_after_St._Leger).png" class="image">
+                            <img alt="Two sketches (one from the front and one from the right side) of a man, with an expressionless face. He is stooped forward and is presumably having difficulty walking." 
+                            src="//upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Paralysis_agitans_%281907%2C_after_St._Leger%29.png/300px-Paralysis_agitans_%281907%2C_after_St._Leger%29.png" decoding="async" width="300" height="316" 
+                            srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Paralysis_agitans_%281907%2C_after_St._Leger%29.png/450px-Paralysis_agitans_%281907%2C_after_St._Leger%29.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Paralysis_agitans_%281907%2C_after_St._Leger%29.png/600px-Paralysis_agitans_%281907%2C_after_St._Leger%29.png 2x" 
+                            data-file-width="1500" data-file-height="1580"></a></td></tr>
+                        <tr><td colspan="2" class="infobox-full-data">Illustration of Parkinson's disease by <a href="/wiki/William_Gowers_(neurologist)" title="William Gowers (neurologist)">William Richard Gowers</a>, 
+                            first published in <i>A Manual of Diseases of the Nervous System</i> (1886), and based on 1879 photographs attributed to <a href="/wiki/Albert_Londe" title="Albert Londe">Albert Londe</a>
+                            <sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup><sup id="cite_ref-2" class="reference"><a href="#cite_note-2">[2]</a></sup></td></tr><tr><th scope="row" class="infobox-label">
+                                <a href="/wiki/Medical_specialty" title="Medical specialty">Specialty</a></th><td class="infobox-data"><a href="/wiki/Neurology" title="Neurology">Neurology</a></td></tr><tr><th scope="row" class="infobox-label">
+                                    <a href="/wiki/Signs_and_symptoms" title="Signs and symptoms">Symptoms</a></th><td class="infobox-data"><a href="/wiki/Tremor" title="Tremor">Tremor</a>, <a href="/wiki/Spasticity" title="Spasticity">rigidity</a>, 
+                                        <a href="/wiki/Hypokinesia#Bradykinesia" title="Hypokinesia">slowness of movement</a>, <a href="/wiki/Gait_abnormality" title="Gait abnormality">difficulty walking</a><sup id="cite_ref-NIH2016_3-0" class="reference">
+                                            <a href="#cite_note-NIH2016-3">[3]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Complication_(medicine)" title="Complication (medicine)">Complications</a></th><td class="infobox-data">
+                                                <a href="/wiki/Parkinson%27s_disease_dementia" title="Parkinson's disease dementia">Dementia</a>, <a href="/wiki/Major_depressive_disorder" title="Major depressive disorder">depression</a>, anxiety,
+                                                <sup id="cite_ref-Sv2016_4-0" class="reference"><a href="#cite_note-Sv2016-4">[4]</a></sup> eating problems, and sleep problems<sup id="cite_ref-5" class="reference"><a href="#cite_note-5">[5]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Usual onset</th><td class="infobox-data">Age over 60<sup id="cite_ref-NIH2016_3-1" class="reference"><a href="#cite_note-NIH2016-3">[3]</a></sup><sup id="cite_ref-Car2016_6-0" class="reference">
+                            <a href="#cite_note-Car2016-6">[6]</a></sup></td></tr><tr><th scope="row" class="infobox-label">Causes</th><td class="infobox-data">Unknown<sup id="cite_ref-Lancet2015_7-0" class="reference"><a href="#cite_note-Lancet2015-7">[7]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Risk_factor" title="Risk factor">Risk factors</a></th><td class="infobox-data"><a href="/wiki/Pesticide" title="Pesticide">Pesticide</a> exposure, <a href="/wiki/Head_injuries" class="mw-redirect" title="Head injuries">head injuries</a><sup id="cite_ref-Lancet2015_7-1" class="reference"><a href="#cite_note-Lancet2015-7">[7]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Medical_diagnosis" title="Medical diagnosis">Diagnostic method</a></th><td class="infobox-data">Based on symptoms<sup id="cite_ref-NIH2016_3-2" class="reference"><a href="#cite_note-NIH2016-3">[3]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Differential_diagnosis" title="Differential diagnosis">Differential diagnosis</a></th><td class="infobox-data"><a href="/wiki/Dementia_with_Lewy_bodies" title="Dementia with Lewy bodies">Dementia with Lewy bodies</a>, <a href="/wiki/Progressive_supranuclear_palsy" title="Progressive supranuclear palsy">progressive supranuclear palsy</a>, <a href="/wiki/Essential_tremor" title="Essential tremor">essential tremor</a>, <a href="/wiki/Antipsychotic" title="Antipsychotic">antipsychotic</a> use<sup id="cite_ref-8" class="reference"><a href="#cite_note-8">[8]</a></sup></td></tr><tr><th scope="row" class="infobox-label">Treatment</th><td class="infobox-data">Medications, surgery<sup id="cite_ref-NIH2016_3-3" class="reference"><a href="#cite_note-NIH2016-3">[3]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Medication" title="Medication">Medication</a></th><td class="infobox-data"><a href="/wiki/L-DOPA" title="L-DOPA">L-DOPA</a>, <a href="/wiki/Dopamine_agonist" title="Dopamine agonist">dopamine agonists</a><sup id="cite_ref-Sv2016_4-1" class="reference"><a href="#cite_note-Sv2016-4">[4]</a></sup></td></tr><tr><th scope="row" class="infobox-label"><a href="/wiki/Prognosis" title="Prognosis">Prognosis</a></th><td class="infobox-data"><a href="/wiki/Life_expectancy" title="Life expectancy">Life expectancy</a> about 7–15 years<sup id="cite_ref-Macleod2014_9-0" class="reference"><a href="#cite_note-Macleod2014-9">[9]</a></sup></td></tr><tr><th scope="row" class="infobox-label">Frequency</th><td class="infobox-data">6.2&nbsp;million (2015)<sup id="cite_ref-GBD2015Pre_10-0" class="reference"><a href="#cite_note-GBD2015Pre-10">[10]</a></sup></td></tr><tr><th scope="row" class="infobox-label">Deaths</th><td class="infobox-data">117,400 (2015)<sup id="cite_ref-GBD2015De_11-0" class="reference"><a href="#cite_note-GBD2015De-11">[11]</a></sup></td></tr></tbody></table>
+                </div>
+            </div>
+        </div>
+        <div class="col" id="multiple-sclerosis">
+            <div class="card mb-3">
+                <div class="card-header" > <div><strong><span id="desc_header"></span>Multiple Sclerosis (MS):&nbsp;&nbsp;&nbsp;</strong><a onclick="getDataset('MS');" class="btn btn-info">View All MS Dataset</a></div></div>
+                <div class="card-body mr-0 ml-0 pl-0 pr-0">
+                    <table class="table"><tbody>
+                        <tr><td colspan="2" class="infobox-full-data"><a href="/wiki/File:MS_Demyelinisation_CD68_10xv2.jpg" class="image"><img alt="MS Demyelinisation CD68 10xv2.jpg" 
+                            src="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/MS_Demyelinisation_CD68_10xv2.jpg/300px-MS_Demyelinisation_CD68_10xv2.jpg" decoding="async" width="300" height="223" 
+                            srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/MS_Demyelinisation_CD68_10xv2.jpg/450px-MS_Demyelinisation_CD68_10xv2.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/59/MS_Demyelinisation_CD68_10xv2.jpg/600px-MS_Demyelinisation_CD68_10xv2.jpg 2x" 
+                            data-file-width="2080" data-file-height="1544"></a></td></tr><tr><td colspan="2" class="infobox-full-data"><a href="/wiki/CD68" title="CD68">CD68</a>-stained tissue shows several 
+                                <a href="/wiki/Macrophage" title="Macrophage">macrophages</a> in the area of a demyelinated lesion caused by MS.</td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Medical_specialty" title="Medical specialty">Specialty</a></th><td class="infobox-data"><a href="/wiki/Neurology" title="Neurology">Neurology</a></td></tr>
+                        <tr><th scope="row" class="infobox-label">Other names</th><td class="infobox-data">Multiple cerebral sclerosis, multiple cerebro-spinal sclerosis, disseminated sclerosis, encephalomyelitis disseminata</td></tr>
+
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Signs_and_symptoms" title="Signs and symptoms">Symptoms</a></th><td class="infobox-data">Variable, including almost any neurological symptom or sign, with 
+                            <a href="/wiki/Autonomic_nervous_system" title="Autonomic nervous system">autonomic</a>, visual, motor, and sensory problems being the most common.<sup id="cite_ref-pmid18970977_1-0" class="reference"><a href="#cite_note-pmid18970977-1">[1]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Usual onset</th><td class="infobox-data">Age 20–50<sup id="cite_ref-Milo2010_2-0" class="reference"><a href="#cite_note-Milo2010-2">[2]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Duration</th><td class="infobox-data">Long term<sup id="cite_ref-NIH2015_3-0" class="reference"><a href="#cite_note-NIH2015-3">[3]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Causes</th><td class="infobox-data">Unknown<sup id="cite_ref-Nak2012_4-0" class="reference"><a href="#cite_note-Nak2012-4">[4]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label"><a href="/wiki/Medical_diagnosis" title="Medical diagnosis">Diagnostic method</a></th><td class="infobox-data">Based on symptoms and medical tests<sup id="cite_ref-Tsang2011_5-0" class="reference">
+                            <a href="#cite_note-Tsang2011-5">[5]</a></sup></td></tr><tr><th scope="row" class="infobox-label">Treatment</th><td class="infobox-data">Disease-Modifying Therapies<sup id="cite_ref-Liu_2021_6-0" class="reference"
+                                <a href="#cite_note-Liu_2021-6">[6]</a></sup><p>Physiotherapy<sup id="cite_ref-Alphonsus_2019_7-0" class="reference"><a href="#cite_note-Alphonsus_2019-7">[7]</a></sup></p>Occupational Therapy
+                                <sup id="cite_ref-Alphonsus_2019_7-1" class="reference"><a href="#cite_note-Alphonsus_2019-7">[7]</a></sup></td></tr>
+                        <tr><th scope="row" class="infobox-label">Frequency</th><td class="infobox-data">0.032% (<a href="/wiki/World" title="World">world</a>)</td></tr></tbody></table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer  container-fluid" style="width: 100%; min-width: 1100px; margin-block: 100px;background-color: white;">
+        <hr>
+          <div class=" container-fluid">
+              <div class="row">
+            <div class="col-md-1"></div>
+                  <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
+                      <img src="images/SBMI.png" width="100%" alt="@"></a>
+                  </div>
+                  <div class="col-md-7">
+                      <p style="align:left;font-size: 14px;">
+                      <span style="font-size:1.20em;"><strong>Copyright ©</strong>
+                      <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
+                      <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
+                      <span style="font-family: Arial;"> | </span>
+                      <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </footer>
+</div>
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="view_result">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class="container-fluid">
+                <div class="row" >
+                    <div class="col" id="alzheimer">
+                        <div class="card mb-3">
+                            <div class="card-header" >
+                                <div><strong><span id="result_header">All Dataset with Disease Samples</span></div>          
+                                </div>
+                            <div class="card-body" id="result_container">
+                                datatable here
+                            </div>
+                        </div>
+                    </div>            
+            </div>
+          </div>        
+      </div>
+    </div>
+  </div>
+<script type="text/javascript">
+    function init(){
+        includeHTML();
+    }
+    function getDataset(disease){
+        $('#result_header').html('All Dataset with <strong>'+disease+'</strong> Samples');
+        document.getElementById("result_container").innerHTML = 'Loading...';
+        $.get("cgi/search.py", { field: 'Disease', kw: disease, type:'simple',lucky: false}, function (response) {
+          document.getElementById("result_container").innerHTML = response;
+          let table = new DataTable('#result_table', {response:true});  
+        });
+        $('#view_result').modal();
+        
+    }
+</script>
+</body>

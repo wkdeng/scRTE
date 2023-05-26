@@ -77,6 +77,8 @@ elif cate=='Cell_Dataset':
     print(json.dumps(list(info.transpose().to_dict().values())))
 elif cate=='Cell_TE':
     cursor = connection.cursor()
+    if kw=='In':
+        kw='`In`'
     sql=f" select TE,{kw} from FAM_CELL_COUNT;"
     cursor.execute(sql)
     info=cursor.fetchall()
