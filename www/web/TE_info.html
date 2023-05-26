@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-05-16 11:31:28
+@modify date 2023-05-25 14:00:51
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -14,12 +14,13 @@
 <style>@import url('css/te_table.css');</style>
 <style>@import url('css/highcharts.css');</style>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
-    
+<script src='https://cdn.plot.ly/plotly-2.20.0.min.js'></script>
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/data.js"></script>
 <script src="https://code.highcharts.com/modules/heatmap.js"></script>
 <script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
 <script src="https://code.highcharts.com/modules/export-data.js"></script>
 <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
@@ -29,6 +30,9 @@
 <script src="http://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script src="js/te_info/chr_dist.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
 </head>
 
 <body onload='init()'>
@@ -74,7 +78,7 @@
           </div>
         </div>
       </div>
-
+      <!--TE genomic region distribution-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="region_container" >
         <div class="card " >
           <h5 class="card-header">Distribution in genomic regions</h5>
@@ -89,14 +93,22 @@
     </div>
     <!--third row-->
     <div class="row" id="row3">
-    <!--TE genomic region distribution-->
-
+      <!-- TE expression boxplot -->
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-0" id="exp_container">
+        <div class="card mb-0">
+          <h5 class="card-header">TE Expression</h5>
+          <div class="card-body"id="exp_body">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row4">
       <!-- TE-gene network-->
-      <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="network_container">
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-0" id="network_container">
         <div class="card mb-0">
           <h5 class="card-header">TE-Gene network</h5>
-          <div class="card-body" id="te_gene" style="height: 600px;">
-            <figure class="highcharts-figure">
+          <div class="card-body" id="te_gene">
+            <!--<figure class="highcharts-figure">
                 <div id="container_network"></div>
                 <label for="degree">Network degree:</label>
                 <select name="degree" id="degree">
@@ -108,7 +120,7 @@
                   <option value='false' selected>Hide</option>
                   <option value='true' >Show</option>
                 </select>
-            </figure>
+            </figure>-->
           </div>
         </div>
       </div>
@@ -116,6 +128,9 @@
 </div>
 
 <script type="text/javascript">
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
     function init(){
         const urlParams = new URLSearchParams(window.location.search);
         var content_only=urlParams.get('CL')
@@ -132,43 +147,15 @@
                 showRegionDist(response[3]);
             }
         );
-        var netData;
-        function updateNetwork(){
-            showLabel=document.getElementById('showLabel').value=='true';
-            console.log(showLabel);
-                // netData=JSON.parse(response);
-            netChart=ForceGraph(netData,{nodeID:d => d.id,
-                            nodeGroup:d => d.group,
-                            nodeTitle:d => d.id,
-                            linkStrokeWidth:d => 1,
-                            width:500,
-                            height:500,
-                            showLabel:showLabel});
-            document.getElementById('container_network').innerHTML='';
-            document.getElementById('container_network').appendChild(netChart);
-    }
-        var name_=urlParams.get('Name');
-        
-        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
-                function(response){
-                    netData=JSON.parse(response);
-                    updateNetwork();
-                }
-        );
-        document.getElementById('degree').addEventListener('change',function(){
-        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
+        sleep(100).then(()=>{$.get('/cgi/te_info/get_te_containing_gene.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
             function(response){
-                    netData=JSON.parse(response);
-                    updateNetwork();
-                }
-            );
-        });
-        document.getElementById('showLabel').addEventListener('change',function(){
-            updateNetwork();
-        });
-    
+                $('#te_gene').html(response);
+                let table = new DataTable('#gene_table', {response:true});  
+            }
+        );});
     }
 </script>
+<script type="text/javascript" src="js/te_info/te_exp_plotly.js"></script>
 <footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
 		  <hr>
 		    <div class=" container-fluid">
