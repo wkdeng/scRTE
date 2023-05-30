@@ -1,0 +1,271 @@
+<!--
+@author [Wankun Deng]
+@email [dengwankun@gmail.com]
+@create date 2023-04-27 15:32:36
+@modify date 2023-05-30 11:25:56
+@desc [description]
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name=""author" content="Wankun Deng">
+
+  <title>Home</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<style>
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}  
+</style>
+<script src='js/third_party/plotly-2.20.0.min.js'></script>
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script src="js/third_party/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="js/third_party/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<link rel="stylesheet" href="css/jquery.dataTables.css" />
+<script src="js/third_party/jquery.dataTables.js"></script>
+
+
+<body onload="init()">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
+<div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
+    <div class="row" >
+        <div class="col-xl-12" id="desc">
+            <div class="card mb-3">
+                <div class="card-header" ><strong><span id="desc_header"></span>Description</strong></div>
+                <div class="card-body">
+                    In this page, you'll be able to explore the scARE database and find highlighted RTEs in different cell types and disease conditions
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-xl-12" id="most_exp_row">
+            <div class="card mb-3">
+                <div class="card-header" ><strong><span id="desc_header"></span>Highly expressed RTEs</strong></div>
+                <div class="card-body">
+                    <div>In this section, you can choose conditions to explore highly expressed RTEs</div>
+                        <br>
+                        <div class="input-group mb-3" onchange="get_most_exp();">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text" for="multi_field">I want to list top 
+                            </div>
+                            <input type="number" step=10 id="most_exp_n" style="width:100px;" class="form-control" placeholder="Keyword" aria-label="most_exp_n"
+                            aria-describedby="basic-addon1" value=10>
+
+                        
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="multi_field"> most expressed RTEs in cell type of: </label>
+                            </div>
+                            <select name="Cell types" id="most_exp_cell_types">
+                                <option value=0 >All</option>
+                                <option value=1 selected >Excitatory Neuron</option>
+                                <option value=2 >Inhibitory Neuron</option>
+                                <option value=3 >Oligodendrocyte Progenitor Cell</option>
+                                <option value=4>Oligodendrocyte</option>
+                                <option value=5 >Astrocyte</option>
+                                <option value=6 >Microglia</option>
+                                <option value=7 >Endothelial</option>
+                                <option value=8 >VLMC</option>
+                            </select>
+                        
+                            <div class="input-group-append">
+                                <label class="input-group-text" for="multi_field"> in condition of: </label>
+                            </div>
+                            <select name="Disease" id="most_exp_disease">
+                                <option value='AD' >AD</option>
+                                <option value='PD' selected >PD</option>
+                                <option value="MS">MS</option>
+                                <option value='Control' >Control</option>
+                            </select>
+                        </div>
+                        <br>
+                        <div id="most_exp_panel">
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link active" id="boxplot-tab" data-bs-toggle="tab" data-bs-target="#boxplotview" type="button" role="tab" aria-controls="boxplotview" aria-selected="true">Boxplot</button>
+                                <button class="nav-link" id="table-tab" data-bs-toggle="tab" data-bs-target="#most_exp_tableview" type="button" role="tab" aria-controls="most_exp_tableview" aria-selected="false">Table</button>
+                            </div>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane show active" id="boxplotview" role="tabpanel" aria-labelledby="boxplot-tab" tabindex="0" style="border-left: 1px;border-right: 1px;border-bottom: 1px;">Loading plots...</div>
+                                <div class="tab-pane" id="most_exp_tableview" role="tabpanel" aria-labelledby="table-tab" tabindex="0">Loading table...</div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row" >
+        <div class="col-xl-12" id="diff_d_exp_row">
+            <div class="card mb-3">
+                <div class="card-header" ><strong><span id="desc_header"></span>Differential expressed RTEs (disease v.s. control)</strong></div>
+                <div class="card-body">
+                    <div>In this section, you can choose conditions to explore differential expressed RTEs</div>
+                    <br>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="multi_field">I want to list differential expressed RTEs when comparing 
+                        </div>
+                        <select id="diff_d_comp">
+                            <option value=-1 selected >Disease v.s. control</option>
+                            <option value= 0 >Disease v.s. disease</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="multi_field"> in cell type of: </label>
+                        </div>
+                        <select name="Cell types" id="diff_d_cell_types">
+                            <option value=-1 >All</option>
+                            <option value=0 selected >Excitatory Neuron</option>
+                            <option value=1 >Inhibitory Neuron</option>
+                            <option value=2 >Oligodendrocyte Progenitor Cell</option>
+                            <option value=3 >Oligodendrocyte</option>
+                            <option value=4 >Astrocyte</option>
+                            <option value=5 >Microglia</option>
+                            <option value=6 >Endothelial</option>
+                            <option value=6 >VLMC</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div id="diff_d_table">Result field</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="col-xl-12" id="diff_c_exp_row">
+            <div class="card mb-3">
+                <div class="card-header" ><strong><span id="desc_header"></span>Differential expressed RTEs (cell type v.s. cell type)</strong></div>
+                <div class="card-body">
+                    <div>In this section, you can choose conditions to explore differential expressed RTEs</div>
+                    <br>
+                        <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="diff_d_comp">I want to list differential expressed RTEs when comparing 
+                        </div>
+                        <select id="diff_d_comp">
+                            <option value= 0 selected >Excitatory Neuron</option>
+                            <option value=1 >Inhibitory Neuron</option>
+                            <option value=2 >OPC</option>
+                            <option value=3 >Oligodendrocyte</option>
+                            <option value=4 >Astrocyte</option>
+                            <option value=5 >Microglia</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="diff_d_comp"> cells to: </label>
+                        </div>
+                        <select id="diff_d_cell_types">
+                            <option value=-1 selected >Any else</option>
+                            <option value= 0 >Excitatory Neuron</option>
+                            <option value=1 >Inhibitory Neuron</option>
+                            <option value=2 >OPC</option>
+                            <option value=3 >Oligodendrocyte</option>
+                            <option value=4 >Astrocyte</option>
+                            <option value=5 >Microglia</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="diff_d_comp"> cells.</label>
+                        </div>
+                    </div>
+                    <br>
+                    <div id="diff_c_table">Result field</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" >
+        <div class="col-xl-12" id="co_exp">
+            <div class="card mb-3">
+                <div class="card-header" ><strong><span></span>Co-expressed RTEs</strong></div>
+                <div class="card-body">
+                    <div>In this section, you can explore co-expression of RTE with differential expressed genes</div>
+                    <br>
+                    <div >
+                        <div id="co_exp_panel">
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <button class="nav-link active" id="boxplot-tab" data-bs-toggle="tab" data-bs-target="#diagnosis_svg" type="button" role="tab" aria-controls="diagnosis_svg" aria-selected="true">Diagnosis</button>
+                                <button class="nav-link" id="table-tab" data-bs-toggle="tab" data-bs-target="#cll_type_svg" type="button" role="tab" aria-controls="cll_type_svg" aria-selected="false">Cell type</button>
+                            </div>
+                            <div class="tab-content" id="nav-tabContent">
+                                <div class="tab-pane show active" id="diagnosis_svg" role="tabpanel" aria-labelledby="boxplot-tab" tabindex="0" style="border-left: 1px;border-right: 1px;border-bottom: 1px;" w3-include-html="images/coexpression_diagnosis.svg"></div>
+                                <div class="tab-pane" id="cll_type_svg" role="tabpanel" aria-labelledby="table-tab" tabindex="0" w3-include-html="images/coexpression_cell_type.svg"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript" src="js/co_exp_net.js"></script>
+<script type="text/javascript">
+    async function getTEExpData() {
+      var num=document.getElementById("most_exp_n").value
+      var cell=document.getElementById("most_exp_cell_types").value
+      var condition=document.getElementById("most_exp_disease").value
+      const response = await fetch(
+          '/cgi/get_most_exp.py?Num='+num+'&Cell='+cell+'&Condition='+condition
+      );
+      return response.json();
+    }
+    
+    function get_most_exp(){
+        getTEExpData().then(data => {
+                dataset=data[0]
+                console.log(dataset)
+                document.getElementById("boxplotview").innerHTML =''
+                var layout = {
+                    yaxis: {
+                    title: 'Normalized Expression'
+                    },
+                    // boxmode: 'group',
+                    title: 'Most expressed RTEs',
+                    showlegend: false
+                };
+                Plotly.newPlot('boxplotview', dataset, layout,{responsive: true});
+                $('#most_exp_tableview').html(data[1]);
+                let dtable=new DataTable('#most_exp_table', {response:true});  
+            });
+    }
+    function get_co_exp(){
+        
+    }
+    function init(){
+        includeHTML();
+        get_most_exp();
+    }
+</script>
+<footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
+		  <hr>
+		    <div class=" container-fluid">
+		        <div class="row">
+              <div class="col-md-1"></div>
+		            <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
+		                <img src="images/SBMI.png" width="100%" alt="@"></a>
+		            </div>
+		            <div class="col-md-7">
+		                <p style="align:left;font-size: 14px;">
+		                <span style="font-size:1.20em;"><strong>Copyright ©</strong>
+		                <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
+		                <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
+		                <span style="font-family: Arial;"> | </span>
+		                <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
+		                </p>
+		            </div>
+		        </div>
+		    </div>
+		</footer>
+</body>
