@@ -19,15 +19,15 @@ form = cgi.FieldStorage()
 Dataset=form['Dataset'].value
 
 
+import config
 # Create the connection object
 connection = MySQLdb.connect(
-    user='www-data',
-    passwd='www-data-passwd',
-    host='127.0.0.1',
-    port=3306,
-    db='scARE'
+    user=config.user,
+    passwd=config.passwd,
+    host=config.host,
+    port=config.port,
+    db=config.db
 )
-
 cursor = connection.cursor()
 
 cursor.execute(f"select CELL, CELL_TYPE, UMAP_1, UMAP_2 from DATA_CELLUMAP WHERE scARE_ID = '{Dataset}' ")

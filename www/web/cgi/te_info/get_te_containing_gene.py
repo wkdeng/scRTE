@@ -12,23 +12,27 @@ import pandas as pd
 import cgi
 import json
 import MySQLdb
+
+import sys
+sys.path.append('../')
+import config
+# Create the connection object
+connection = MySQLdb.connect(
+    user=config.user,
+    passwd=config.passwd,
+    host=config.host,
+    port=config.port,
+    db=config.db
+)
+
+
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
-
 
 form = cgi.FieldStorage()
 class_=form['Class'].value
 family=form['Family'].value
 name=form['Name'].value
-
-# Create the connection object
-connection = MySQLdb.connect(
-    user='www-data',
-    passwd='www-data-passwd',
-    host='127.0.0.1',
-    port=3306,
-    db='scARE'
-)
 
 cursor = connection.cursor()
 sql="select CLASS,FAMILY,NAME,GENE from TE_GENE where CLASS='%s' and FAMILY='%s' and NAME='%s'"%(class_,family,name)

@@ -16,15 +16,17 @@ import urllib.parse
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
+import sys
+sys.path.append('../')
+import config
 # Create the connection object
 connection = MySQLdb.connect(
-    user='www-data',
-    passwd='www-data-passwd',
-    host='127.0.0.1',
-    port=3306,
-    db='scARE'
+    user=config.user,
+    passwd=config.passwd,
+    host=config.host,
+    port=config.port,
+    db=config.db
 )
-
 
 
 form = cgi.FieldStorage()
