@@ -61,13 +61,14 @@ family_content='''
 name_content="""<li class='{name_cls}' style="list-style-type:none;display:{display}"><a href="http://localhost/te_info.html?Class={Class}&Family={Family}&Name={name_name}" target="_blank">{name_name}</li>"""
 
 
+import config
 # Create the connection object
 connection = MySQLdb.connect(
-    host='127.0.0.1',
-    user='www-data',
-    passwd='www-data-passwd',
-    port=3306,
-    db='scARE'
+    user=config.user,
+    passwd=config.passwd,
+    host=config.host,
+    port=config.port,
+    db=config.db
 )
 
 # Create cursor and use it to execute SQL command

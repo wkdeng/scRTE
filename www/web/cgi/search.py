@@ -38,15 +38,15 @@ else:
     kw = [kw.strip()]
     kw_org = [kw_org.strip()]
 
+import config
 # Create the connection object
 connection = MySQLdb.connect(
-    host='127.0.0.1',
-    user='www-data',
-    passwd='www-data-passwd',
-    port=3306,
-    db='scARE'
+    user=config.user,
+    passwd=config.passwd,
+    host=config.host,
+    port=config.port,
+    db=config.db
 )
-
 # Create the cursor object
 cursor = connection.cursor()
 
