@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:36
-@modify date 2023-05-31 11:16:08
+@modify date 2023-05-31 16:39:39
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -35,7 +35,7 @@ ul {
 <link rel="stylesheet" href="css/jquery.dataTables.css" />
 <script src="js/third_party/jquery.dataTables.js"></script>
 
-<body onload="init()">
+<body onload="init()" style="background-color:#efefef;">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="row" >
@@ -132,49 +132,29 @@ ul {
         </div>
     </div>
 
-    <footer class="footer  container-fluid" style="width: 100%; min-width: 1100px; margin-block: 100px;background-color: white;">
-        <hr>
-          <div class=" container-fluid">
-              <div class="row">
-            <div class="col-md-1"></div>
-                  <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
-                      <img src="images/SBMI.png" width="100%" alt="@"></a>
-                  </div>
-                  <div class="col-md-7">
-                      <p style="align:left;font-size: 14px;">
-                      <span style="font-size:1.20em;"><strong>Copyright ©</strong>
-                      <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
-                      <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
-                      <span style="font-family: Arial;"> | </span>
-                      <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
-                      </p>
-                  </div>
-              </div>
-          </div>
-      </footer>
+    
 </div>
 
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" id="view_result">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-body">
-            <div class="container-fluid">
-                <div class="row" >
-                    <div class="col" id="alzheimer">
-                        <div class="card mb-3">
-                            <div class="card-header" >
-                                <div><strong><span id="result_header">All Dataset with Disease Samples</span></div>          
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row" >
+                        <div class="col" id="alzheimer">
+                            <div class="card mb-3">
+                                <div class="card-header" >
+                                    <div><strong><span id="result_header">All Dataset with Disease Samples</span></strong></div>          
+                                    <div class="card-body" id="result_container">datatable here</div>
                                 </div>
-                            <div class="card-body" id="result_container">
-                                datatable here
-                            </div>
+                            </div>            
                         </div>
-                    </div>            
-            </div>
-          </div>        
-      </div>
+                    </div>
+                </div>
+            </div>        
+        </div>
     </div>
-  </div>
+</div>
 <script type="text/javascript">
     function init(){
         includeHTML();
@@ -190,4 +170,5 @@ ul {
         
     }
 </script>
+<div w3-include-html="footer.html"></div>
 </body>

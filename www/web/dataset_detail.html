@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:46
-@modify date 2023-05-31 11:17:40
+@modify date 2023-05-31 16:10:45
 @desc [description]
 -->
 <!DOCTYPE html>
@@ -33,7 +33,7 @@
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 
-<body onload='init()'>
+<body onload='init()' style="background-color:#efefef;">
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 
   <div style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
@@ -143,25 +143,6 @@
 <script src="js/cell_count/cell_count.js"></script>
 <script src="js/umap/umap.js" ></script>
 <script src="js/umap/umap_gene.js" ></script>
-<footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
-		  <hr>
-		    <div class=" container-fluid">
-		        <div class="row">
-              <div class="col-md-1"></div>
-		            <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
-		                <img src="images/SBMI.png" width="100%" alt="@"></a>
-		            </div>
-		            <div class="col-md-7">
-		                <p style="align:left;font-size: 14px;">
-		                <span style="font-size:1.20em;"><strong>Copyright ©</strong>
-		                <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
-		                <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
-		                <span style="font-family: Arial;"> | </span>
-		                <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
-		                </p>
-		            </div>
-		        </div>
-		    </div>
-		</footer>
+<div w3-include-html="footer.html"></div>
 </body>
 </html>
