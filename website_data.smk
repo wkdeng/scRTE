@@ -21,18 +21,18 @@ MODE='overwrite'
 
 rule all:
     input:
-        # INTERMEDIATE+'/cell_exp.log',
-        INTERMEDIATE+'/cell_umap.log',
-        DATA_FOLDER+'/te_fam.sql',
-        DATA_FOLDER+'/te_net.sql',
-        DATA_FOLDER+'/te_basic.sql',
-        DATA_FOLDER+'/cell_umap.sql',
-        DATA_FOLDER+'/gene_dict.sql',
-        DATA_FOLDER+'/te_gene.sql',
-        DATA_FOLDER+'/meta.sql',
-        DATA_FOLDER+'/sample2dataset.sql',
-        DATA_FOLDER+'/subfam_cellcount.sql',
-        DATA_FOLDER+'/te_exp_boxplot.sql'
+        INTERMEDIATE+'/cell_exp.log'
+        # INTERMEDIATE+'/cell_umap.log',
+        # DATA_FOLDER+'/te_fam.sql',
+        # DATA_FOLDER+'/te_net.sql',
+        # DATA_FOLDER+'/te_basic.sql',
+        # DATA_FOLDER+'/cell_umap.sql',
+        # DATA_FOLDER+'/gene_dict.sql',
+        # DATA_FOLDER+'/te_gene.sql',
+        # DATA_FOLDER+'/meta.sql',
+        # DATA_FOLDER+'/sample2dataset.sql',
+        # DATA_FOLDER+'/subfam_cellcount.sql',
+        # DATA_FOLDER+'/te_exp_boxplot.sql'
 
 rule extract_cell_umap:
     input:
@@ -48,19 +48,19 @@ rule extract_cell_umap:
         output_folder=INTERMEDIATE
     shell:"{params.cmd} {params.script} {params.input_folder} {params.output_folder} > {log} 2>&1"        
 
-# rule extract_cell_exp:
-#     input:
-#         DATASET_META
-#     output:
-#         INTERMEDIATE+'/cell_exp.log'
-#     log:
-#         'log/extract_cell_exp.log'
-#     params:
-#         script='scripts/get_cell_exp.r',
-#         cmd='Rscript',
-#         input_folder=SEURAT_OBJ_FOLDER,
-#         output_folder=INTERMEDIATE
-#     shell:"{params.cmd} {params.script} {params.input_folder} {params.output_folder} > {log} 2>&1"
+rule extract_cell_exp:
+    input:
+        DATASET_META
+    output:
+        INTERMEDIATE+'/cell_exp.log'
+    log:
+        'log/extract_cell_exp.log'
+    params:
+        script='scripts/get_cell_exp.r',
+        cmd='Rscript',
+        input_folder=SEURAT_OBJ_FOLDER,
+        output_folder=INTERMEDIATE
+    shell:"{params.cmd} {params.script} {params.input_folder} {params.output_folder} > {log} 2>&1"
 
 rule cell_umap:
     input:

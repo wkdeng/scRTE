@@ -2,7 +2,7 @@
 # @author [Wankun Deng]
 # @email [dengwankun@gmail.com]
 # @create date 2023-04-10 14:41:40
-# @modify date 2023-05-26 10:34:02
+# @modify date 2023-05-26 13:55:44
 # @desc [description]
 ###
 
@@ -50,6 +50,8 @@ def process_a_file(file_path,lock):
     cell_umap['predicted.celltype'] = cell_umap['predicted.celltype'].replace(
         'Opc', 'OPC')
     for i in range(cell_umap.shape[0]):
+        if cell_umap.iloc[i,1] =='Stage_0':
+            cell_umap.iloc[i,1]='Control'
         if cell_umap.iloc[i,1] !='Control':
             cell_umap.iloc[i,1]=cell_umap.iloc[i,7].split('_')[0]
 
