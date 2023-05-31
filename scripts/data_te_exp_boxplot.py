@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-05-18 16:18:04
- # @modify date 2023-05-26 10:27:37
+ # @modify date 2023-05-26 23:39:46
  # @desc [description]
 ###
 import sys
@@ -40,9 +40,10 @@ cell_umap=pd.concat([pd.read_csv(x,sep='\t',index_col=0) for x in cell_umaps],ax
 ## replace value of Opc to OPC
 cell_umap['predicted.celltype']=cell_umap['predicted.celltype'].replace('Opc','OPC')
 for i in range(cell_umap.shape[0]):
+    if cell_umap.iloc[i,1] =='Stage_0':
+        cell_umap.iloc[i,1]='Control'
     if cell_umap.iloc[i,1] !='Control':
         cell_umap.iloc[i,1]=cell_umap.iloc[i,7].split('_')[0]
-
 
 datasets=set(cell_umap['dataset'].tolist())
 diagnosis=set(cell_umap['Diagnosis'].tolist())
@@ -53,7 +54,7 @@ def process(arg):
     disease,dataset,cell_type=arg
     cells=cell_umap.loc[(cell_umap['dataset']==dataset)&(cell_umap['Diagnosis']==disease)&(cell_umap['predicted.celltype']==cell_type),:].index.tolist()
     rows=[]
-    for te in tqdm(cell_te_exp.columns):
+    for te in cell_exp.columns:
         row=[]
         row.append(cell_type)
         row.append(len(cells))
@@ -91,7 +92,8 @@ te_exp.write('''use scARE;
         Q1 float NOT NULL,
         MEDIAN float NOT NULL,
         Q3 float NOT NULL,
-        PRIMARY KEY ID);\n''')
+        PRIMARY KEY ID);
+        set autocommit=0;\n''')
 
 result=pd.DataFrame(result,columns=['cell_type','cell_num','dataset','disease','te','max','min','q1','median','q3'])
 result['cell_type']=result['cell_type'].apply(lambda x:'"'+x+'"')
@@ -100,8 +102,18 @@ result['disease']=result['disease'].apply(lambda x:'"'+x+'"')
 result['te']=result['te'].apply(lambda x:'"'+x+'"')
 result.fillna(-1,inplace=True)
 
-te_exp=open('../www/mysql/te_exp_boxplot.sql','w')
+count=0
+values_list=[]
+template='INSERT INTO `TE_EXP_BOXPLOT` (CELL_TYPE,CELL_NUM,DATASET,DISEASE,TE,MAX,MIN,Q1,MEDIAN,Q3) VALUES {values};\n'
 for i in range(result.shape[0]):
-    te_exp.write('INSERT INTO `TE_EXP_BOXPLOT` (CELL_TYPE,CELL_NUM,DATASET,DISEASE,TE,MAX,MIN,Q1,MEDIAN,Q3) VALUES ('+','.join([str(x) for x in result.iloc[i,:]])+');\n')
+    if count==2000:
+        te_exp.write(template.format(values=','.join(values_list)))
+        count=0
+        values_list=[]
+    values_list.append('('+','.join([str(x) for x in result.iloc[i,:]])+')')
+    count+=1
 
+if count>0:
+    te_exp.write(template.format(values=','.join(values_list)))
+te_exp.write('commit;')
 te_exp.close()

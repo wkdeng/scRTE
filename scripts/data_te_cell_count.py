@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-04-30 23:29:01
- # @modify date 2023-05-26 10:48:21
+ # @modify date 2023-05-26 13:55:24
  # @desc [description]
 ###
 import sys
@@ -22,13 +22,13 @@ rmsk_f=sys.argv[3]
 mode='append' if (len(sys.argv)==5 and sys.argv[5]=='append') else 'overwrite'
 
 # load cell annotation
-cell_annos=[os.path.join(in_path,x) for x in os.listdir(in_path) if x.endswith('.cell_umap.txt')]
-cell_anno=pd.read_csv(cell_annos[0],sep='\t',index_col=0)
-for x in cell_annos[1:]:
-    cell_anno=pd.concat([cell_anno,pd.read_csv(x,sep='\t',index_col=0)],axis=0)
+cell_umaps=[os.path.join(in_path,x) for x in os.listdir(in_path) if x.endswith('.cell_umap.txt')]
+cell_umap=pd.concat([pd.read_csv(x,sep='\t',index_col=0) for x in cell_umaps],axis=0)
 ## replace value of Opc to OPC
-cell_anno['predicted.celltype']=cell_anno['predicted.celltype'].replace('Opc','OPC')
+cell_umap['predicted.celltype']=cell_umap['predicted.celltype'].replace('Opc','OPC')
 for i in range(cell_umap.shape[0]):
+    if cell_umap.iloc[i,1] =='Stage_0':
+        cell_umap.iloc[i,1]='Control'
     if cell_umap.iloc[i,1] !='Control':
         cell_umap.iloc[i,1]=cell_umap.iloc[i,7].split('_')[0]
 
@@ -82,11 +82,11 @@ for x in fam_dic:
 subfam_cell_count_mtx=pd.DataFrame(np.zeros([len(subfams),len(['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'],index=subfams)
 for x in subfam_cell_count:
     for y in subfam_cell_count[x]:
-        subfam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
+        subfam_cell_count_mtx.loc[x,cell_umap.loc[y,'predicted.celltype']]+=1
 fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'],index=families)
 for x in fam_cell_count:
     for y in fam_cell_count[x]:
-        fam_cell_count_mtx.loc[x,cell_anno.loc[y,'predicted.celltype']]+=1
+        fam_cell_count_mtx.loc[x,cell_umap.loc[y,'predicted.celltype']]+=1
     
 subfam_mtx_out=open(out_path+'/subfam_cellcount.sql','w')
 subfam_mtx_out.write('''CREATE DATABASE IF NOT EXISTS scARE;

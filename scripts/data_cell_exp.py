@@ -2,7 +2,7 @@
 # @author [Wankun Deng]
 # @email [dengwankun@gmail.com]
 # @create date 2023-04-10 14:41:40
-# @modify date 2023-05-25 17:46:09
+# @modify date 2023-05-26 23:49:01
 # @desc [description]
 ###
 
@@ -62,6 +62,7 @@ if mode=='overwrite':
     for i in range(len(exp_tables)):
         exp_tables[i].write('UMAP_1 FLOAT NOT NULL,\n')
         exp_tables[i].write('UMAP_2 FLOAT NOT NULL);\n')
+        exp_tables[i].write('set autocommit=0;\n')
         exp_tables[i].flush()
     json.dump(table_genes,open(f'{out_path}/table_genes.json','w'))
 else:
@@ -77,11 +78,23 @@ def one_table(i):
     tmp_exp.loc[:,expressed_i]=cell_exp.loc[:,expressed_i]
     all_values=tmp_exp.agg(lambda x:  ','.join(x.astype(str)), axis=1).values
     expressed_i_c=','.join(expressed_i)
-    template='''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,{expressed_i_c}) values ({values});\n'''
-    to_write='\n'.join([template.format(i=i,expressed_i_c=expressed_i_c,values=x) for x in all_values])+'\n'
-    # lock.acquire()
+    template=f'''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,{expressed_i_c}) values '''
+
+
+    count=0
+    values_list=[]
+    to_write=''
+    for x in all_values:
+        if count==2000:
+            to_write+=template+','.join(values_list)+';\n'
+            count=0
+            values_list=[]
+        values_list.append('('+x+')')
+        count+=1
+    if len(values_list)>0:
+        to_write+=template+','.join(values_list)+';\n'
+    # to_write='\n'.join([template.format(i=i,expressed_i_c=expressed_i_c,values=x) for x in all_values])+'\n'
     exp_tables[i].write(to_write)
-    # lock.release()
 
 from multiprocessing import Pool
 for file_ in os.listdir(inpath):
@@ -93,5 +106,6 @@ for file_ in os.listdir(inpath):
         pool.close()
         pool.join()
 
+[x.write('commit;\n') for x in exp_tables]
 [x.flush() for x in exp_tables]
 [x.close() for x in exp_tables]
