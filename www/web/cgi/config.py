@@ -1,5 +1,9 @@
-host='127.0.0.1'
-user='www-data'
-passwd='www-data-passwd'
-port=3306
-db='scARE'
+import json
+import os
+
+current_folder=os.path.abspath('.')
+if current_folder.endswith('te_info'):
+    config_path='../config.json'
+else:
+    config_path='config.json'
+host,user,passwd,port,db=json.load(fp=open(config_path,'r'))
