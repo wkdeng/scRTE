@@ -36,9 +36,14 @@ name=form['Name'].value
 # Create cursor and use it to execute SQL command
 cursor = connection.cursor()
 
-cursor.execute(f"select * from TE_BASIC WHERE CLASS = '{cls_}' AND FAMILY = '{fam}' AND NAME = '{name}'")
+if not (cls_ == 'N/A' or fam=='N/A'):
+    cursor.execute(f"select * from TE_BASIC WHERE CLASS = '{cls_}' AND FAMILY = '{fam}' AND NAME = '{name}'")
+else:
+    cursor.execute(f"select * from TE_BASIC WHERE NAME = '{name}'")
 info=cursor.fetchone()
 
+cls_=info[1]
+fam=info[2]
 num_locus=info[6]
 cons_len=info[5]
 cons=info[4]

@@ -70,11 +70,11 @@ for i in range(len(info)):
     if class_ not in class_order:
         class_order[class_]=len(class_order)
         family_order[class_]={}
-        treeview_result.append({"name":class_, "children":[]})
+        treeview_result.append({"name":class_, 'type':'cls',"children":[]})
     if family not in family_order[class_]:
         family_order[class_][family]=len(family_order[class_])
-        treeview_result[class_order[class_]]["children"].append({"name":family, "children":[]})
-    treeview_result[class_order[class_]]["children"][family_order[class_][family]]["children"].append({"name":name, "value":int(num),'link':f'te_info.html?Name={name}&Class={class_}&Family={family}'})
+        treeview_result[class_order[class_]]["children"].append({"name":family,'type':'fam', "children":[]})
+    treeview_result[class_order[class_]]["children"][family_order[class_][family]]["children"].append({"name":name, 'type':'subfam',"value":int(num),'link':f'te_info.html?Name={name}&Class={class_}&Family={family}'})
 
     if class_ not in class_imported:
         class_imported.append(class_)

@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-05-11 16:30:23
-@modify date 2023-05-31 16:14:46
+@modify date 2023-06-02 18:25:50
 @desc [description]
 -->
 
@@ -40,6 +40,8 @@
 <script src="js/third_party/bootstrap.bundle.min.js" ></script>
 <script src="js/third_party/bootstrap.min.js" ></script>
 <script type="text/javascript" src="js/utils.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="js/third_party/jquery.dataTables.js"></script>
 
 <body onload="init()" style="background-color:#efefef;">
@@ -80,7 +82,7 @@
         $.get('cgi/get_all_dataset.py',{},
             function(response){
                 $('#datasets').html(response)
-                let table = new DataTable('#ds_table', {response:true});        
+                let table = new DataTable('#ds_table', {response:true, dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel', 'pdf', 'print']});        
                     
             }
         );

@@ -2,24 +2,30 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:46
-@modify date 2023-05-31 16:10:45
+@modify date 2023-06-02 16:28:27
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name=""author" content="Wankun Deng">
-  
-    <title>Dataset view</title>
-    <style>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="" author" content="Wankun Deng">
+
+  <title>Dataset view</title>
+  <style>
     @import url('css/te_table.css');
-    </style>
-    <style>
     @import url('css/highcharts.css');
-    </style>
-    <link href="css/bootstrap.min.css" rel="stylesheet"/>
-  </head>
+
+    #geneSelect {
+      height: 200px;
+      overflow-y: scroll;
+    }
+
+    ;
+  </style>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+</head>
 
 <script src="js/third_party/highcharts.js"></script>
 <script src="js/third_party/data.js"></script>
@@ -32,14 +38,18 @@
 <script src="js/third_party/forceGraph.js"> </script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@docsearch/js@3"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+
 
 <body onload='init()' style="background-color:#efefef;">
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 
   <div style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="row" id="Overview">
-      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="Desc_container" >
-        <div class="card " >
+      <div class="col mb-3 pl-0 pr-0 mr-3 ml-0" id="Desc_container">
+        <div class="card ">
           <h5 class="card-header">Dataset information</h5>
           <div class="card-body overflow-auto" id="desc" style="height: 500px;">
           </div>
@@ -58,91 +68,216 @@
         </div>
       </div>
     </div>
-    
+
     <div class="row" id="umap">
       <div class="card col-md-12 ml-0 mr-0 pl-0 pr-0">
         <h5 class="card-header">Cell Clustering & Gene Expression</h5>
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-                <figure class="highcharts-figure">
-                  <div id="container_umap" style="min-height: 700px;"></div>
-                  <label for="cell_types">Cell type:</label>
-                  <select name="Cell types" id="cell_types">
-                    <option value=-1 >All</option>
-                    <option value= 0 >Excitatory Neuron</option>
-                    <option value=1 >Inhibitory Neuron</option>
-                    <option value=2 >Oligodendrocyte Progenitor Cell</option>
-                    <option value=3 >Oligodendrocyte</option>
-                    <option value=4 >Astrocyte</option>
-                    <option value=5 >Microglia</option>
-                    <option value=6 >Endothelial</option>
-                    <option value=6 >VLMC</option>
-                  </select>
-                </figure>
+              <figure class="highcharts-figure">
+                <div id="container_umap" style="min-height: 700px;"></div>
+                <label for="cell_types">Cell type:</label>
+                <select name="Cell types" id="cell_types">
+                  <option value=-1 >All</option>
+                  <option value=0 >Excitatory Neuron</option>
+                  <option value=1 >Inhibitory Neuron</option>
+                  <option value=2 >Oligodendrocyte Progenitor Cell</option>
+                  <option value=3 >Oligodendrocyte</option>
+                  <option value=4 >Astrocyte</option>
+                  <option value=5 >Microglia</option>
+                  <option value=6 >Endothelial</option>
+                  <option value=6 >VLMC</option>
+                </select>
+              </figure>
             </div>
             <div class="col-md-6">
               <figure class="highcharts-figure">
                 <div id="container_gene_exp" style="min-height: 700px;"></div>
-                <label for="Gene">Gene/TE:</label>
-                <select name="Gene" id="Gene">
-                  <option value='AluY'>AluY</option>
-                  <option value='SYT1'>SYT1</option>
-                  <option value='SLC17A7'>SLC17A7</option>
-                  <option value='MBP'>MBP</option>
-                </select>
-              </figure>  
+                <label for="geneInput">Gene/TE:</label>
+                  <input type="text" id="geneInput" onkeyup="filterFunction()" onfocus="showList()"
+                    placeholder="Search for names.." value="DHX30">
+                  <div class="list-group" id="geneSelect" style="display:none">
+                  </div>
+              </figure>
             </div>
           </div>
-          </div>
-        </div>  
+        </div>
       </div>
     </div>
   </div>
+  </div>
 
-<script type="text/javascript">
-    function init(){
-        var queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        var cate=urlParams.get('Cate')
-        if(cate == null){
-          cate='Dataset'
-            var href=window.location.href
-            if(!queryString.includes('?')){
-                href=href+'?Cate='+cate
-            }else{
-                href=href+'&Cate='+cate
-            }
-            window.history.pushState({},0,href)
-            window.history.replaceState({},0,href)
-            urlParams.set('Cate',cate)
+  <script type="text/javascript">
+    var gene_list;
+    var current_gene;
+    var umap_chart;
+    var umap_gene_chart;
+    function init() {
+      var queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      var cate = urlParams.get('Cate')
+      if (cate == null) {
+        cate = 'Dataset'
+        var href = window.location.href
+        if (!queryString.includes('?')) {
+          href = href + '?Cate=' + cate
+        } else {
+          href = href + '&Cate=' + cate
         }
-        var kw=urlParams.get('KW')
-        if(kw == null){
-            kw='AD_HS_00001'
-            var href=window.location.href
-            href=href+'&KW='+kw
-            window.history.pushState({},0,href)
-            window.history.replaceState({},0,href)
-            urlParams.set('KW',kw)
+        window.history.pushState({}, 0, href)
+        window.history.replaceState({}, 0, href)
+        urlParams.set('Cate', cate)
+      }
+      var kw = urlParams.get('KW')
+      if (kw == null) {
+        kw = 'AD_HS_00001'
+        var href = window.location.href
+        href = href + '&KW=' + kw
+        window.history.pushState({}, 0, href)
+        window.history.replaceState({}, 0, href)
+        urlParams.set('KW', kw)
+      }
+      var rte = urlParams.get('Gene')
+      if (rte == null) {
+        rte = 'AluY'
+        var href = window.location.href
+        href = href + '&Gene=' + rte
+        window.history.pushState({}, 0, href)
+        window.history.replaceState({}, 0, href)
+        urlParams.set('Gene', rte)
+      }
+      current_gene = rte;
+      
+      var cell = urlParams.get('Cell')
+      if (cell == null) {
+        cell = 'All'
+        var href = window.location.href
+        href = href + '&Cell=' + cell
+        window.history.pushState({}, 0, href)
+        window.history.replaceState({}, 0, href)
+        urlParams.set('Cell', cell)
+      }
+      document.getElementById('geneInput').value = rte;
+      initial_gene_list();
+      $.get("/cgi/get_dataset_basic.py", { Cate: urlParams.get('Cate'), KW: urlParams.get('KW'), Gene: urlParams.get('rte'), Cell: urlParams.get('Cell') },
+        function (response) {
+          document.getElementById('desc').style.display = 'block'
+          $('#desc').html(response)
+          document.title = 'scARE: ' + urlParams.get('KW')
         }
-        $.get("/cgi/get_dataset_basic.py",{Cate: urlParams.get('Cate') , KW: urlParams.get('KW')},
-            function(response){
-                document.getElementById('desc').style.display='block'
-                $('#desc').html(response)
-                document.title='scARE: '+urlParams.get('KW')
-                // document.getElementById()
-            }
-        );
-        var content_only=urlParams.get('CL')
-        if(content_only==null || content_only=='' || content_only=='F'){
-          includeHTML();
-        }
+      );
+      var content_only = urlParams.get('CL')
+      if (content_only == null || content_only == '' || content_only == 'F') {
+        includeHTML();
+      }
     }
-</script>
-<script src="js/cell_count/cell_count.js"></script>
-<script src="js/umap/umap.js" ></script>
-<script src="js/umap/umap_gene.js" ></script>
-<div w3-include-html="footer.html"></div>
+  </script>
+  <script src="js/cell_count/cell_count.js"></script>
+  <script src="js/umap/umap.js" ></script>
+  <script src="js/umap/umap_gene.js" ></script>
+  <script>
+    function initial_gene_list(){
+      $.get("/cgi/get_gene_list.py", {},
+        function (response) {
+          gene_list=JSON.parse(response)
+          sublist=gene_list.slice(0,1000)
+          if(!sublist.includes(current_gene)){
+            sublist.push(current_gene)
+          }
+          document.getElementById('geneInput').value=current_gene
+          var select=document.getElementById('geneSelect');
+          select.innerHTML='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)" id="noData" style="display:none">No genes in list fits your search</button>'
+          sublist.forEach(gene => {
+            if(gene==current_gene){
+              select.innerHTML+='<button type="button" class="list-group-item list-group-item-action active" onclick="selectItem(this)">'+gene+'</button>' 
+            }else{
+              select.innerHTML+='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)">'+gene+'</button>' 
+            }
+          });
+        });
+    }
+    function filterFunction() {
+      var input, filter, ul, li, option, i;
+      input = document.getElementById("geneInput");
+      filter = input.value.toUpperCase();
+      var select=document.getElementById('geneSelect');
+      select.innerHTML='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)" id="noData" style="display:none">No genes in list fits your search</button>'
+
+      var found = false;
+      
+      var found_item=0;
+      for (i = 0; i < gene_list.length; i++) {
+        if (found_item>1000){
+          break;
+        }
+        txtValue = gene_list[i];
+        if (filter.length == 0 || txtValue.toUpperCase().indexOf(filter) > -1) {
+          select.innerHTML+='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)">'+txtValue+'</button>'
+          found_item++;
+          found = true;
+        }
+      }
+
+      if (!found) {
+        document.getElementById("noData").style.display = "";
+      } else {
+        document.getElementById("noData").style.display = "none";
+      }
+    }
+    
+    function hideList() {
+      var select = document.getElementById("geneSelect");
+      select.style.display = "none";
+    }
+    function showList() {
+      var select = document.getElementById("geneSelect");
+      select.style.display = "block";
+    }
+    function selectItem(ele) {
+      var select = document.getElementById("geneSelect");
+      var input = document.getElementById("geneInput");
+      select.style.display = "none";
+      if(ele.innerHTML==current_gene){
+        return;
+      }
+
+      if (ele.id == 'noData') {
+        input.value = '';
+      } else {
+        input.value = ele.innerText;
+        current_gene=ele.innerHTML;
+
+        getGeneExpData(current_gene).then(data2 => {
+        var [min, max] = d3.extent(data2.flatMap(d => d.value));
+        var data2_s=[];
+        data2.forEach(elm => {
+                data2_s.push({ x:elm.x,y:elm.y,cell_id:elm.CELL,value:elm.value,color:calculateColor( min, max, elm.value)});   
+        });
+        umap_gene_chart.update({
+            series: [{
+                name: '',
+                data: data2_s
+            }]
+          });
+        });
+      }
+      option = select.getElementsByTagName("button");
+      for (i = 0; i < option.length; i++) {
+        option[i].classList.remove("active");
+      }
+      if (ele.id != 'noData') {
+        ele.classList.add("active");
+      } else {
+
+      for (i = 0; i < option.length; i++) {
+          option[i].style.display = "block";
+        }
+        ele.style.display = "none";
+      }
+    }
+  </script>
+  <div w3-include-html="footer.html"></div>
 </body>
+
 </html>
