@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-05-18 16:18:04
- # @modify date 2023-05-26 23:39:46
+ # @modify date 2023-05-31 15:17:02
  # @desc [description]
 ###
 import sys
@@ -92,7 +92,7 @@ te_exp.write('''use scARE;
         Q1 float NOT NULL,
         MEDIAN float NOT NULL,
         Q3 float NOT NULL,
-        PRIMARY KEY ID);
+        PRIMARY KEY (ID));
         set autocommit=0;\n''')
 
 result=pd.DataFrame(result,columns=['cell_type','cell_num','dataset','disease','te','max','min','q1','median','q3'])

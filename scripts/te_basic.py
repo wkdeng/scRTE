@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-03-17 14:53:15
- # @modify date 2023-05-22 15:42:35
+ # @modify date 2023-06-06 17:26:30
  # @desc [description]
 ###
 import pandas as pd 
@@ -35,9 +35,9 @@ CREATE TABLE TE_BASIC (
     CONSENSUS TEXT,
     CONSENSUS_LEN INT,
     NUM_OCCUR INT NOT NULL,
-    OCCUR_CHR JSON NOT NULL,
-    DISTRIBUTION_EA_CHR JSON NOT NULL,
-    DISTRIBUTION_GENE JSON NOT NULL,
+    OCCUR_CHR TEXT NOT NULL,
+    DISTRIBUTION_EA_CHR TEXT NOT NULL,
+    DISTRIBUTION_GENE TEXT NOT NULL,
     PRIMARY KEY (ID) 
 );
 ''')
@@ -60,7 +60,7 @@ for line in open(consensus):
             cseq=''
             cac=''
     elif line.startswith('NM'):
-        cname=line.strip().split(' ')[-1]
+        cname=line.strip().split(' ')[-1].upper()
     elif line.startswith('CC        Type: '):
         ctype=line.strip().split(' ')[-1]
     elif line.startswith('CC        SubType: '):
@@ -69,14 +69,14 @@ for line in open(consensus):
         cseq+=re.sub(r'[\d\s]','',line.strip())
     elif line.startswith('DR'):
         if 'Repbase' in line:
-            cname=line.split('Repbase;')[1].strip()[:-1]    
+            cname=line.split('Repbase;')[1].strip()[:-1].upper()    
 
 rte['Consensus']=''
 rte['Consensus_len']=np.zeros(len(rte))
 count=0
 for i in range(len(rte)):
     name,family=rte.iloc[i,[0,2]]
-    seq=rte_consensus[family][name]
+    seq=rte_consensus[family][name.upper()]
     seq_len=len(seq)
     if seq_len == 0:
         seq='N/A'

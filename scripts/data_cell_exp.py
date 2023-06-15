@@ -2,7 +2,7 @@
 # @author [Wankun Deng]
 # @email [dengwankun@gmail.com]
 # @create date 2023-04-10 14:41:40
-# @modify date 2023-05-26 23:49:01
+# @modify date 2023-06-05 23:36:37
 # @desc [description]
 ###
 
@@ -20,7 +20,7 @@ out_path=sys.argv[2]
 mode='append' if sys.argv[3]=='append' else 'overwrite'
 gtf=sys.argv[4]
 rmsk_f=sys.argv[5]
-
+chunck_size=900.0
 if mode=='overwrite':
     genes=[]
     for line in open(gtf):
@@ -35,7 +35,7 @@ if mode=='overwrite':
     genes.extend(rmsk[10].unique())
     genes=list(set(genes))
 
-    exp_tables=[open(f'{out_path}/cell_exp_{i}.sql','w') for i in range(math.ceil((len(genes))/1000.0))]
+    exp_tables=[open(f'{out_path}/cell_exp_{i}.sql','w') for i in range(math.ceil((len(genes))/chunck_size))]
     for i in range(len(exp_tables)):
         exp_tables[i].write('''CREATE DATABASE IF NOT EXISTS scARE;
                                 USE scARE;
@@ -55,14 +55,14 @@ if mode=='overwrite':
 
     table_genes=defaultdict(list)
     for i in range(len(genes)):
-        index=math.floor(i/1000.0)
+        index=math.floor(i/chunck_size)
         exp_tables[index].write(f'`{genes[i]}` FLOAT DEFAULT 0,\n')
         table_genes[index].append(genes[i])
         gene_dict.write(f'INSERT INTO GENE_DICT values("{genes[i]}","{index}");\n')
     for i in range(len(exp_tables)):
         exp_tables[i].write('UMAP_1 FLOAT NOT NULL,\n')
         exp_tables[i].write('UMAP_2 FLOAT NOT NULL);\n')
-        exp_tables[i].write('set autocommit=0;\n')
+        # exp_tables[i].write('set autocommit=0;\n')
         exp_tables[i].flush()
     json.dump(table_genes,open(f'{out_path}/table_genes.json','w'))
 else:
@@ -80,12 +80,11 @@ def one_table(i):
     expressed_i_c=','.join(expressed_i)
     template=f'''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,{expressed_i_c}) values '''
 
-
     count=0
     values_list=[]
     to_write=''
     for x in all_values:
-        if count==2000:
+        if count==80:
             to_write+=template+','.join(values_list)+';\n'
             count=0
             values_list=[]
