@@ -28,15 +28,14 @@ var dataset=uparams.get('KW');
         return 'rgba(200,200,200,50)';
       }
   }
-  
-  getGeneExpData(document.getElementById('Gene').value).then(data => {
+  getGeneExpData(document.getElementById('geneInput').value).then(data => {
     var [min, max] = d3.extent(data.flatMap(d => d.value));
     var data_s=[];
     data.forEach(elm => {
             data_s.push({ x:elm.x,y:elm.y,cell_id:elm.CELL,value:elm.value,color:calculateColor(min, max, elm.value)});
             
       });
-    const chart = Highcharts.chart('container_gene_exp', {
+    umap_gene_chart = Highcharts.chart('container_gene_exp', {
       chart: {
         type: 'scatter',
         zoomType: 'xy'
@@ -111,22 +110,6 @@ var dataset=uparams.get('KW');
       }]
     }
     );
-    document.getElementById('Gene').addEventListener('change', () => {
-        var gene=document.getElementById('Gene').value;
-
-        getGeneExpData(gene).then(data2 => {
-        var [min, max] = d3.extent(data2.flatMap(d => d.value));
-        var data2_s=[];
-        data2.forEach(elm => {
-                data2_s.push({ x:elm.x,y:elm.y,cell_id:elm.CELL,value:elm.value,color:calculateColor( min, max, elm.value)});   
-            });
-        chart.update({
-            series: [{
-                name: '',
-                data: data2_s
-            }]
-        });
-      });});
   }
   );
 

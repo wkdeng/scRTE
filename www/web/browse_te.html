@@ -2,7 +2,7 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-05-11 16:30:23
-@modify date 2023-05-31 11:16:52
+@modify date 2023-06-02 18:09:54
 @desc [description]
 -->
 
@@ -39,9 +39,11 @@ ul {
 <script src="js/third_party/bootstrap.min.js" ></script>
 <script src="js/third_party/bootstrap.bundle.min.js" ></script>
 <script type="text/javascript" src="js/utils.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="js/third_party/jquery.dataTables.js"></script>
 
-<body onload="init()">
+<body onload="init()" style="background-color:#efefef;">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="card mb-3">
@@ -389,31 +391,18 @@ ul {
                 }
                 
                 function name(d) {
-                    console.log(d.data)
                     return d.parent ? name(d.parent) + " / " + d.data.name + " (" + formatNumber(d.value) + ")" : d.data.name + " (" + formatNumber(d.value) + ")";
                 }
-
                 
-                // chart = Treemap(treeData[1], {
-                //             path: d => d.name.replace(/\./g, "/"), // e.g., "flare/animate/Easing"
-                //             value: d => d?.size, // size of each node (file); null for internal nodes (folders)
-                //             group: d => d.name.split(".")[1], // e.g., "animate" in "flare.animate.Easing"; for color
-                //             label: (d, n) => [...d.name.split(".").pop().split(/(?=[A-Z][a-z])/g), n.value.toLocaleString("en")].join("\n"),
-                //             title: (d, n) => `${d.name}\n${n.value.toLocaleString("en")}`, // text to show on hover
-                //             link: (d, n) => `te_info.html?Name=${d.name.split(/\./g)[2]}&Class=${d.name.split(/\./g)[0]}&Family=${d.name.split(/\./g)[1]}&CL=T`,
-                //             tile: d3.treemapBinary,// set by input above
-                //             width: 1152,
-                //             height: 5000
-                //         })
-                // $('#treemapview').html(chart)
                 $('#tableview').html(treeData[0])
-                let table = new DataTable('#te_table', {response:true}); 
-
+                let table = new DataTable('#te_table', {response:true, dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel', 'pdf', 'print']}); 
+                // console.log(table.buttons())
+                // table.buttons().container().appendTo( $('#te_table_filter' ) );
                 /** =========================== Tree View =========================== **/
-                margin = ({top: 10, right: 120, bottom: 10, left: 40})
+                margin = ({top: 50, right: 120, bottom: 10, left: 40})
                 width=1100
                 dy = width / 4
-                dx = 25
+                dx = 60
                 tree = d3.tree().nodeSize([dx, dy])
                 diagonal = d3.linkHorizontal().x(d => d.y).y(d => d.x)
                 function get_treeview(data) {
@@ -429,7 +418,7 @@ ul {
 
                         const svg = d3.create("svg")
                             .attr("viewBox", [-margin.left, -margin.top, width, dx])
-                            .style("font", "10px sans-serif")
+                            .style("font", "20px sans-serif")
                             .style("user-select", "none");
 
                         const gLink = svg.append("g")
@@ -441,7 +430,21 @@ ul {
                         const gNode = svg.append("g")
                             .attr("cursor", "pointer")
                             .attr("pointer-events", "all");
-
+                        function getRadius(d) {
+                            if(d.data.type=='cls'){return 30}else if (d.data.type=='fam'){return 20}else if(d.data.type=='subfam'){return 10}else{return 35}
+                        }
+                        function getFill(d){
+                            if(d.data.type=='cls'){return 'rgba(31, 119, 180, 0.6)'}
+                            else if (d.data.type=='fam'){return 'rgba(23, 190, 207, 0.6)'}
+                            else if(d.data.type=='subfam'){return 'rgba(255, 127, 14, 0.6)'}
+                            else{return 'rgba(127, 127, 127, 0.6)'}
+                        }
+                        function getAction(d){
+                            if(d.data.type!='subfam'){
+                                d.children = d.children ? null : d._children;
+                                update(d);}
+                            else{window.open(d.data.link, '_blank');}
+                        }
                         function update(source) {
                             const duration = d3.event && d3.event.altKey ? 2500 : 250;
                             const nodes = root.descendants().reverse();
@@ -461,7 +464,7 @@ ul {
 
                             const transition = svg.transition()
                                 .duration(duration)
-                                .attr("viewBox", [-margin.left, left.x - margin.top, width, height])
+                                .attr("viewBox", [-margin.left, left.x - margin.top, width, height+100])
                                 .tween("resize", window.ResizeObserver ? null : () => () => svg.dispatch("toggle"));
 
                             // Update the nodes…
@@ -469,33 +472,27 @@ ul {
                             .data(nodes, d => d.id);
 
                             // Enter any new nodes at the parent's previous position.
-                            const nodeEnter = node.enter().append("g")
+                            const nodeEnter = node.enter()
+                                .append("g")
                                 .attr("transform", d => `translate(${source.y0},${source.x0})`)
                                 .attr("fill-opacity", 0)
                                 .attr("stroke-opacity", 0)
-                                .on("click", (event, d) => {
-                                d.children = d.children ? null : d._children;
-                                update(d);
-                                });
+                                .on("click", (event, d) => getAction(d));
 
                             nodeEnter.append("circle")
-                                .attr("r", d => d._children ? 10 : 2)
-                                .attr("fill", d => d._children ? "#555" : "#999")
-                                .attr("stroke-width", 10)
+                                .attr("r", d=>getRadius(d))
+                                .attr('fill',d=>getFill(d))
+                                .attr("stroke-width", 2)
+                                .attr("stroke", "black")
 
                             nodeEnter.append('a')
-                                .attr("xlink:href", d => d.data._children ? null : d.data.link)
+                                .attr("xlink:href", d => d.data.type!='subfam' ? null : d.data.link)
                                 .attr("target", "_blank")
                             .append("text")
                                 .attr("dy", "0.31em")
-                                .attr("x", d => d._children ? -6 : 6)
+                                .attr("x", d => d._children ? -6 : 20)
                                 .attr("text-anchor", d => d._children ? "end" : "start")
                                 .text(d => d.data.name)
-                            .clone(true).lower()
-                                .attr("stroke-linejoin", "round")
-                                .attr("stroke-width", 3)
-                                .attr("stroke", "white");
-
                             // Transition nodes to their new position.
                             const nodeUpdate = node.merge(nodeEnter).transition(transition)
                                 .attr("transform", d => `translate(${d.y},${d.x})`)
@@ -548,24 +545,5 @@ ul {
         );
     }
 </script>
-    <footer class="footer  container-fluid" style="width: 60%; min-width: 1100px; margin-block: 100px;background-color: white;">
-        <hr>
-        <div class=" container-fluid">
-            <div class="row">
-        <div class="col-md-1"></div>
-                <div class="col-md-3"><a href="https://www.uth.edu/" target="_blank">
-                    <img src="images/SBMI.png" width="100%" alt="@"></a>
-                </div>
-                <div class="col-md-7">
-                    <p style="align-content:left;font-size: 14px;">
-                    <span style="font-size:1.20em;"><strong>Copyright ©</strong>
-                    <span> 2023-Present - <a href="https://www.uth.edu" style="text-decoration: underline;">The University of Texas Health Science Center at Houston (UTHealth)</a><br></span>
-                    <a href="https://www.uth.edu/index/policies.htm"><span style="font-family: Arial;">Site Policies</span></a>
-                    <span style="font-family: Arial;"> | </span>
-                    <a href="https://uthealthemergency.org/"><span style="font-family: Arial;">Emergency Information</span></a></span>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </footer>
+<div w3-include-html="footer.html"></div>
 </body>

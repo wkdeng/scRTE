@@ -34,7 +34,7 @@ sql=f'select * from DATASET_META where scARE_ID="{dataset}";'
 cursor.execute(sql)
 info=cursor.fetchone()
 
-dataset,title,sampleN,_,disease,brain_region,stage,cell_types,acc,method,protocol,gender,age,sample_acc=info
+dataset,title,sampleN,_,disease,brain_region,stage,cell_types,acc,method,protocol,gender,age,sample_acc,citation=info
 brain_region='; '.join(set(brain_region.split(';')))
 sample_acc=sample_acc.split(';')
 cell_types=cell_types.replace(';','; ')
@@ -74,6 +74,7 @@ ret+=basic_row.format('Accession',acc,'bg-light')
 ret+=basic_row.format('Gender',gender,'')
 ret+=basic_row.format('Age',age,'bg-light')
 ret+=basic_row.format('Stage',stage,'')
-ret+=basic_row.format('Sample accession',sample_acc,'bg-light')
+ret+=basic_row.format('Sample list',sample_acc,'bg-light')
+ret+=basic_row.format('Citation',citation,'')
 
 print(ret)

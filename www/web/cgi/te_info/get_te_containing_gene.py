@@ -30,12 +30,12 @@ cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
 form = cgi.FieldStorage()
-class_=form['Class'].value
-family=form['Family'].value
+# class_=form['Class'].value
+# family=form['Family'].value
 name=form['Name'].value
 
 cursor = connection.cursor()
-sql="select CLASS,FAMILY,NAME,GENE from TE_GENE where CLASS='%s' and FAMILY='%s' and NAME='%s'"%(class_,family,name)
+sql="select CLASS,FAMILY,NAME,GENE from TE_GENE where  NAME='%s'"%(name)
 cursor.execute(sql)
 info=cursor.fetchall()
 

@@ -40,8 +40,14 @@ Highcharts.setOptions({
       symbol: 'circle'
     }
   },{
-    name: 'Pericytes',
-    id: 'Per',
+    name: 'Endothelial',
+    id: 'Endo',
+    marker: {
+      symbol: 'circle'
+    }
+  },{
+    name: 'VLMC',
+    id: 'VLMC',
     marker: {
       symbol: 'circle'
     }
@@ -50,7 +56,6 @@ Highcharts.setOptions({
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
-  const serries_map={'Ex':0,'In':1,'Opc':2,'Oli':3,'Ast':4,'Mic':5,'Per':6}
   async function getCellUMAPData() {
     const response = await fetch(
         '/cgi/get_data_umap.py?Dataset='+urlParams.get('KW')
@@ -73,7 +78,7 @@ Highcharts.setOptions({
       s.data = parseCellUMAP(s.id);
     });
   
-    const chart = Highcharts.chart('container_umap', {
+    umap_chart = Highcharts.chart('container_umap', {
       chart: {
         type: 'scatter',
         zoomType: 'xy'
@@ -142,7 +147,7 @@ Highcharts.setOptions({
       series
     });
     document.getElementById('cell_types').addEventListener('change', () => {
-        var series=chart.series;
+        var series=umap_chart.series;
         var cell_types=document.getElementById('cell_types').value;
         for(let i=0; i< series.length; i++){
             if(cell_types==-1 || i==cell_types){

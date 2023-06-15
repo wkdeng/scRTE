@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-04-28 15:36:56
- * @modify date 2023-05-01 11:42:11
+ * @modify date 2023-06-02 16:31:18
  * @desc [description]
  */
 
@@ -29,7 +29,6 @@ Highcharts.setOptions({
     data.forEach(element => {
         categories.push(element.name);
     });
-    console.log(categories);
 
     const chartDatasetCount = Highcharts.chart('cellCountDataset', {
       title: {

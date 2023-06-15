@@ -27,20 +27,24 @@ connection = MySQLdb.connect(
 
 cursor = connection.cursor()
 
-sql='select scARE_ID,DISEASE,CELL_TYPE,METHODOLOGY from DATASET_META'
+sql='select scARE_ID,DISEASE,METHODOLOGY,PROTOCOL,ACCESSION from DATASET_META'
 cursor.execute(sql)
 info=cursor.fetchall()
 
 
 table_head='''<table id="ds_table" class="display stripe hover cell-border row-border order-column compact">\
-    <thead><tr><th>scARE ID</th><th>Disease</th><th>Cell Types</th><th>Methodology</th></tr></thead><tbody>{table_row}</tbody></table>'''
+    <thead><tr><th>scARE ID</th><th>Disease</th><th>Methodology</th><th>Protocol</th><th>Accession</th></tr></thead><tbody>{table_row}</tbody></table>'''
 table_row=''
-table_row_fmt='''<tr><td><a href='dataset_detail.html?Cate=Dataset&KW={scARE_ID}' target='_blank'>{scARE_ID}</a></td><td>{DISEASE}</td><td>{CELL_TYPE}\
-    </td><td>{METHODOLOGY}</td></tr>'''
+table_row_fmt='''<tr><td><a href='dataset_detail.html?Cate=Dataset&KW={scARE_ID}' target='_blank'>{scARE_ID}</a></td><td>{DISEASE}</td><td>{METHODOLOGY}</td><td>{PROTOCOL}</td><td>{ACCESSION}</td></tr>'''
 
 for row in info:
-    scARE_ID, DISEASE, CELL_TYPE, METHODOLOGY=row
-    CELL_TYPE='; '.join(set(CELL_TYPE.split(';')))
-    table_row+=table_row_fmt.format(scARE_ID=scARE_ID, DISEASE=DISEASE, CELL_TYPE=CELL_TYPE, METHODOLOGY=METHODOLOGY)
+    scARE_ID, DISEASE, METHODOLOGY,PROTOCOL,ACCESSION=row
+
+    if ACCESSION.startswith('GSE'):
+        ACCESSION=f'<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc={ACCESSION}" target="_blank">{ACCESSION}</a>'
+    elif ACCESSION.startswith('syn'):
+        ACCESSION=f'<a href="https://www.synapse.org/#!Synapse:{ACCESSION}" target="_blank">{ACCESSION}</a>'
+
+    table_row+=table_row_fmt.format(scARE_ID=scARE_ID,DISEASE=DISEASE,METHODOLOGY=METHODOLOGY,PROTOCOL=PROTOCOL,ACCESSION=ACCESSION)
 
 print(table_head.format(table_row=table_row))
