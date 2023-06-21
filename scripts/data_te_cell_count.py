@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-04-30 23:29:01
- # @modify date 2023-05-26 13:55:24
+ # @modify date 2023-06-02 01:22:32
  # @desc [description]
 ###
 import sys
@@ -79,14 +79,19 @@ for x in fam_dic:
     fam_cell_count[x]=list(set(fam_cell_count[x]))
 
 
+cell_type_dict=cell_umap['predicted.celltype'].to_dict()
 subfam_cell_count_mtx=pd.DataFrame(np.zeros([len(subfams),len(['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'],index=subfams)
 for x in subfam_cell_count:
+    print(x)
     for y in subfam_cell_count[x]:
-        subfam_cell_count_mtx.loc[x,cell_umap.loc[y,'predicted.celltype']]+=1
+        celltype=cell_type_dict[y]
+        subfam_cell_count_mtx.loc[x,celltype]+=1
+
 fam_cell_count_mtx=pd.DataFrame(np.zeros([len(families),len(['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'])]),columns=['Ex','In','Oli','OPC','Ast','Mic','Endo','VLMC'],index=families)
 for x in fam_cell_count:
     for y in fam_cell_count[x]:
-        fam_cell_count_mtx.loc[x,cell_umap.loc[y,'predicted.celltype']]+=1
+        celltype=cell_type_dict[y]
+        fam_cell_count_mtx.loc[x,celltype]+=1
     
 subfam_mtx_out=open(out_path+'/subfam_cellcount.sql','w')
 subfam_mtx_out.write('''CREATE DATABASE IF NOT EXISTS scARE;
@@ -137,4 +142,3 @@ for i in range(fam_cell_count_mtx.shape[0]):
     values='"'+fam_cell_count_mtx.index[i]+'",'+values
     fam_mtx_out.write(f'INSERT INTO FAM_CELL_COUNT (TE,Ex,`In`,Oli,OPC,Ast,Mic,Endo,VLMC) values({values});\n')
 fam_mtx_out.close()
-

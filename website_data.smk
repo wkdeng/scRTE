@@ -21,18 +21,18 @@ MODE='overwrite'
 
 rule all:
     input:
-        INTERMEDIATE+'/cell_exp.log'
-        # INTERMEDIATE+'/cell_umap.log',
-        # DATA_FOLDER+'/te_fam.sql',
-        # DATA_FOLDER+'/te_net.sql',
-        # DATA_FOLDER+'/te_basic.sql',
-        # DATA_FOLDER+'/cell_umap.sql',
-        # DATA_FOLDER+'/gene_dict.sql',
-        # DATA_FOLDER+'/te_gene.sql',
-        # DATA_FOLDER+'/meta.sql',
-        # DATA_FOLDER+'/sample2dataset.sql',
-        # DATA_FOLDER+'/subfam_cellcount.sql',
-        # DATA_FOLDER+'/te_exp_boxplot.sql'
+        INTERMEDIATE+'/cell_exp.log',
+        INTERMEDIATE+'/cell_umap.log',
+        DATA_FOLDER+'/te_fam.sql',
+        DATA_FOLDER+'/te_net.sql',
+        DATA_FOLDER+'/te_basic.sql',
+        DATA_FOLDER+'/cell_umap.sql',
+        DATA_FOLDER+'/gene_dict.sql',
+        DATA_FOLDER+'/te_gene.sql',
+        DATA_FOLDER+'/meta.sql',
+        DATA_FOLDER+'/sample2dataset.sql',
+        DATA_FOLDER+'/subfam_cellcount.sql',
+        DATA_FOLDER+'/te_exp_boxplot.sql'
 
 rule extract_cell_umap:
     input:
@@ -75,24 +75,24 @@ rule cell_umap:
         input_path=INTERMEDIATE
     shell:"{params.python} {params.script} {params.input_path} {output} > {log} 2>&1"
 
-# rule cell_exp:
-#     input:
-#         cell_exp=INTERMEDIATE+'/cell_exp.log',
-#         cell_umap=INTERMEDIATE+'/cell_umap.log'
-#     output:
-#         DATA_FOLDER+'/gene_dict.sql',
-#         DATA_FOLDER+'/cell_exp_0.sql'
-#     log:
-#         'log/cell_exp.log'
-#     params:
-#         script='scripts/data_cell_exp.py',
-#         python=PYTHON,
-#         out_path=DATA_FOLDER,
-#         input_dir=INTERMEDIATE,
-#         mode=MODE,
-#         gtf=GENE_GTF,
-#         rmsk=RMSK
-#     shell:"{params.python} {params.script} {params.input_dir} {params.out_path} {params.mode} {params.gtf} {params.rmsk}> {log} 2>&1"
+rule cell_exp:
+    input:
+        cell_exp=INTERMEDIATE+'/cell_exp.log',
+        cell_umap=INTERMEDIATE+'/cell_umap.log'
+    output:
+        DATA_FOLDER+'/gene_dict.sql',
+        DATA_FOLDER+'/cell_exp_0.sql'
+    log:
+        'log/cell_exp.log'
+    params:
+        script='scripts/data_cell_exp.py',
+        python=PYTHON,
+        out_path=DATA_FOLDER,
+        input_dir=INTERMEDIATE,
+        mode=MODE,
+        gtf=GENE_GTF,
+        rmsk=RMSK
+    shell:"{params.python} {params.script} {params.input_dir} {params.out_path} {params.mode} {params.gtf} {params.rmsk}> {log} 2>&1"
 
 
 rule te_cellcount:
@@ -102,7 +102,7 @@ rule te_cellcount:
         cell_umap=DATA_FOLDER+'/cell_umap.sql'
     output:
         DATA_FOLDER+'/subfam_cellcount.sql',
-        DATA_FOLDER+'/fam_cellcount.txt'
+        DATA_FOLDER+'/fam_cellcount.sql'
     log:
         'log/te_cellcount.log'
     params:
