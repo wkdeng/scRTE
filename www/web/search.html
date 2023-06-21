@@ -2,15 +2,17 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:56
-@modify date 2023-06-02 18:06:12
+@modify date 2023-06-15 12:02:52
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="" author" content="Wankun Deng">
+  <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+  <meta name=viewport content="width=device-width, initial-scale=1">
 
   <title>Search</title>
   <style>
@@ -18,8 +20,11 @@
   </style>
   <link href="css/bootstrap.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="css/jquery.dataTables.css" />
+  <style>
+    @import url('css/te_table.css');
+  </style>
 </head>
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
@@ -27,7 +32,7 @@
 <script src="js/third_party/jquery.dataTables.js"></script>
 
 
-<body onload="init()" style="background-color:#efefef;">
+<body onload="init()">
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
   <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="card mb-3" id="simple_section">
@@ -42,7 +47,7 @@
               <option value='RTE' selected>RTE</option>
               <option value='Gene'>Gene</option>
               <option value='Disease'>Disease</option>
-              <option value='Cell'>Cell</option>
+              <!--<option value='Cell'>Cell</option>-->
               <option value='Dataset'>Dataset</option>
             </select>
           </div>
@@ -87,7 +92,7 @@
               <option value='RTE' selected>RTE</option>
               <option value='Gene'>Gene</option>
               <option value='Disease'>Disease</option>
-              <option value='Cell'>Cell</option>
+              <!--<option value='Cell'>Cell</option>-->
               <option value='Dataset'>Dataset</option>
             </select>
           </div>
@@ -190,8 +195,16 @@
         });
       }
       function init() {
-        includeHTML();
+        includeHTML('nav_search');
         $('#container').css('min-height',$(document).height()-280)
+        const urlParams = new URLSearchParams(window.location.search);
+        var kw=urlParams.get('KW');
+        if(kw!=null){
+          var field=0;//urlParams.get('Field');
+          document.getElementById("simple_field").selectedIndex = field;
+          document.getElementById("simple_kw").value = kw;
+          simple_search();
+        }
       }
     </script>
     <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid"></div>

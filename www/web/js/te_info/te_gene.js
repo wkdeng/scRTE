@@ -23,14 +23,14 @@
             document.getElementById('container_network').appendChild(netChart);
         }
         
-        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
+        $.get('/scARE/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
                 function(response){
                     netData=JSON.parse(response);
                     updateNetwork();
                 }
         );
         document.getElementById('degree').addEventListener('change',function(){
-        $.get('/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
+        $.get('/scARE/cgi/te_info/get_te_gene_net.py',{Name: name_,Degree:document.getElementById('degree').value},
             function(response){
                     netData=JSON.parse(response);
                     updateNetwork();

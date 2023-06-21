@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-23 09:28:56
- * @modify date 2023-05-23 16:53:03
+ * @modify date 2023-06-05 01:05:49
  * @desc [description]
  */
 const uparams2 = new URLSearchParams(window.location.search);
@@ -11,22 +11,23 @@ if(te_name==null){
   }
 async function getTEExpData() {
       const response = await fetch(
-          '/cgi/te_info/get_te_exp_boxplotly.py?Name='+te_name
+          '/scARE/cgi/te_info/get_te_exp_boxplotly.py?Name='+te_name
       );
       return response.json();
     }
 
   
 getTEExpData().then(data => {
-
+    console.log(data)
     if('NO_EXP' in data){
         document.getElementById("exp_body").innerHTML='<span style="color:red">No expression data available for this TE</span>'
     }else{
-    
-    for(const key in data){
-        dataset=data[key]
-        console.log(dataset)
+    for(var key in data){
         document.getElementById("exp_body").innerHTML += '<div id="exp_'+key+'" style="height:500px;"></div>'
+      }
+    for(var key in data){
+        dataset=data[key]
+        // document.getElementById("exp_body").innerHTML += '<div id="exp_'+key+'" style="height:500px;"></div>'
         var layout = {
             yaxis: {
               title: 'Normalized Expression'

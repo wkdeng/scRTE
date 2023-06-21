@@ -2,23 +2,23 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:36
-@modify date 2023-05-31 16:15:19
+@modify date 2023-06-20 16:06:41
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name=""author" content="Wankun Deng">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=""author" content="Wankun Deng">
+    <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+    <meta name=viewport content="width=device-width, initial-scale=1">
 
-  <title>Tutorial & Example</title>
+  <title>Tutorial</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
   <style>
   @import url('css/te_table.css');
-  </style>
-  <style>
   @import url('css/highcharts.css');
   </style>
-  <link href="css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 
 <style>
@@ -28,21 +28,378 @@ ul {
   -moz-columns: 2;
 }  
 </style>
-
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<style>
+    <!--
+     /* Font Definitions */
+     @font-face
+        {font-family:"Cambria Math";
+        panose-1:2 4 5 3 5 4 6 3 2 4;}
+    @font-face
+        {font-family:DengXian;
+        panose-1:2 1 6 0 3 1 1 1 1 1;}
+    @font-face
+        {font-family:Calibri;
+        panose-1:2 15 5 2 2 2 4 3 2 4;}
+    @font-face
+        {font-family:"\@DengXian";
+        panose-1:2 1 6 0 3 1 1 1 1 1;}
+     /* Style Definitions */
+     p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:.5in;
+        font-size:12.0pt;
+        font-family:"Calibri",sans-serif;}
+    p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:.5in;
+        font-size:12.0pt;
+        font-family:"Calibri",sans-serif;}
+    p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:.5in;
+        font-size:12.0pt;
+        font-family:"Calibri",sans-serif;}
+    p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
+        {margin-top:0in;
+        margin-right:0in;
+        margin-bottom:0in;
+        margin-left:.5in;
+        font-size:12.0pt;
+        font-family:"Calibri",sans-serif;}
+    .MsoChpDefault
+        {font-family:"Calibri",sans-serif;}
+    @page WordSection1
+        {size:8.5in 11.0in;
+        margin:1.0in 1.0in 1.0in 1.0in;}
+    div.WordSection1
+        {page:WordSection1;}
+     /* List Definitions */
+     ol
+        {margin-bottom:0in;}
+    ul
+        {margin-bottom:0in;}
+    -->
+    </style>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 
-<body onload="init()" style="background-color:#efefef;">
+<body onload="init()" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="row" >
-        <div class="col-xl-12" id="cell_number_TE">
-            <div class="card mb-3">
-            <div class="card-header" ><strong><span id="desc_header"></span>Tutorial & Example</strong></div>
-            <div class="card-body">
-                Tutorial & Example
-            </div>
+        <div class="col-xl-12">
+            <!--<div class="card mb-3">
+            <div class="card-header" >--><strong><font size=5em>Tutorial</font></strong>
+            <!--<div class="card-body">-->
+                    <p class=MsoListParagraphCxSpFirst style='text-indent:-.25in'>1.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    options</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>a.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    single term: </p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    by RTE</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>In this option,
+                    scARE will search RTEs with any of Class, Family or Name matching or partial
+                    matching keyword. Result will be a table of RTEs. By checking “I’m feeling lucky”,
+                    scARE will return the first result. Link in result table will lead to RTE
+                    information page (section 4.a).</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100
+                    src="images/image001.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    by gene</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>In this option,
+                    scARE will search genes matching keyword. Result will be a table of matched
+                    genes and RTEs found within each matched gene. By checking “I’m feeling lucky”,
+                    scARE will return the first result. Link in result table will lead to RTE
+                    information page (section 4.a).</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image002.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>iii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    by disease</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>In this option,
+                    scARE will search disease field of all dataset records and return matched list
+                    of datasets included in scARE. Link in result table will lead to dataset
+                    information page (section 4.b).</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image003.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>iv.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    by cell</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>v.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    by dataset</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>scARE will return
+                    list of datasets with scARE ID matching keywords. Link in result table will
+                    lead to RTE information page (section 4.b).</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image004.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>b.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Search
+                    multiple terms:</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>This option allows
+                    users to search for records in our database match all or any of several keywords.
+                    Returned results are similar with search single term. </p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image005.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in'>2.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Browse
+                    options</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>a.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Browse by
+                    RTE</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>We provide 3
+                    views for browsing by RTE: treemap view, tree view and table view. In treemap
+                    view, different classes/families/RTEs are represented as tiles and click on
+                    tile can expand each class/family or redirect to RTE information page (section 4.a).
+                    Numbers below each name is the total loci number of each class/family/RTE.</p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img
+                    width=1100 src="images/image006.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence">For
+                    tree view, class/family/RTE are organized as tree and nodes can be expanded or
+                    redirect to RTE information page (section 4.a). </p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>
+                    <img width=1100
+                    src="images/image007.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated">Table
+                    view presents all RTEs as rows in a table with loci number of each RTE. <img
+                    width=1100 src="images/image008.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"> </p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>b.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Browse by cell
+                    type</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>scARE provides options
+                    for browsing cell types identified in included samples. By selecting cell types
+                    shown, it will redirect to cell type information page (section 4.c). <img
+                    width=1100 src="images/image009.png"
+                    alt="A picture containing drawing, child art&#10;&#10;Description automatically generated"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>c.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Browse by
+                    disease</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>scARE provides options
+                    to browse by all 3 diseases in our database. This page included basic
+                    information about each of Alzheimer’s disease, Parkinson’s disease and multiple
+                    sclerosis. </p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image010.png"
+                    alt="A picture containing text, website, font, design&#10;&#10;Description automatically generated"></p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>By
+                    clicking “View All AD Dataset” (or any of other two diseases), a table listing
+                    all datasets containing AD samples will popup and allow users to choose
+                    specific dataset to view detail (section 4.b). </p>
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100
+                    src="images/image011.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>d.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Browse by
+                    dataset</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>From this page, a
+                    list of all datasets in scARE will show and allow users to choose the specific
+                    dataset to view detail (section 4.b). <img width=1100
+                    src="images/image012.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in'>3.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Discover
+                    RTEs</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>a.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Most
+                    expressed RTEs.</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>This section will
+                    allow users to view most expressed RTEs in selected conditions. For example,
+                    the top 10 most expressed RTEs in excitatory neurons of AD samples. <img
+                    width=1100 src="images/image013.png"
+                    alt="A screenshot of a graph&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>scARE also
+                    provides table view of results, allowing users to gather more information. <img
+                    width=1100 src="images/image014.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>b.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Most
+                    differential expressed RTEs - disease v.s. control</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>scARE compared
+                    expression of RTEs in disease v.s. control manner and allow users to find the
+                    most differential expressed RTEs in chosen condition. <img width=1100 src="images/image015.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>c.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Most differential
+                    expressed RTES – cell v.s. cell</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>scARE also
+                    compared expression of RTEs in cell v.s. cell manner, allowing users to find
+                    most differential expressed RTEs between cell types. <img width=1100
+                    src="images/image016.png"
+                    alt="A screenshot of a cell type&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>d.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Co-expression
+                    network</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>We performed
+                    co-expression analysis for RTEs and genes in AD samples in manner of both
+                    disease v.s. control and cell v.s. cell. We then built the co expression network
+                    for the comparison. Clicking on names of RTEs (rectangles) will redirect to RTE
+                    information page (section 4.a)<img width=1100
+                    src="images/image017.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='text-indent:-.25in'>4.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Detailed
+                    information pages:</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>a.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>RTE
+                    information page</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>This page contains
+                    6 major sections:</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Basic
+                    information</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image018.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Distribution
+                    of loci on chromosome</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image019.png"
+                    alt="A picture containing text, screenshot, plot, line&#10;&#10;Description automatically generated"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>iii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Distribution
+                    of loci in each chromosome</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img wwidth=1100 src="images/image020.png"
+                    alt="A picture containing text, screenshot, rectangle&#10;&#10;Description automatically generated"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>iv.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Distribution
+                    between genomic regions <img width=1100 src="images/image021.png"
+                    alt="A screenshot of a graph&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>v.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Expression
+                    in each dataset/cell type <img width=1100 src="images/image022.png"
+                    alt="A screenshot of a graph&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>vi.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>List
+                    of genes containing loci of each RTE <img width=1100
+                    src="images/image023.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>b.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Dataset
+                    information page</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Dataset
+                    information and cell number statistics</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>This section
+                    contains basic information of each dataset, allowing users to trace back to original
+                    publication. Cells detected in each dataset is also presented.</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'><img width=1100 src="images/image024.png"
+                    alt="A screenshot of a cell phone&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Cell
+                    clustering and gene expression </p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>Left panel shows
+                    the cell clustering, cell type annotation for all cells in this dataset while
+                    right panel shows expression of selected gene.<img width=1100
+                    src="images/image025.png"
+                    alt="A screenshot of a computer screen&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in;text-indent:-.25in'>c.<span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Cell type
+                    information page</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.0in'>This page allows
+                    users to briefly summarize and access datasets with specified cell types.</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>i.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>Number
+                    of cells.</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>Cell numbers were
+                    counted for each cell type under different scope: <img width=1100
+                    src="images/image026.png"
+                    alt="A screenshot of a graph&#10;&#10;Description automatically generated with low confidence"></p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in;text-indent:-1.5in'><span
+                    style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    </span>ii.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp; </span>List
+                    of datasets containing this cell type.</p>
+
+                    <p class=MsoListParagraphCxSpMiddle style='margin-left:1.5in'>Details of the
+                    first dataset is expanded and rest are collapsed. Clicking on names will expand/collapse
+                    each details of each dataset. Open in a new tab can be done by clicking on
+                    icons on the right.</p>
+
+                    <p class=MsoListParagraphCxSpLast style='margin-left:1.5in'><img width=1100 id="Picture 1" src="images/image027.png"
+                    alt="A screenshot of a computer&#10;&#10;Description automatically generated with medium confidence"></p>
+                
             </div>
         </div>
     </div>
@@ -50,8 +407,9 @@ ul {
 
 <script type="text/javascript">
     function init(){
-        includeHTML();
+        includeHTML('nav_faq');
     }
+    
 </script>
 <div w3-include-html="footer.html"></div>
 </body>

@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/bin/bash
+"source" "/home/wdeng3/scARE/bin/activate"
+"python" "$0" "$@"
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
@@ -11,51 +13,43 @@ import cgitb
 import pandas as pd
 import cgi
 import json
-import MySQLdb
+# import MySQLdb
 
 import sys
 sys.path.append('../')
 import config
-# Create the connection object
-connection = MySQLdb.connect(
-    user=config.user,
-    passwd=config.passwd,
-    host=config.host,
-    port=config.port,
-    db=config.db
-)
-
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
-
 form=cgi.FieldStorage()
 name=form['Name'].value
 
-cursor = connection.cursor()
-
-cursor.execute(f"select * from  TE_EXP_BOXPLOT where TE='{name}' ORDER BY DATASET,DISEASE,CELL_TYPE ASC; ")
-
+sql=f"select * from  TE_EXP_BOXPLOT where TE='{name}' ORDER BY DATASET,DISEASE,CELL_TYPE ASC; "
+cursor,cnx=config.get_cursor()
+cursor.execute(sql)
 info=cursor.fetchall()
+
 ret={}
-labels={}
+ret_high={}
+labels={} 
 diseases=[]
+
 if info:
     for row in info:
         _,cell,cell_n,dataset,disease,_,max_,min_,q1,median,q3= row
         if disease != 'Control':
             disease=dataset.split('_')[0]
-            
-        if all([x>0 for x in [max_,min_,q1,median,q3]]):
-            if dataset not in ret:
-                ret[dataset]=[]
+        if all([x>=0 for x in [max_,min_,q1,median,q3]]):
+            if dataset not in ret_high:
                 labels[dataset]=[]
                 diseases=[]
+                ret_high[dataset]=[]
             if disease not in diseases:
-                ret[dataset].append({'data':[],'name':disease})
-                labels[dataset].append([])
+                ret_high[dataset].append({'data':[],'name':disease,'color':'#7cb5ec' if disease=='Control' else '#f7a35c','fillColor':'#99caf7' if disease=='Control' else '#fac89d'})
             diseases.append(disease)
-            ret[dataset][-1]['data'].append([min_,q1,median,q3,max_])
-            labels[dataset][-1].append(cell)
-    print(json.dumps([ret,labels]))
+            if cell not in labels[dataset]:
+                labels[dataset].append(cell)
+            ret_high[dataset][-1]['data'].append({'x':labels[dataset].index(cell),'low':min_,'q1':q1,'median':median,'q3':q3,'high':max_})
+
+    print(json.dumps([ret_high,labels]))
 else:
-    print('ERROR: {name} not expressed in any dataset.')
+    print(json.dumps(['No data']))

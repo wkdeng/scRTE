@@ -1,0 +1,180 @@
+<!--
+@author [Wankun Deng]
+@email [dengwankun@gmail.com]
+@create date 2023-04-27 15:32:36
+@modify date 2023-06-06 01:56:55
+@desc [description]
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name=""author" content="Wankun Deng">
+
+  <title>Home</title>
+  <style>
+  @import url('css/te_table.css');
+  </style>
+  <style>
+  @import url('css/highcharts.css');
+  </style>
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+
+<style>
+ul {
+  columns: 2;
+  -webkit-columns: 2;
+  -moz-columns: 2;
+}  
+</style>
+
+<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script src="js/third_party/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<!--MDB fonts-->
+<!-- Font Awesome -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+  rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css"
+  rel="stylesheet"
+/>
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"
+></script>
+<!-- MDB -->
+<body onload="init()"  style="background-color:#efefef;">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
+<div id="container" style="width: 60%; min-width: 1200px; margin-block: 100px;" class="container-fluid">
+    <div class="row" >
+        <div class="col-xl-7" id="cell_number_TE">
+            <div class="card mb-1">
+                <div class="card-body text-justify">
+                    <strong>About scARE (single cell Atlas of Retrotransposable Elements)</strong><br>
+                    Recent studies have revealed the important role of retrotransposons in neurodegenerative disease (Copley and Shorter 2023). 
+                    Abnormal activation or repression of RTEs have been observed in multiple neurodegenerative diseases, 
+                    including Alzheimer’s disease (Sun et al. 2018), Parkinson’s disease (Baeken, Moosmann, and Hajieva 2020), 
+                    multiple sclerosis (Heinrich et al. 2019) and so on. However, RTE dynamics in neurodegenerative diseases are under explored. 
+                    With advances of single cell RNA sequencing (scRNA-seq) technology, 
+                    the community has accumulated large amount of single cell transcriptome profiles in neurodegenerative disease (Ahmadi et al. 2021). 
+                    In this work, we compiled scRNA-seq dataset from 11 studies in Alzheimer’s disease, Parkinson’s disease, and multiple sclerosis, 
+                    to reveal RTE dynamic in disease and cell types. 
+                    In total, we quantified RTE expression in more than 600,000 cells and built single cell atlas of retrotransposon (scARE) to host these data. 
+                    In scARE, we provide various search and browse options, including search RTE, gene, disease or dataset by single term and multiple terms, 
+                    browse by RTE, cell type, disease, and dataset. 
+                    Furthermore, we implemented discover option to highlight most expressed, most differential expressed or co-expressed RTEs in given conditions. 
+                    Overall, scARE provides handful tool for exploration of RTE dynamic in neurodegenerative diseases.
+                    
+                </div>
+            </div>
+
+            <div class="card mb-1">
+                <div class="card-header"><strong>References</strong></div>
+                <div class="card-body">
+<li>Ahmadi, Amirhossein, Juan D. Gispert, Arcadi Navarro, Natalia Vilor-Tejedor, and Iman Sadeghi. 2021. “Single-Cell Transcriptional Changes in Neurodegenerative Diseases.” Neuroscience 479 (December): 192–205.</li>
+<li>Baeken, Marius W., Bernd Moosmann, and Parvana Hajieva. 2020. “Retrotransposon Activation by Distressed Mitochondria in Neurons.” Biochemical and Biophysical Research Communications 525 (3): 570–75.</li>
+<li>Copley, Katie E., and James Shorter. 2023. “Repetitive Elements in Aging and Neurodegeneration.” Trends in Genetics: TIG 39 (5): 381–400.</li>
+<li>Heinrich, Maxwell J., Caroline A. Purcell, Andrea J. Pruijssers, Yang Zhao, Charles F. Spurlock 3rd, Subramaniam Sriram, Kristen M. Ogden, et al. 2019. “Endogenous Double-Stranded Alu RNA Elements Stimulate IFN-Responses in Relapsing Remitting Multiple Sclerosis.” Journal of Autoimmunity 100 (June): 40–51.</li>
+<li>Sun, Wenyan, Hanie Samimi, Maria Gamez, Habil Zare, and Bess Frost. 2018. “Pathogenic Tau-Induced PiRNA Depletion Promotes Neuronal Death through Transposable Element Dysregulation in Neurodegenerative Tauopathies.” Nature Neuroscience 21 (8): 1038–48.</li>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="card-header"><strong>Developer</strong></div>
+                <div class="card-body">
+                    <li>Wankun Deng (Author, Website maintainer)</li>
+                    <li>Citu (Author, Data source maintainer)</li>
+                    <li>Andi Liu (Author, Data source maintainer)</li>
+                    <li>Zhongming Zhao (Author, Mentor)</li>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="card-header"><strong>Citation</strong></div>
+                <div class="card-body">
+                    <!--<li>Deng W*, Citu*, Liu A*, Zhao Z<sup>#</sup>. scARE: an atlas of retrotransposable elements in neurodegenerative diseases. Submitted.</li>-->
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-xl-5" id="navigation">
+            <div class="card mb-1">
+                <div class="card-header"><strong>Discover</strong></div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li><a href="discover.html#most_exp_row"><img src="images/most_exp.png" width="200" > Most expressed RTEs</a></li><br/>
+                        <li><a href="discover.html#diff_d_exp_row"><img src="images/de_disease.png" width="200" > DE RTEs (Disease v.s. control)</a></li>
+                        <li><a href="discover.html#diff_c_exp_row"><img src="images/de_cell.png" width="200" > DE RTEs (cell v.s. cell)</a></li>
+                        <li><a href="discover.html#co_exp"><img src="images/co_exp.png" width="200" > Coexpression</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="card-header"><strong>Search RTE</strong></div>
+                <div class="card-body">    
+                    <div class="input-group">
+                        <div class="form-outline">
+                          <input type="search" id="quick_search_kw" class="form-control" />
+                          <label class="form-label" for="form1">Keyword</label>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="quick_search_btn" onclick="quick_search();">
+                          <i class="fas fa-search"></i>
+                        </button>
+                      </div>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="card-header"><strong>Browse</strong></div>
+                <div class="card-body">    
+                    <ul class="list-group list-group-flush">
+                        <li><a href="browse_te.html"><img src="images/rte_st.png" width="200" > Browse RTE</a></li><br/>
+                        <li><a href="browse_cell.html"><img src="images/cell_neuron.png" width="200" > Browse cell</a></li>
+                        <li><a href="browse_disease.html"><img src="images/disease.png" width="200" > Browse disease</a></li>
+                        <li><a href="browse_dataset.html"><img src="images/dataset.png" width="200" > Browse dataset</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="card mb-1">
+                <div class="card-header"><strong>External links</strong></div>
+                <div class="card-body">    
+                    <a href="https://www.dfam.org/home" target='_blank' class="badge badge-success">Dfam</a>
+                    <a href="https://www.gencodegenes.org/" target='_blank' class="badge badge-secondary">GENCODE</a>
+                    <a href="https://www.repeatmasker.org/cgi-bin/WEBRepeatMasker" target='_blank' class="badge badge-primary">RepeatMasker</a>
+                    <a href="https://genome.ucsc.edu/" target='_blank' class="badge badge-danger">UCSC Genome browser</a>
+                    <a href="https://portal.brain-map.org/" target='_blank' class="badge badge-warning">Allen Brain Atlas</a>
+                    <a href="https://satijalab.org/seurat/" target='_blank' class="badge badge-info">Seurat</a>
+                    <a href="https://github.com/JiekaiLab/scTE" target='_blank' class="badge badge-light">scTE</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function init(){
+        includeHTML();
+        document.getElementById("quick_search_kw").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("quick_search_btn").click();
+            }
+        });
+    }
+    function quick_search(){
+        var kw = document.getElementById("quick_search_kw").value;
+        window.location.href = "search.html?KW="+kw+'&Field=0';
+    }
+    
+    
+</script>
+<div w3-include-html="footer.html"></div>
+</body>

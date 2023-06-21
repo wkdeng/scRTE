@@ -2,24 +2,24 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-05-15 23:55:45
-@modify date 2023-05-31 16:15:07
+@modify date 2023-06-15 11:59:08
 @desc [description]
 -->
 
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name=""author" content="Wankun Deng">
+  <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+  <meta name=viewport content="width=device-width, initial-scale=1">
 
   <title>Contacts</title>
-  <style>
-  @import url('css/te_table.css');
-  </style>
-  <style>
-  @import url('css/highcharts.css');
-  </style>
   <link href="css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    @import url('css/highcharts.css');
+    @import url('css/te_table.css');
+  </style>
 </head>
 
 <style>
@@ -30,11 +30,11 @@ ul {
 }  
 </style>
 
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 
-<body onload="init()" style="background-color:#efefef;">
+<body onload="init()" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <main role="main">  
@@ -50,7 +50,7 @@ ul {
               Director, UTHealth Cancer Genomics Core<br>
               The University of Texas Health Science Center at Houston (UTHealth)<br>
               Phone: 713-500-3631<br>
-              Email: <strong><a href="mailto:Zhongming.Zhao@uth.tmc.edu">Zhongming.Zhao-at-uth.tmc.edu</a></strong></p><br>
+              Email: <strong><a href="mailto:Zhongming.Zhao@uth.tmc.edu">Zhongming.Zhao<span>@</span>uth.tmc.edu</a></strong></p><br>
         </div>
           
         <div class="container">
@@ -58,7 +58,7 @@ ul {
                 Bioinformatics and Systems Medicine Labororaty<br>
                 McWilliams School of Biomedical Informatics <br>
                 University of Texas Health Science Center at Houston (UTHealth)<br>
-                Email: <strong><a href="mailto:Wankun.Deng@uth.tmc.edu">Wankun.Deng-at-uth.tmc.edu</a></strong></p><br>
+                Email: <strong><a href="mailto:Wankun.Deng@uth.tmc.edu">Wankun.Deng<span>@</span>uth.tmc.edu</a></strong></p><br>
     
         </div>
         <div class="container">
@@ -66,7 +66,7 @@ ul {
                 Bioinformatics and Systems Medicine Labororaty<br>
                 McWilliams School of Biomedical Informatics <br>
                 University of Texas Health Science Center at Houston (UTHealth)<br>
-                Email: <strong><a href="mailto:Citu.Citu@uth.tmc.edu">Citu-at-uth.tmc.edu</a></strong></p><br>
+                Email: <strong><a href="mailto:Citu.Citu@uth.tmc.edu">Citu<span>@</span>uth.tmc.edu</a></strong></p><br>
     
         </div>  
         <div class="container">
@@ -74,7 +74,7 @@ ul {
                 Bioinformatics and Systems Medicine Labororaty<br>
                 McWilliams School of Biomedical Informatics <br>
                 University of Texas Health Science Center at Houston (UTHealth)<br>
-                Email: <strong><a href="mailto:andi.liu@uth.tmc.edu">Andi.Liu-at-uth.tmc.edu</a></strong></p><br>
+                Email: <strong><a href="mailto:andi.liu@uth.tmc.edu">Andi.Liu<span>@</span>uth.tmc.edu</a></strong></p><br>
     
         </div>  
       <br>
@@ -83,7 +83,7 @@ ul {
 
 <script type="text/javascript">
     function init(){
-        includeHTML();
+        includeHTML('nav_contacts');
     }
 </script>
 <div w3-include-html="footer.html"></div>

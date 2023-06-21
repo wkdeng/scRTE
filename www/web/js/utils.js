@@ -1,4 +1,4 @@
-function includeHTML() {
+function includeHTML(page) {
     var z, i, elmnt, file, xhttp;
     /* Loop through a collection of all HTML elements: */
     z = document.getElementsByTagName("*");
@@ -11,7 +11,15 @@ function includeHTML() {
         xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4) {
-            if (this.status == 200) {elmnt.innerHTML = this.responseText;}
+            if (this.status == 200) {
+                elmnt.innerHTML = this.responseText;
+                if(file=='navigation.html'){
+                  $('#navagation_list li').removeClass('active');
+                  if(page.length>0){
+                    $('#'+page).addClass('active')
+                  }
+                }
+              }
             if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
             /* Remove the attribute, and call this function once more: */
             elmnt.removeAttribute("w3-include-html");
@@ -24,6 +32,7 @@ function includeHTML() {
         return;
       }
     }
+    
   }
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

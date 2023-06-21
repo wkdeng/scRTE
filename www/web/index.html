@@ -2,45 +2,288 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:36
-@modify date 2023-06-01 16:27:04
+@modify date 2023-06-21 11:19:18
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name=""author" content="Wankun Deng">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=""author" content="Wankun Deng">
+    <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+    <meta name=viewport content="width=device-width, initial-scale=1">
 
   <title>Home</title>
-  <style>
-  @import url('css/te_table.css');
-  </style>
+
   <style>
   @import url('css/highcharts.css');
+  .carousel .carousel-indicators li {  background-color: gray; }
+  .carousel .carousel-control-prev span {  color: gray; }
+  .carousel .carousel-control-next span {  color: gray; }
+  .carousel .carousel-indicators li.active { background-color: var(--primary); }
   </style>
   <link href="css/bootstrap.min.css" rel="stylesheet"/>
+  <!--MDB fonts-->
+<!-- Font Awesome -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.css"
+rel="stylesheet"
+/>
+<!-- MDB -->
+<script
+type="text/javascript"
+src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.1/mdb.min.js"
+></script>
+<!-- MDB -->
+<style>
+    @import url('css/te_table.css');
+</style>
 </head>
 
 <style>
-ul {
-  columns: 2;
-  -webkit-columns: 2;
-  -moz-columns: 2;
-}  
+    ul {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+    } 
+
+    #bg_img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        display: block;
+        background: url("images/Slide3.png") center repeat-y;
+        background-size: 100% 100%;
+        opacity:0.15;
+        background-attachment: fixed;
+        background-position: 0px 160px;
+    }
+
+    .icon-block p{
+    min-height: 50px;
+
+    }
+    .icon-block p{
+    min-height: 50px;
+
+    }
+		 
 </style>
 
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 
-<body onload="init()"  style="background-color:#efefef;">
+<body onload="init()"  >
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
-<div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
+<div id="bg_img"></div>
+<div id="container" style="width: 60%; min-width: 1200px; margin-block: 100px;" class="container-fluid  bg-transparent">
+    <br/><br/>
     <div class="row" >
-        <div class="col-xl-12" id="cell_number_TE">
-            <div class="card mb-3">
-                <div class="card-body">
-                    Summary of scARE with simple search box
+        <div class="row text-center">
+            <h4>At a glance</h4>
+        </div>
+        <div class="col-xl-12">
+            <div class="card mb-1 border border-white shadow-none bg-transparent">
+                <div class="card-body text-justify">
+                    <div id="slide_indicator" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                          <li data-target="#slide_indicator" data-slide-to="0" class="active" style="color:gray"></li>
+                          <li data-target="#slide_indicator" data-slide-to="1"></li>
+                          <li data-target="#slide_indicator" data-slide-to="2"></li>
+                          <li data-target="#slide_indicator" data-slide-to="3"></li>
+                        </ol>
+                        <div class="carousel-inner">
+                          <div class="carousel-item active">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <img class="d-block w-100" src="images/Slide1.png" style="width:500px;">
+                                </div>
+
+                                <div class="col-xl-5 text-center">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <h5>RTE quantification and cell type annotation</h3>
+                                    <p>In scARE, we provide quantification of RTEs and Genes for each dataset included. 
+                                        Cells were annotated by referencing Allen Brain Atlas and clustered by gene/RTE expression.
+                                    </p>
+                                    <button type="button" class="btn btn-primary" onclick="window.open('browse_dataset.html','_blank')">More >></button>
+                                </div>
+                            </div>
+                            
+                          </div>
+                          <div class="carousel-item ">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <img class="d-block w-100" src="images/Slide2.png"  style="width:500px;">
+                                </div>
+                                <div class="col-xl-5 text-center">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <h5>Discovering most expressed and most differential expressed RTEs</h3>
+                                    <p>In scARE, we provide dicover options for exploration of most expressed RTEs and most differential expressed RTEs.
+                                    </p>
+                                    <button type="button" class="btn btn-primary" onclick="window.open('discover.html','_blank')">More >></button>
+                                </div>
+                            </div>
+                          </div>                          
+                          <div class="carousel-item ">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <img class="d-block w-100" src="images/Slide3.png"  style="width:500px;">
+                                </div>
+                                <div class="col-xl-5 text-center">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <h5>Explore expression of RTE in cell types</h3>
+                                    <p>In scARE, we summerized expression profile of RTEs in each cell type, allowing exploration of RTE expression in different cell types.
+                                    </p>
+                                    <button type="button" class="btn btn-primary" onclick="window.open('browse_cell.html','_blank')">More >></button>
+                                </div>
+                            </div>
+                            
+                          </div>
+                          <div class="carousel-item ">
+                            <div class="row">
+                                <div class="col-xl-7">
+                                    <img class="d-block w-100" src="images/Slide4.png"  style="width:500px;">
+                                </div>
+                                <div class="col-xl-5 text-center">
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <h5>Discovering co-expression of RTE and gene</h3>
+                                    <p>In scARE, we performed co-expression analysis between RTE and genes, enabled discovery of correlation between gene and RTE.
+                                    </p>
+                                    <button type="button" class="btn btn-primary" onclick="window.open('discover.html#co_exp','_blank')">More >></button>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#slide_indicator" role="button" data-slide="prev">
+                          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#slide_indicator" role="button" data-slide="next">
+                          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                          <span class="sr-only">Next</span>
+                        </a>
+                      </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="col-xl-12">
+            <div class="card mb-1 border border-white shadow-none bg-transparent">
+                <div class="card-body text-justify">
+                    <div class="row text-center">
+                        <h4>Browse scARE</h4>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center text-center">
+                        <div class="p-2 bd-highlight"><a href="browse_te.html"><img src="images/rte_st.png" width="200" ><br/> Browse RTE</a></div>
+                        <div class="p-2 bd-highlight"><a href="browse_cell.html"><img src="images/cell_neuron.png" width="200" > <br/>Browse cell</a></div>
+                        <div class="p-2 bd-highlight"><a href="browse_disease.html"><img src="images/disease.png" width="200" > <br/>Browse disease</a></div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center text-center">
+                        <div class="p-2 bd-highlight"><a href="browse_dataset.html"><img src="images/dataset.png" width="200" > <br/>Browse dataset</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <hr/>
+        <div class="col-xl-12">
+            <div class="card mb-1 border border-white shadow-none bg-transparent">
+                <div class="card-body text-justify">
+                    <div class="row text-center">
+                        <h4>Discover scARE</h4>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center text-center">
+                        <div class="p-2 bd-highlight"><a href="discover.html#most_exp_row"><img src="images/most_exp.png" width="200" > <br/>Most expressed RTEs</a></div>
+                        <div class="p-2 bd-highlight"><a href="discover.html#diff_d_exp_row"><img src="images/de_disease.png" width="200" > <br/>DE RTEs (Disease v.s. control)</a></div>
+                        <div class="p-2 bd-highlight"><a href="discover.html#diff_c_exp_row"><img src="images/de_cell.png" width="200" > <br/>DE RTEs (cell v.s. cell)</a></div>
+                    </div>
+                    <div class="d-flex justify-content-around align-items-center text-center">
+                        <div class="p-2 bd-highlight"></div>
+                        <div class="p-2 bd-highlight"><a href="discover.html#exp_corr_container"><img src="images/correlation.png" width="200" > <br/>Expression correlation</a></div>
+                        <div class="p-2 bd-highlight"><a href="discover.html#co_exp"><img src="images/co_exp.png" width="200" > <br/>Coexpression network</a></div>
+                        <div class="p-2 bd-highlight"></div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="col-xl-12">
+            <div class="card mb-1 border border-white shadow-none bg-transparent">
+                <div class="card-body text-justify">
+                    <div class="d-flex justify-content-around align-items-top text-center">
+                        <div class="p-2 bd-highlight col-xl-7">
+                            <h4>About</h4>  <br/>
+                            <p class=" text-justify">
+                                In scARE, we compiled scRNA-seq dataset from 11 studies in Alzheimer’s disease, Parkinson’s disease, and multiple sclerosis, 
+                                to reveal RTE dynamic in disease and cell types. 
+                                In total, we quantified RTE expression in more than 600,000 cells and built single cell atlas of retrotransposon (scARE) to host these data. 
+                                We also provide various search and browse options, including search RTE, gene, disease or dataset by single term and multiple terms, 
+                                browse by RTE, cell type, disease, and dataset. 
+                                Furthermore, we implemented discover option to highlight most expressed, most differential expressed or co-expressed RTEs in given conditions. 
+                                .</p>
+                        </div>
+                        <div class="p-2 bd-highlight text-left">
+                            <h4>Developer</h4>  <br/>
+                            Wankun Deng (Website maintainer)<br/>
+                            Citu (Data source maintainer)<br/>
+                            Andi Liu (Data source maintainer)<br/>
+                            Zhongming Zhao (Mentor)<br/>
+                        </div>
+                        <div class="p-2 bd-highlight">
+                            <h4>External links</h4>  <br/>
+                            <a href="https://www.dfam.org/home" target='_blank' class="badge badge-success">Dfam</a>
+                            <a href="https://www.gencodegenes.org/" target='_blank' class="badge badge-secondary">GENCODE</a>
+                            <a href="https://www.repeatmasker.org/cgi-bin/WEBRepeatMasker" target='_blank' class="badge badge-primary">RepeatMasker</a>
+                            <br/>
+                            <a href="https://genome.ucsc.edu/" target='_blank' class="badge badge-danger">UCSC Genome browser</a>
+                            <a href="https://portal.brain-map.org/" target='_blank' class="badge badge-warning">Allen Brain Atlas</a>
+                            <br/>
+                            <a href="https://satijalab.org/seurat/" target='_blank' class="badge badge-info">Seurat</a>
+                            <a href="https://github.com/JiekaiLab/scTE" target='_blank' class="badge badge-light">scTE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br/>
+        <hr/>
+        <div class="col-xl-12">
+            <div class="card mb-1 border border-white shadow-none bg-transparent">
+                <div class="card-body text-justify">
+                    <div class="d-flex justify-content-around align-items-top text-center">
+                        <div class="p-2 bd-highlight text-center">
+                            <h4>Citation</h4>  <br/>
+                            Deng W*, Citu*, Liu A*, Zhao Z<sup>#</sup>. scARE: an atlas of retrotransposable elements in neurodegenerative diseases. Preparing.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,8 +292,20 @@ ul {
 
 <script type="text/javascript">
     function init(){
-        includeHTML();
+        includeHTML('nav_home');
+        // document.getElementById("quick_search_kw").addEventListener("keypress", function(event) {
+        //     if (event.key === "Enter") {
+        //         event.preventDefault();
+        //         document.getElementById("quick_search_btn").click();
+        //     }
+        // });
     }
+    // function quick_search(){
+    //     var kw = document.getElementById("quick_search_kw").value;
+    //     window.location.href = "search.html?KW="+kw+'&Field=0';
+    // }
+    
+    
 </script>
 <div w3-include-html="footer.html"></div>
 </body>

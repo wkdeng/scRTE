@@ -1,0 +1,82 @@
+<html>
+   <head> 
+      <meta name="viewport" content="width=device-width, initial-scale=1"> 
+      <script type="text/javascript">
+    window.onload=function(){/*from   ww w.ja v  a  2 s . c  om*/
+    Highcharts.chart('container', {
+        chart: {
+            type: 'boxplot'
+        },
+        title: {
+            text: 'Highcharts box plot styling'
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['1', '2', '3', '4', '5'],
+            title: {
+                text: 'Experiment No.'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Observations'
+            }
+        },
+        plotOptions: {
+            boxplot: {
+                lineWidth: 2,
+                medianColor: '#0C5DA5',
+                medianWidth: 3,
+                stemColor: '#A63400',
+                stemDashStyle: 'dot',
+                stemWidth: 1,
+                whiskerColor: '#3D9200',
+                whiskerLength: '20%',
+                whiskerWidth: 3
+            }
+        },
+        series: [{
+            name: 'Observations',
+            data: [{
+                x: 1,
+                low: 4,
+                q1: 9,
+                median: 7,
+                q3: 6,
+                high: 10,
+                name: "Point2",
+                fillColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+            }, {
+                x: 2,
+                low: 4,
+                q1: 9,
+                median: 7,
+                q3: 6,
+                high: 10,
+                name: "Point2",
+                fillColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+            }, {
+                x: 3,
+                low: 4,
+                q1: 9,
+                median: 7,
+                q3: 6,
+                high: 10,
+                name: "Point2",
+                fillColor: '#'+(Math.random()*0xFFFFFF<<0).toString(16),
+            }]
+        }]
+    });
+}
+
+      </script> 
+   </head> 
+   <body> 
+      <script src="https://code.highcharts.com/highcharts.js"></script> 
+      <script src="https://code.highcharts.com/highcharts-more.js"></script> 
+      <script src="https://code.highcharts.com/modules/exporting.js"></script> 
+      <div id="container" style="height: 400px; margin: auto; min-width: 400px; max-width: 600px"></div>  
+   </body>
+</html>

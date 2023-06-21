@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/bin/bash
+"source" "/home/wdeng3/scARE/bin/activate"
+"python" "$0" "$@"
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
@@ -10,7 +12,7 @@ import cgitb
 import pandas as pd
 import cgi
 import json
-import MySQLdb
+# import MySQLdb
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
@@ -21,23 +23,26 @@ Family=form['Family'].value
 Name=form['Name'].value
 Degree=form['Degree'].value
 
-import config
-# Create the connection object
-connection = MySQLdb.connect(
-    user=config.user,
-    passwd=config.passwd,
-    host=config.host,
-    port=config.port,
-    db=config.db
-)
+try:
+    import config
+    # # Create the connection object
+    # connection = MySQLdb.connect(
+    #     user=config.user,
+    #     passwd=config.passwd,
+    #     host=config.host,
+    #     port=config.port,
+    #     db=config.db
+    # )
+    # cursor = connection.cursor()
 
-cursor = connection.cursor()
+    cursor,cnx=config.get_cursor()
+    cursor.execute(f"select NAME, {Degree} from TE_NET WHERE CLASS = '{Class}' AND FAMILY = '{Family}' AND NAME = '{Name}'")
+    info=cursor.fetchone()
 
-cursor.execute(f"select NAME, {Degree} from TE_NET WHERE CLASS = '{Class}' AND FAMILY = '{Family}' AND NAME = '{Name}'")
-info=cursor.fetchone()
 
-
-if info is None:
-    print('{"nodes":[{"id":"%s","label":"%s","group":1}],"links":[{ "source":"%s","target":"%s","value":1}]}'%(Name,Name,Name,Name))
-else:
-    print(info[1])
+    if info is None:
+        print('{"nodes":[{"id":"%s","label":"%s","group":1}],"links":[{ "source":"%s","target":"%s","value":1}]}'%(Name,Name,Name,Name))
+    else:
+        print(info[1])
+except Exception as e:
+      print('An error occurred when fetching information.')

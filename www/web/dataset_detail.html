@@ -2,17 +2,20 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:46
-@modify date 2023-06-02 16:28:27
+@modify date 2023-06-15 11:59:30
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 
 <head>
-  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="" author" content="Wankun Deng">
+  <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+  <meta name=viewport content="width=device-width, initial-scale=1">
 
   <title>Dataset view</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
   <style>
     @import url('css/te_table.css');
     @import url('css/highcharts.css');
@@ -20,11 +23,9 @@
     #geneSelect {
       height: 200px;
       overflow-y: scroll;
-    }
-
-    ;
+    };
   </style>
-  <link href="css/bootstrap.min.css" rel="stylesheet" />
+
 </head>
 
 <script src="js/third_party/highcharts.js"></script>
@@ -33,7 +34,7 @@
 <script src="js/third_party/exporting.js"></script>
 <script src="js/third_party/export-data.js"></script>
 <script src="js/third_party/accessibility.js"></script>
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/d3.v7.min.js"> import * as d3 from "d3"</script>
 <script src="js/third_party/forceGraph.js"> </script>
 <script src="js/third_party/bootstrap.min.js"></script>
@@ -43,7 +44,7 @@
 
 
 
-<body onload='init()' style="background-color:#efefef;">
+<body onload='init()' >
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 
   <div style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
@@ -94,9 +95,9 @@
             <div class="col-md-6">
               <figure class="highcharts-figure">
                 <div id="container_gene_exp" style="min-height: 700px;"></div>
-                <label for="geneInput">Gene/TE:</label>
+                  <label for="geneInput">Gene/TE:</label>
                   <input type="text" id="geneInput" onkeyup="filterFunction()" onfocus="showList()"
-                    placeholder="Search for names.." value="DHX30">
+                    placeholder="Search for names.." value="AluY">
                   <div class="list-group" id="geneSelect" style="display:none">
                   </div>
               </figure>
@@ -159,8 +160,8 @@
         urlParams.set('Cell', cell)
       }
       document.getElementById('geneInput').value = rte;
-      initial_gene_list();
-      $.get("/cgi/get_dataset_basic.py", { Cate: urlParams.get('Cate'), KW: urlParams.get('KW'), Gene: urlParams.get('rte'), Cell: urlParams.get('Cell') },
+      initial_gene_list(kw);
+      $.get("/scARE/cgi/get_dataset_basic.py", { Cate: urlParams.get('Cate'), KW: urlParams.get('KW'), Gene: urlParams.get('rte'), Cell: urlParams.get('Cell') },
         function (response) {
           document.getElementById('desc').style.display = 'block'
           $('#desc').html(response)
@@ -169,7 +170,7 @@
       );
       var content_only = urlParams.get('CL')
       if (content_only == null || content_only == '' || content_only == 'F') {
-        includeHTML();
+        includeHTML('');
       }
     }
   </script>
@@ -177,11 +178,11 @@
   <script src="js/umap/umap.js" ></script>
   <script src="js/umap/umap_gene.js" ></script>
   <script>
-    function initial_gene_list(){
-      $.get("/cgi/get_gene_list.py", {},
+    function initial_gene_list(dataset){
+      $.get("/scARE/cgi/get_gene_list.py", {Dataset:dataset},
         function (response) {
           gene_list=JSON.parse(response)
-          sublist=gene_list.slice(0,1000)
+          var sublist=gene_list.slice(0,1000)
           if(!sublist.includes(current_gene)){
             sublist.push(current_gene)
           }

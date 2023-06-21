@@ -17,7 +17,7 @@ Highcharts.setOptions({
     }
   },{
     name: 'Oligodentrocyte Progenitor Cells',
-    id: 'Opc',
+    id: 'OPC',
     marker: {
       symbol: 'circle'
     }
@@ -58,7 +58,7 @@ Highcharts.setOptions({
 
   async function getCellUMAPData() {
     const response = await fetch(
-        '/cgi/get_data_umap.py?Dataset='+urlParams.get('KW')
+        '/scARE/cgi/get_data_umap.py?Dataset='+urlParams.get('KW')
     );
     return response.json();
   }
@@ -146,6 +146,7 @@ Highcharts.setOptions({
       },
       series
     });
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
     document.getElementById('cell_types').addEventListener('change', () => {
         var series=umap_chart.series;
         var cell_types=document.getElementById('cell_types').value;

@@ -2,23 +2,23 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:32:36
-@modify date 2023-06-01 18:19:36
+@modify date 2023-06-15 11:56:34
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name=""author" content="Wankun Deng">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name=""author" content="Wankun Deng">
+    <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+    <meta name=viewport content="width=device-width, initial-scale=1">
 
-  <title>Browse by disease</title>
+  <title>Browse by disease</title>  
+  <link href="css/bootstrap.min.css" rel="stylesheet"/>
   <style>
   @import url('css/te_table.css');
-  </style>
-  <style>
   @import url('css/highcharts.css');
   </style>
-  <link href="css/bootstrap.min.css" rel="stylesheet"/>
 </head>
 
 <style>
@@ -29,13 +29,13 @@ ul {
 }  
 </style>
 
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <link rel="stylesheet" href="css/jquery.dataTables.css" />
 <script src="js/third_party/jquery.dataTables.js"></script>
 
-<body onload="init()" style="background-color:#efefef;">
+<body onload="init()" >
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="row" >
@@ -163,12 +163,12 @@ ul {
 </div>
 <script type="text/javascript">
     function init(){
-        includeHTML();
+        includeHTML('nav_browse');
     }
     function getDataset(disease){
         $('#result_header').html('All Dataset with <strong>'+disease+'</strong> Samples');
         document.getElementById("result_container").innerHTML = 'Loading...';
-        $.get("cgi/search.py", { field: 'Disease', kw: disease, type:'simple',lucky: false}, function (response) {
+        $.get("/scARE/cgi/search.py", { field: 'Disease', kw: disease, type:'simple',lucky: false}, function (response) {
           document.getElementById("result_container").innerHTML = response;
           let table = new DataTable('#result_table', {response:true});  
         });

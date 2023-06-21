@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-04 18:19:24
- * @modify date 2023-05-16 15:25:25
+ * @modify date 2023-06-14 09:51:30
  * @desc [description]
  */
 
@@ -14,7 +14,7 @@ Highcharts.setOptions({
 function showChrDist(data) {
     const chartChrDist = Highcharts.chart('container_chr_dist', {
         title: {
-            text: 'Number of Locuses in Each Chromosome',
+            text: 'Number of Loci in Each Chromosome',
             align: 'left'
         },
         subtitle: {
@@ -25,11 +25,11 @@ function showChrDist(data) {
             title: {
                 text: 'Chromosome',
             },
-            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'M']
+            categories: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', 'X', 'Y', 'M','Others']
         },
         yAxis: {
             title: {
-                text: 'Number of Locuses'
+                text: 'Number of Loci'
             }
         },
         credits: {
@@ -38,8 +38,9 @@ function showChrDist(data) {
         legend: {
             enabled: false
         },
-        series: [{ name: 'Locus number', type: 'column', colorByPoint: true, data: data }]
+        series: [{ name: 'Loci number', type: 'column', colorByPoint: true, data: data }]
     });
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
     document.getElementById('plain_chrdist').addEventListener('click', () => {
         series = chartChrDist.series
         series[0].update({ type: 'column' })
@@ -97,7 +98,7 @@ function showChrEaDist(data) {
             maxColor: Highcharts.getOptions().colors[0]
         },
         title: {
-            text: 'Number of Locus in Each Chromosome',
+            text: 'Number of Loci in Each Chromosome',
             align: 'left'
         },
         subtitle: {
@@ -134,7 +135,7 @@ function showChrEaDist(data) {
             symbolHeight: 280
         },
         series: [{
-            name: 'Locus number',
+            name: 'Loci number',
             borderWidth: 0,
             data: data,
             datalabels: { enabled: false }
@@ -157,12 +158,13 @@ function showChrEaDist(data) {
         // }
 
     });
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
 }
 
 function showRegionDist(data) {
     Highcharts.chart('container_region_dist', {
         title: {
-            text: 'Number of Locus in Genomic Regions',
+            text: 'Number of Loci in Genomic Regions',
             align: 'left'
         },
         subtitle: {
@@ -178,7 +180,7 @@ function showRegionDist(data) {
         },
         yAxis: {
             title: {
-                text: 'Number of Locuses'
+                text: 'Number of Loci'
             }
         },
         credits: {
@@ -187,6 +189,7 @@ function showRegionDist(data) {
         legend: {
             enabled: false
         },
-        series: [{ name: 'Locus number', type: 'pie', colorByPoint: true, data: data }]
+        series: [{ name: 'Loci number', type: 'pie', colorByPoint: true, data: data }]
     });
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
 }

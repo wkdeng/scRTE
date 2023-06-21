@@ -2,17 +2,19 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-04-27 15:33:01
-@modify date 2023-05-31 18:20:30
+@modify date 2023-06-21 10:59:28
 @desc [description]
 -->
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name=""author" content="Wankun Deng">
+<meta name="description" content="single cell Atlas of Retrotransposable Elements">
+<meta name=viewport content="width=device-width, initial-scale=1">
 <title>TE view</title>
-<style>@import url('css/te_table.css');</style>
-<style>@import url('css/highcharts.css');</style>
+
+<style>#geneSelect {width:200px;height: 300px;overflow-y: scroll;};</style>
 <link href="css/bootstrap.min.css" rel="stylesheet"/>
 <link rel="stylesheet" href="css/jquery.dataTables.css" />
 <script src='js/third_party/plotly-2.20.0.min.js'></script>
@@ -25,17 +27,18 @@
 <script src="js/third_party/export-data.js"></script>
 <script src="js/third_party/accessibility.js"></script>
 <script src="js/third_party/networkgraph.js"></script>
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <script src="js/third_party/d3.v7.min.js"> import * as d3 from "d3"</script>
 <script src="js/third_party/forceGraph.js"> </script>
 <script src="js/third_party/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script src="js/te_info/chr_dist.js"></script>
 <script src="js/third_party/jquery.dataTables.js"></script>
-
+<style>@import url('css/te_table.css');</style>
+<style>@import url('css/highcharts.css');</style>
 </head>
 
-<body onload='init()' style="background-color:#efefef;">
+<body onload='init()'>
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 
 <div style="width: 60%; min-width: 1100px;margin-block:100px" class="container-fluid">
@@ -52,7 +55,7 @@
       <!--TE distribution across chromosome-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-3" id="'chr_dist_container">
         <div class="card mb-0">
-          <h5 class="card-header">Distribution of Locus</h5>
+          <h5 class="card-header">Distribution of Loci</h5>
           <div class="card-body" id="chr_dist" style="height: 500px;">
             <figure class="highcharts-figure">
               <div id="container_chr_dist"></div>
@@ -102,40 +105,87 @@
         </div>
       </div>
     </div>
+    <!--4th row-->
     <div class="row" id="row4">
+      <div class="col mb-3 pl-0 pr-0 mr-0 ml-0" id="coexp_container">
+        <div class="card mb-0">
+          <h5 class="card-header">Expression correlation</h5>
+          <div class="card-body"id="coexp_body">
+            <div class="row" name="conditions">
+              <div class="input-group mb-3" >
+                      <div class="input-group-prepend">
+                        <label class="input-group-text" for="geneInput">Compare expression of &nbsp;<span id="current_te"></span>&nbsp; to </label>
+                          <input type="text" id="geneInput" onkeyup="filterFunction()" onfocus="showList()" placeholder="Search for names.." value="AluY">
+                        </div>
+                        <label class="input-group-text" for="co_exp_di"> in condition </label>
+                        <select id="co_exp_di" onchange="get_coexp('te_info')">
+                          <option value='Disease' selected>Disease</option>
+                          <option value='Control'>Control</option>
+                        </select>
+                        <div class="input-group-append">
+                            <label class="input-group-text" for="co_exp_c"> in cell type </label>
+                        </div>
+                        <select name="Cell types" id="co_exp_c" onchange="get_coexp('te_info')">
+                            <option value='Ex' selected>Excitatory Neuron</option>
+                            <option value='In' >Inhibitory Neuron</option>
+                            <option value='OPC' >OPC</option>
+                            <option value='Oli' >Oligodendrocyte</option>
+                            <option value='Ast' >Astrocyte</option>
+                            <option value='Mic' >Microglia</option>
+                            <option value='Endo' >Endothelial</option>
+                            <option value='VLMC' >VLMC</option>
+                        </select>
+                        
+                        <div class="input-group-append">
+                          <label class="input-group-text" for="co_exp_dt"> in dataset </label>
+                        </div>
+                        <select name="Cell types" id="co_exp_dt" onchange="get_coexp('te_info')">
+                            <option value='AD_HS_00001' selected>AD_HS_00001</option>
+                            <option value='AD_HS_00002' >AD_HS_00002</option>
+                            <option value='AD_HS_00003' >AD_HS_00003</option>
+                            <option value='AD_HS_00004' >AD_HS_00004</option>
+                            <option value='AD_HS_00005' >AD_HS_00005</option>
+                            <option value='AD_HS_00006' >AD_HS_00006</option>
+                            <option value='AD_HS_00007' >AD_HS_00007</option>
+                            <option value='AD_HS_00008' >AD_HS_00008</option>
+                            <option value='MS_HS_00001' >MS_HS_00001</option>
+                            <option value='MS_HS_00002' >MS_HS_00002</option>
+                            <option value='PD_HS_00001' >PD_HS_00001</option>
+                        </select>
+              </div>
+            </div>
+            <div class="row" name="results" id="note">It could take a few minutes to load the data.<br></div>
+            <div class="row" name="results" id="coexp_ret">
+              <div class="col-md-6" id="coexp_scatter"></div>  
+              <div class="col-md-6" id="coexp_box"></div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="row5">
       <!-- TE-gene network-->
       <div class="col mb-3 pl-0 pr-0 mr-0 ml-0" id="network_container">
         <div class="card mb-0">
           <h5 class="card-header">TE-Gene network</h5>
           <div class="card-body" id="te_gene">
-            <!--<figure class="highcharts-figure">
-                <div id="container_network"></div>
-                <label for="degree">Network degree:</label>
-                <select name="degree" id="degree">
-                  <option value='1'>1</option>
-                  <option value='2'>2</option>
-                </select>
-                <label for="showLabel">Show Label:</label>
-                <select name="showLabel" id="showLabel">
-                  <option value='false' selected>Hide</option>
-                  <option value='true' >Show</option>
-                </select>
-            </figure>-->
           </div>
         </div>
       </div>
     </div>
 </div>
-
+<div class="list-group" id="geneSelect" style="display:none"></div>
 <script type="text/javascript">
     function sleep(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
+    var current_gene;
+    var current_te;
     function init(){
         const urlParams = new URLSearchParams(window.location.search);
         var content_only=urlParams.get('CL')
         if(content_only==null || content_only=='T' || content_only=='F'){
-          includeHTML();
+          includeHTML('');
         }
         if(!('Class' in urlParams)){
           urlParams.set('Class','N/A')
@@ -143,7 +193,13 @@
         if(!('Family' in urlParams)){
           urlParams.set('Family','N/A')
         }
-        $.get('/cgi/te_info/get_te_overview.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+        
+        current_te=urlParams.get('Name')
+        document.getElementById('current_te').innerHTML=current_te
+        document.getElementById('current_te').value=current_te
+        current_gene=document.getElementById('geneInput').value
+        initial_gene_list(document.getElementById('co_exp_dt').value)
+        $.get('/scARE/cgi/te_info/get_te_overview.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
             function(response){
                 response=JSON.parse(response)
                 document.getElementById('desc').style.display='block'
@@ -153,14 +209,109 @@
                 showRegionDist(response[3]);
             }
         );
-        sleep(100).then(()=>{$.get('/cgi/te_info/get_te_containing_gene.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
+        sleep(100).then(()=>{$.get('/scARE/cgi/te_info/get_te_containing_gene.py',{Class: urlParams.get('Class') , Family: urlParams.get('Family'), Name: urlParams.get('Name')},
             function(response){
                 $('#te_gene').html(response);
                 let table = new DataTable('#gene_table', {response:true});  
             }
         );});
+        sleep(100).then(()=>{get_coexp('te_info')});
     }
 </script>
-<script type="text/javascript" src="js/te_info/te_exp_plotly.js"></script>
+
+<script>
+    function initial_gene_list(dataset){
+      $.get("/scARE/cgi/get_gene_list.py", {Dataset:dataset},
+        function (response) {
+          gene_list=JSON.parse(response)
+          sublist=gene_list.slice(0,100)
+          if(!sublist.includes(current_gene)){
+            sublist.push(current_gene)
+          }
+          document.getElementById('geneInput').value=current_gene
+          var select=document.getElementById('geneSelect');
+          select.innerHTML='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)" id="noData" style="display:none">No genes in list fits your search</button>'
+          sublist.forEach(gene => {
+            if(gene==current_gene){
+              select.innerHTML+='<button type="button" class="list-group-item list-group-item-action active" onclick="selectItem(this)">'+gene+'</button>' 
+            }else{
+              select.innerHTML+='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)">'+gene+'</button>' 
+            }
+          });
+        });
+    }
+    function filterFunction() {
+      var input, filter, ul, li, option, i;
+      input = document.getElementById("geneInput");
+      filter = input.value.toUpperCase();
+      var select=document.getElementById('geneSelect');
+      select.innerHTML='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)" id="noData" style="display:none">No genes in list fits your search</button>'
+
+      var found = false;
+      
+      var found_item=0;
+      for (i = 0; i < gene_list.length; i++) {
+        if (found_item>500){
+          break;
+        }
+        txtValue = gene_list[i];
+        if (filter.length == 0 || txtValue.toUpperCase().indexOf(filter) > -1) {
+          select.innerHTML+='<button type="button" class="list-group-item list-group-item-action" onclick="selectItem(this)">'+txtValue+'</button>'
+          found_item++;
+          found = true;
+        }
+      }
+
+      if (!found) {
+        document.getElementById("noData").style.display = "";
+      } else {
+        document.getElementById("noData").style.display = "none";
+      }
+    }
+    
+    function hideList() {
+      var select = document.getElementById("geneSelect");
+      select.style.display = "none";
+    }
+    function showList() {
+      var select = document.getElementById("geneSelect");
+      var rect = document.getElementById("geneInput").getBoundingClientRect();
+      
+      select.style.position='absolute';
+      select.style.top=rect.bottom+window.scrollY+'px';
+      select.style.left=rect.left+ window.scrollX+'px';
+      select.style.display = "block";
+    }
+    function selectItem(ele) {
+      var select = document.getElementById("geneSelect");
+      var input = document.getElementById("geneInput");
+      select.style.display = "none";
+      if(ele.innerHTML==current_gene){
+        return;
+      }
+
+      if (ele.id == 'noData') {
+        input.value = '';
+      } else {
+        input.value=ele.innerHTML
+        get_coexp('te_info')
+      }
+      option = select.getElementsByTagName("button");
+      for (i = 0; i < option.length; i++) {
+        option[i].classList.remove("active");
+      }
+      if (ele.id != 'noData') {
+        ele.classList.add("active");
+      } else {
+
+      for (i = 0; i < option.length; i++) {
+          option[i].style.display = "block";
+        }
+        ele.style.display = "none";
+      }
+    }
+  </script>
+<script type="text/javascript" src="js/te_info/te_exp.js"></script>
+<script type="text/javascript" src="js/te_info/te_coexp.js"></script>
 <div w3-include-html="footer.html"></div>
 </body>
