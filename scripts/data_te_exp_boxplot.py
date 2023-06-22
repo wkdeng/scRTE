@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-05-18 16:18:04
- # @modify date 2023-05-31 15:17:02
+ # @modify date 2023-06-15 15:36:26
  # @desc [description]
 ###
 import sys
@@ -63,6 +63,7 @@ def process(arg):
         row.append(te)
         row.append(cell_exp.loc[cells,te].max())
         row.append(cell_exp.loc[cells,te].min())
+        json.dump(list(cell_exp.loc[cells,te]),open(os.path.join(in_path,'{te}_{disease}_{cell_type}.json'),'w'))
         row.extend(list(cell_exp.loc[cells,te].quantile([0.25,0.5,0.75])))
         rows.append(row)
     return rows
