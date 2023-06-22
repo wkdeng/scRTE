@@ -2,9 +2,10 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-29 00:49:48
- * @modify date 2023-05-29 00:49:57
+ * @modify date 2023-06-13 15:58:59
  * @desc [description]
  */
+
 
 const uparams2 = new URLSearchParams(window.location.search);
 if(te_name==null){
@@ -12,7 +13,7 @@ if(te_name==null){
   }
 async function getTEExpData() {
       const response = await fetch(
-          '/cgi/te_info/get_te_exp_boxplotly.py?Name='+te_name
+          '/scARE/cgi/te_info/get_te_exp_boxplotly.py?Name='+te_name
       );
       return response.json();
     }

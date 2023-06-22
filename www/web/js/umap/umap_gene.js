@@ -10,7 +10,7 @@ var dataset=uparams.get('KW');
       gene='AluY'
     }
     const response = await fetch(
-        '/cgi/get_gene_umap.py?Gene='+gene+'&Dataset='+dataset
+        '/scARE/cgi/get_gene_umap.py?Gene='+gene+'&Dataset='+dataset
     );
     return response.json();
   }
@@ -110,6 +110,7 @@ var dataset=uparams.get('KW');
       }]
     }
     );
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
   }
   );
 

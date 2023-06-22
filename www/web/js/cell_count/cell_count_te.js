@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-05-01 11:42:21
- * @modify date 2023-05-01 14:35:20
+ * @modify date 2023-06-14 09:50:51
  * @desc [description]
  */
 
@@ -17,7 +17,7 @@ Highcharts.setOptions({
   }
   async function getTECellCountData() {
       const response = await fetch(
-          '/cgi/get_cell_count.py?KW='+cellType+'&Cate=Cell_TE'
+          '/scARE/cgi/get_cell_count.py?KW='+cellType+'&Cate=Cell_TE'
       );
       return response.json();
     }
@@ -56,7 +56,7 @@ Highcharts.setOptions({
         series:[{name:'Cell number',type:'column',colorByPoint: true,data:dataset_count}],
         drilldown: {breadcrumbs:{position:{align:'right'}},series: data[1]}
     });
-
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
     document.getElementById('plain_te').addEventListener('click', () => {
         chartTECount.update({
             chart: {

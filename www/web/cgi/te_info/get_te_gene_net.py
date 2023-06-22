@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/bin/bash
+"source" "/home/wdeng3/scARE/bin/activate"
+"python" "$0" "$@"
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
@@ -10,7 +12,7 @@ import cgitb
 import pandas as pd
 import cgi
 import json
-import MySQLdb
+# import MySQLdb
 import urllib.parse
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
@@ -18,24 +20,28 @@ print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 import sys
 sys.path.append('../')
 import config
-# Create the connection object
-connection = MySQLdb.connect(
-    user=config.user,
-    passwd=config.passwd,
-    host=config.host,
-    port=config.port,
-    db=config.db
-)
-
 form=cgi.FieldStorage()
 name=form['Name'].value
 degree=form['Degree'].value
-cursor = connection.cursor()
+
+## Create the connection object
+# connection = MySQLdb.connect(
+#     user=config.user,
+#     passwd=config.passwd,
+#     host=config.host,
+#     port=config.port,
+#     db=config.db
+# )
+# cursor = connection.cursor()
+# sql=f"select D{degree} from TE_NET WHERE NAME = '{name}'"
+# cursor.execute(sql)
+# res=cursor.fetchone()
+# res=json.loads(res[0])
 
 sql=f"select D{degree} from TE_NET WHERE NAME = '{name}'"
-cursor.execute(sql)
-res=cursor.fetchone()
-res=json.loads(res[0])
+info,cnx=config.get_cursor()
+info.execute(sql)
+res=json.loads(info[0])
 
 
 # nodes=[]

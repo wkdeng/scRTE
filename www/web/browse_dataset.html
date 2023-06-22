@@ -2,28 +2,26 @@
 @author [Wankun Deng]
 @email [dengwankun@gmail.com]
 @create date 2023-05-11 16:30:23
-@modify date 2023-06-02 18:25:50
+@modify date 2023-06-15 11:55:35
 @desc [description]
 -->
 
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name=""author" content="Wankun Deng">
-
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="single cell Atlas of Retrotransposable Elements">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name=""author" content="Wankun Deng">
   <title>Browse by Dataset</title>
+   <link href="css/bootstrap.min.css" rel="stylesheet"/>
+   <link rel="stylesheet" href="css/jquery.dataTables.css" /> 
   <style>
     @import url('css/te_table.css');
-  </style>
-  <style>
     @import url('css/highcharts.css');
     /* @import url('css/te_tree.css'); */
   </style>
-  <link href="css/bootstrap.min.css" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/jquery.dataTables.css" />
 </head>
-
 <style>
     ul {
     columns: 2;
@@ -33,7 +31,7 @@
 </style>
 
 
-<script type="text/javascript" src="js/third_party/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="js/third_party/jquery-3.7.0.js"></script>
 <!--script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.11.0/d3.min.js"> import * as d3 from "d3"</script-->
 <script src="js/third_party/d3.v7.min.js"> import * as d3 from "d3"</script>
 <script src="js/third_party/treemap.js"> </script>
@@ -44,13 +42,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <script src="js/third_party/jquery.dataTables.js"></script>
 
-<body onload="init()" style="background-color:#efefef;">
+<body onload="init()">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" w3-include-html="navigation.html"></nav>
 <div id="container" style="width: 60%; min-width: 1100px; margin-block: 100px;" class="container-fluid">
     <div class="card mb-3">
-        <div class="card-header"><strong>Overview of all dataset</strong></div>
+        <div class="card-header"><strong>Description</strong></div>
         <div class="card-body" id="desc">
-            
+            In this page, all of 11 datasets included in scARE are listed.
         </div>
     </div>
 
@@ -71,15 +69,15 @@
     function init(){
         var content_only=uparams.get('CL')
         if(content_only==null || content_only=='' || content_only=='F'){
-          includeHTML();
+          includeHTML('nav_browse');
         }
-        $.get('cgi/get_cell_desc.py',{Cell: 'AllDataset'},
-            function(response){
-                document.getElementById('desc').style.display='block'
-                $('#desc').html(response)
-            }
-        );
-        $.get('cgi/get_all_dataset.py',{},
+        // $.get('/scARE/cgi/get_cell_desc.py',{Cell: 'AllDataset'},
+        //     function(response){
+        //         document.getElementById('desc').style.display='block'
+        //         $('#desc').html(response)
+        //     }
+        // );
+        $.get('/scARE/cgi/get_all_dataset.py',{},
             function(response){
                 $('#datasets').html(response)
                 let table = new DataTable('#ds_table', {response:true, dom: 'Bfrtip', buttons: ['copy', 'csv', 'excel', 'pdf', 'print']});        

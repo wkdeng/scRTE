@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/bin/bash
+"source" "/home/wdeng3/scARE/bin/activate"
+"python" "$0" "$@"
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
@@ -11,33 +13,33 @@ import cgitb
 import pandas as pd
 import cgi
 import json
-import MySQLdb
-
+# import MySQLdb
 import sys
 sys.path.append('../')
 import config
-# Create the connection object
-connection = MySQLdb.connect(
-    user=config.user,
-    passwd=config.passwd,
-    host=config.host,
-    port=config.port,
-    db=config.db
-)
-
 
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 
 form = cgi.FieldStorage()
-# class_=form['Class'].value
-# family=form['Family'].value
 name=form['Name'].value
 
-cursor = connection.cursor()
+# Create the connection object
+# connection = MySQLdb.connect(
+#     user=config.user,
+#     passwd=config.passwd,
+#     host=config.host,
+#     port=config.port,
+#     db=config.db
+# )
+# cursor = connection.cursor()
+# sql="select CLASS,FAMILY,NAME,GENE from TE_GENE where  NAME='%s'"%(name)
+# cursor.execute(sql)
+# info=cursor.fetchall()
+
+info,cnx=config.get_cursor()
 sql="select CLASS,FAMILY,NAME,GENE from TE_GENE where  NAME='%s'"%(name)
-cursor.execute(sql)
-info=cursor.fetchall()
+info.execute(sql)
 
 table_content = '''<table class="table table-striped" id='gene_table'><thead><tr><th scope="col">Class</th><th scope="col">Family</th><th scope="col">Name</th><th scope="col">Gene</th></tr></thead><tbody>{table_row}</tbody></table>'''
 

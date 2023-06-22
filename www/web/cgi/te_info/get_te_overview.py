@@ -1,4 +1,6 @@
-#!/usr/bin/python3
+#!/bin/bash
+"source" "/home/wdeng3/scARE/bin/activate"
+"python" "$0" "$@"
 ##############################
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
@@ -11,7 +13,7 @@ import cgitb
 import pandas as pd
 import cgi
 import json
-import MySQLdb
+# import MySQLdb
 import urllib.parse
 cgitb.enable()
 print( 'Content_Type:text/json; charset=utf-8\r\n\n')
@@ -19,28 +21,32 @@ print( 'Content_Type:text/json; charset=utf-8\r\n\n')
 import sys
 sys.path.append('../')
 import config
-# Create the connection object
-connection = MySQLdb.connect(
-    user=config.user,
-    passwd=config.passwd,
-    host=config.host,
-    port=config.port,
-    db=config.db
-)
-
 
 form = cgi.FieldStorage()
 cls_=form['Class'].value
 fam=form['Family'].value
 name=form['Name'].value
-# Create cursor and use it to execute SQL command
-cursor = connection.cursor()
 
-if not (cls_ == 'N/A' or fam=='N/A'):
-    cursor.execute(f"select * from TE_BASIC WHERE CLASS = '{cls_}' AND FAMILY = '{fam}' AND NAME = '{name}'")
-else:
-    cursor.execute(f"select * from TE_BASIC WHERE NAME = '{name}'")
-info=cursor.fetchone()
+# # Create the connection object
+# connection = MySQLdb.connect(
+#     user=config.user,
+#     passwd=config.passwd,
+#     host=config.host,
+#     port=config.port,
+#     db=config.db
+# )
+# # Create cursor and use it to execute SQL command
+# cursor = connection.cursor()
+# if not (cls_ == 'N/A' or fam=='N/A'):
+#     cursor.execute(f"select * from TE_BASIC WHERE CLASS = '{cls_}' AND FAMILY = '{fam}' AND NAME = '{name}'")
+# else:
+#     cursor.execute(f"select * from TE_BASIC WHERE NAME = '{name}'")
+# info=cursor.fetchone()
+
+sql=f"select * from TE_BASIC WHERE CLASS = '{cls_}' AND FAMILY = '{fam}' AND NAME = '{name}'" if not (cls_ == 'N/A' or fam=='N/A') else f"select * from TE_BASIC WHERE NAME = '{name}'"
+info,cnx=config.get_cursor()
+info.execute(sql)
+info=info.fetchone()
 
 cls_=info[1]
 fam=info[2]
@@ -60,7 +66,7 @@ basic=""
 basic+=basic_row.format('Class',cls_,'bg-light')
 basic+=basic_row.format('Family',fam,'')
 basic+=basic_row.format('Name',name,'bg-light')
-basic+=basic_row.format('Locus #',num_locus,'')
+basic+=basic_row.format('Loci #',num_locus,'')
 basic+=basic_row.format('Consensus Length',cons_len,'bg-light')
 basic+=basic_row.format('Consensus',cons,'bg-light')
 

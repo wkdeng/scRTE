@@ -3,10 +3,10 @@ SRR*
 log*
 nohup*
 .snakemake
-data
 __*
 www/web/latin
 www/mysql/
 www/mysql/cell_umap.sql
 www/mysql/te_basic.sql
 www/mysql/te_fam.sql
+mysql/

@@ -2,7 +2,7 @@
  * @author [Wankun Deng]
  * @email [dengwankun@gmail.com]
  * @create date 2023-04-24 16:47:12
- * @modify date 2023-05-03 16:57:16
+ * @modify date 2023-06-14 09:50:57
  * @desc [description]
  */
 Highcharts.setOptions({
@@ -22,17 +22,18 @@ Highcharts.setOptions({
             symbol:'circle'
         }
     },{
-        name:'Amyotrophic Lateral Sclerosis',
-        id:'ALS',
-        marker: {
-            symbol:'circle'
-        }
+      name:'Multiple sclerosis',
+      id:'MS',
+      marker: {
+          symbol:'circle'
+      }
     },{
-        name:'Control',
-        id:'Control',
-        marker:{
-            symbol:'circle'
-    }}]
+      name:'Control',
+      id:'Control',
+      marker: {
+          symbol:'circle'
+      }
+}]
 
   const uparams2 = new URLSearchParams(window.location.search);
   if(dataset==null){
@@ -40,13 +41,13 @@ Highcharts.setOptions({
   }
   async function getCellCountData() {
       const response = await fetch(
-          '/cgi/get_cell_count.py?KW='+dataset+'&Cate='+uparams2.get('Cate')
+          '/scARE/cgi/get_cell_count.py?KW='+dataset+'&Cate='+uparams2.get('Cate')
       );
       return response.json();
     }
 
   
-  const cell_map={'Ex':0,'In':1,'Opc':2,'Oli':3,'Ast':4,'Mic':5,'Per':6}
+  const cell_map={'Ex':0,'In':1,'OPC':2,'Oli':3,'Ast':4,'Mic':5,'Endo':6,'VLMC':7}
 
   getCellCountData().then(data => {
     const parseCellCount = disease => {
@@ -78,7 +79,7 @@ Highcharts.setOptions({
         title: {
           text: 'Cell Type'
         },
-        categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+        categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Endothelial', 'VLMC'],
         crosshair: true
       },
       yAxis: {
@@ -108,7 +109,7 @@ Highcharts.setOptions({
         },
         series:series2
     });
-
+    $("div[aria-live='assertive']").attr("aria-atomic", true);
 
     document.getElementById('plain').addEventListener('click', () => {
         chart.update({
@@ -120,7 +121,7 @@ Highcharts.setOptions({
             title: {
               text: 'Cell Type'
             },
-            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Endothelial', 'VLMC'],
             crosshair: true
           }
         });
@@ -136,27 +137,10 @@ Highcharts.setOptions({
             title: {
               text: 'Cell Type'
             },
-            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
+            categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Endothelial', 'VLMC'],
             crosshair: true
           }
         });
       });
-
-      // document.getElementById('polar').addEventListener('click', () => {
-      //   console.log('polar');
-      //   chart.update({
-      //     chart: {
-      //       polar: true
-      //     },
-      //     xAxis: {
-      //       title: {
-      //         text: ''
-      //       },
-      //       categories: ['Excitatory Neuron', 'Inhibitory Neuron', 'OPC', 'Oligodendrocyte', 'Astrocyte', 'Microglia', 'Pericyte'],
-      //       // crosshair: true
-      //     }
-          
-      //   });
-      // });
   });
 
