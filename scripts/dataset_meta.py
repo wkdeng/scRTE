@@ -2,13 +2,13 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-03-17 14:53:04
- # @modify date 2023-05-31 15:14:48
+ # @modify date 2023-07-13 15:38:33
  # @desc [description]
 ###
 import pandas as pd 
 import sys
 
-# sys.argv=['','../data/Dataset.meta.txt','../www/mysql/meta.sql']
+# sys.argv=['xx','../data/Dataset.meta.txt','../www/mysql/meta.sql','../www/mysql/sample2dataset.sql']
 input_=sys.argv[1]
 output_1=open(sys.argv[2],'w')
 

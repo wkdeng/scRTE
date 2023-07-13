@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-05-18 16:18:04
- # @modify date 2023-06-15 15:36:26
+ # @modify date 2023-07-06 16:42:12
  # @desc [description]
 ###
 import sys
@@ -10,6 +10,7 @@ import pandas as pd
 from multiprocessing import Pool
 import os
 from multiprocessing import Lock
+import json
 
 # sys.argv=['xx','../data/all_datasets','../../universal_data/rmsk/rmsk_GRCh38.txt','../www/mysql']
 
@@ -20,12 +21,20 @@ out_path=sys.argv[3]
 te_table=pd.read_csv(rmsk_f,sep='\t')
 te_table['repFamily']=te_table['repFamily'].apply(lambda x: x.replace('?',''))
 
-rte=set(te_table.loc[te_table['repClass'].isin(['LINE','SINE','LTR']),['repName','repClass','repFamily']].drop_duplicates()['repName'].tolist())
-
+rte=list(set(te_table.loc[te_table['repClass'].isin(['LINE','SINE','LTR']),['repName','repClass','repFamily']].drop_duplicates()['repName'].tolist()))
+rte_rep=[x.replace('_','.').replace('-','.') for x in rte]
 # load cell expression
 cell_exps=[os.path.join(in_path,x) for x in os.listdir(in_path) if x.endswith('.cell_exp.txt')]
 def load_cell_exp(cell_exp_f):
     cell_exp_i=pd.read_csv(cell_exp_f,sep='\t',index_col=0)
+    colnames=cell_exp_i.columns.tolist()
+    repl_colnames=[]
+    for x in colnames:
+        if '.' not in x or x not in rte_rep:
+            repl_colnames.append(x)
+        else:
+            repl_colnames.append(rte[rte_rep.index(x)])
+    cell_exp_i.columns=repl_colnames
     cell_exp_i=cell_exp_i.loc[:,cell_exp_i.columns.isin(rte)]
     return cell_exp_i
 pool=Pool(20)
@@ -63,7 +72,7 @@ def process(arg):
         row.append(te)
         row.append(cell_exp.loc[cells,te].max())
         row.append(cell_exp.loc[cells,te].min())
-        json.dump(list(cell_exp.loc[cells,te]),open(os.path.join(in_path,'{te}_{disease}_{cell_type}.json'),'w'))
+        json.dump(list(cell_exp.loc[cells,te]),open(os.path.join(in_path,f'{te}_{disease}_{cell_type}.json'),'w'))
         row.extend(list(cell_exp.loc[cells,te].quantile([0.25,0.5,0.75])))
         rows.append(row)
     return rows
@@ -98,7 +107,7 @@ te_exp.write('''use scARE;
 
 result=pd.DataFrame(result,columns=['cell_type','cell_num','dataset','disease','te','max','min','q1','median','q3'])
 result['cell_type']=result['cell_type'].apply(lambda x:'"'+x+'"')
-result['dataset']=result['dataset'].apply(lambda x:'"'+x+'"')   
+result['dataset']=result['dataset'].apply(lambda x:'"'+x+'"')
 result['disease']=result['disease'].apply(lambda x:'"'+x+'"')
 result['te']=result['te'].apply(lambda x:'"'+x+'"')
 result.fillna(-1,inplace=True)

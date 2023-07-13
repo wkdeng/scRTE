@@ -2,7 +2,7 @@
 # @author [Wankun Deng]
 # @email [dengwankun@gmail.com]
 # @create date 2023-04-10 14:41:40
-# @modify date 2023-06-05 23:36:37
+# @modify date 2023-07-05 10:56:20
 # @desc [description]
 ###
 
@@ -29,7 +29,6 @@ if mode=='overwrite':
             if info[2]=='gene' and ('lncRNA' in info[-1] or 'protein_coding' in info[-1]):
                 split_='gene_name "' if 'gene_name' in info[-1] else 'gene_id "'
                 genes.append(info[-1].split(split_)[1].split('"')[0])            
-
     rmsk=pd.read_csv(rmsk_f,sep='\t',header=None)
     rmsk=rmsk[rmsk[11].isin(['LINE','SINE','LTR'])]
     genes.extend(rmsk[10].unique())
@@ -77,8 +76,8 @@ def one_table(i):
     tmp_exp['CELL']=['"%s"'%x for x in cell_exp.index]
     tmp_exp.loc[:,expressed_i]=cell_exp.loc[:,expressed_i]
     all_values=tmp_exp.agg(lambda x:  ','.join(x.astype(str)), axis=1).values
-    expressed_i_c=','.join(expressed_i)
-    template=f'''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,{expressed_i_c}) values '''
+    expressed_i_c='`,`'.join(expressed_i)
+    template=f'''INSERT INTO CELL_EXP_{i} (scARE_ID,CELL,`{expressed_i_c}`) values '''
 
     count=0
     values_list=[]
@@ -96,9 +95,19 @@ def one_table(i):
     exp_tables[i].write(to_write)
 
 from multiprocessing import Pool
+
+genes_rep=[x.replace('_','.').replace('-','.') for x in genes]
 for file_ in os.listdir(inpath):
     if file_.endswith('.cell_exp.txt'):
         cell_exp=pd.read_csv(os.path.join(inpath,file_),sep='\t',index_col=0)
+        colnames=cell_exp.columns
+        repl_colnames=[]
+        for x in colnames:
+            if '.' not in x or x not in genes_rep:
+                repl_colnames.append(x)
+            else:
+                repl_colnames.append(genes[genes_rep.index(x)])
+        cell_exp.columns=repl_colnames
         cell_dataset=pd.read_csv(os.path.join(inpath,file_.replace('cell_exp','cell_umap')),sep='\t',index_col=0)['dataset'].to_dict()
         pool=Pool(40)
         pool.map(one_table,range(len(exp_tables)))

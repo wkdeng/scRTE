@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-03-17 14:53:15
- # @modify date 2023-06-06 17:26:30
+ # @modify date 2023-07-07 14:04:00
  # @desc [description]
 ###
 import pandas as pd 
@@ -14,7 +14,7 @@ from tqdm import tqdm
 import json
 from pybedtools import BedTool
 
-# sys.argv=['script.py','../../universal_data/rmsk/rmsk_GRCh38.txt','../data/website/Dfam.embl','../www/mysql/te_basic.sql','../../universal_data/ref/GRCh38/STAR/chrNameLength.txt']
+# sys.argv=['script.py','../../universal_data/rmsk/rmsk_GRCh38.txt','../data/website/Dfam.embl','../www/mysql/te_basic.sql','../../universal_data/ref/GRCh38/STAR/chrNameLength.txt','../../universal_data/ref/GRCh38/genes.bed']
 rmsk=sys.argv[1]
 consensus=sys.argv[2]
 output=sys.argv[3]
@@ -46,7 +46,7 @@ rte=te_table.loc[te_table['repClass'].isin(['LINE','SINE','LTR']),['repName','re
 rte['repFamily']=rte['repFamily'].apply(lambda x: x.replace('?',''))
 ## get consensus squence from Dfam, need to align TE names.
 rte_consensus=defaultdict(lambda:defaultdict(str))
-cname=''
+cname=['']
 ctype=''
 cfam=''
 cseq=''
@@ -54,13 +54,14 @@ for line in open(consensus):
     if line.startswith('//'):
         if len(cname) >0 :
             # if cname in rte['repName']:
-            rte_consensus[cfam][cname]=cseq
-            cname=''
+            for xname in cname:
+                rte_consensus[xname]=cseq
+            cname=['']
             ckw=''
             cseq=''
             cac=''
     elif line.startswith('NM'):
-        cname=line.strip().split(' ')[-1].upper()
+        cname[0]=line.strip().split(' ')[-1].upper()
     elif line.startswith('CC        Type: '):
         ctype=line.strip().split(' ')[-1]
     elif line.startswith('CC        SubType: '):
@@ -69,14 +70,16 @@ for line in open(consensus):
         cseq+=re.sub(r'[\d\s]','',line.strip())
     elif line.startswith('DR'):
         if 'Repbase' in line:
-            cname=line.split('Repbase;')[1].strip()[:-1].upper()    
+            cname.append(line.split('Repbase;')[1].strip()[:-1].upper())
+    elif line.startswith('DE') and "Internal region of" in line and not cname[0].endswith('-int'):
+        cname.append(cname[0]+'-INT')
 
 rte['Consensus']=''
 rte['Consensus_len']=np.zeros(len(rte))
 count=0
 for i in range(len(rte)):
     name,family=rte.iloc[i,[0,2]]
-    seq=rte_consensus[family][name.upper()]
+    seq=rte_consensus[name.upper()]
     seq_len=len(seq)
     if seq_len == 0:
         seq='N/A'
