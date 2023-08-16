@@ -2,11 +2,12 @@ cellranger_ref: ../universal_data/refdata-gex-GRCh38-2020-A
 scTE_ref: /home/wdeng3/workspace/Codespace/universal_data/rmsk/hg38.exclusive.idx
 solote_annotation: /home/wdeng3/workspace/Codespace/universal_data/rmsk/rmsk_GRCh38_solote.txt
 soloTE_script: /home/wdeng3/workspace/software/SoloTE/SoloTE_pipeline_developmental_20230215.py
+gene_annotation: /home/wdeng3/workspace/Codespace/universal_data/ref/GRCh38/gencode.v43.basic.annotation.gtf
 sample_folder: data/3
 library_type: paired
-nthread: 5
+nthread: 10
 lib_platform: 10x
-samples: [SRR11422700,
+samples: [
           SRR11422701,
           SRR11422702,
           SRR11422703,
