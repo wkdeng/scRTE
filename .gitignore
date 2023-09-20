@@ -13,3 +13,4 @@ www/mysql/te_fam.sql
 mysql/
 data/
 scripts/cache/*
+scripts/figures/*
