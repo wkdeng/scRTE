@@ -2,7 +2,7 @@
  # @author [Wankun Deng]
  # @email [dengwankun@gmail.com]
  # @create date 2023-06-30 13:17:49
- # @modify date 2023-07-12 11:12:52
+ # @modify date 2023-10-09 09:06:21
  # @desc [description]
 ###
 import os
@@ -13,7 +13,7 @@ import pandas as pd
 from multiprocessing import Pool
 from scipy.stats import mannwhitneyu
 
-sys.argv=['th','../data/all_datasets','../www/mysql','../../universal_data/rmsk/rmsk_GRCh38.txt']
+# sys.argv=['th','../data/all_datasets','../www/mysql','../../universal_data/rmsk/rmsk_GRCh38.txt']
 input_path=sys.argv[1]
 output_path=sys.argv[2]
 rmsk_f=sys.argv[3]

@@ -14,3 +14,5 @@ mysql/
 data/
 scripts/cache/*
 scripts/figures/*
+data_archive/
+www_archive/

@@ -28,7 +28,7 @@ rule all:
         DATA_FOLDER+'/te_basic.sql',
         DATA_FOLDER+'/cell_umap.sql',
         DATA_FOLDER+'/gene_dict.sql',
-        DATA_FOLDER+'/te_gene.sql',
+        # DATA_FOLDER+'/te_gene.sql',
         DATA_FOLDER+'/meta.sql',
         DATA_FOLDER+'/sample2dataset.sql',
         DATA_FOLDER+'/subfam_cellcount.sql',
