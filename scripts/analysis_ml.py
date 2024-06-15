@@ -182,11 +182,17 @@ cell_exp=sfg_ad.loc[sfg_ad['predicted.celltype']==cell,:]
 cell_exp.iloc[:,:-4]=np.expm1(cell_exp.iloc[:,:-4].astype(float))
 factors=pd.factorize(cell_exp['Diagnosis'])
 labels=factors[0]
-#### Expression profiles
-rte_exp=cell_exp[[x for x in cell_exp.columns if x in rtes]]
-gene_exp=cell_exp.loc[:,gene_markers]
-combined_exp=cell_exp.loc[:,[x for x in cell_exp.columns if x in rtes]+gene_markers]
-gene_exp2=cell_exp.loc[:,extended_markers]
+
+index=int(sys.argv[1])
+feature_name=['RTE730','Gene730','Combined','Gene1460'][index]
+if index==0:
+    data_exp=cell_exp[[x for x in cell_exp.columns if x in rtes]]
+elif index==1:
+    data_exp=cell_exp.loc[:,gene_markers]
+elif index==2:
+    data_exp=cell_exp.loc[:,[x for x in cell_exp.columns if x in rtes]+gene_markers]
+elif index==3:
+    data_exp=cell_exp.loc[:,extended_markers]
 
 ### Define models
 names = [
@@ -202,37 +208,16 @@ classifiers = [
     AdaBoostClassifier(n_estimators=100,random_state=42),
     MLPClassifier(alpha=1, max_iter=10000,random_state=42,hidden_layer_sizes=(1000,1000))]
 
-classifiers_gene= [
-    SVC(decision_function_shape='ovr',random_state=42),
-    RandomForestClassifier(n_estimators=100,random_state=42),
-    AdaBoostClassifier(),
-    MLPClassifier(alpha=1, max_iter=10000,random_state=42,hidden_layer_sizes=(1000,1000))
-]
-
-classifiers_combined= [
-    SVC(decision_function_shape='ovr',random_state=42),
-    RandomForestClassifier(n_estimators=100,random_state=42),
-    AdaBoostClassifier(),
-    MLPClassifier(alpha=1, max_iter=10000,random_state=42,hidden_layer_sizes=(1000,1000))
-]
-
-classifiers_gene2= [
-    SVC(decision_function_shape='ovr',random_state=42),
-    RandomForestClassifier(n_estimators=100,random_state=42),
-    AdaBoostClassifier(),
-    MLPClassifier(alpha=1, max_iter=10000,random_state=42,hidden_layer_sizes=(1000,1000))
-]
-
 ### Cross validation
-func_=partial(cv_auc,classifiers,names,rte_exp.to_numpy(),labels,'RTE730')
-func_gene=partial(cv_auc,classifiers_gene,names,gene_exp.to_numpy(),labels,'Gene730')
-func_combined=partial(cv_auc,classifiers_combined,names,combined_exp.to_numpy(),labels,'Combined')
-func_gene2=partial(cv_auc,classifiers_gene2,names,gene_exp2.to_numpy(),labels,'Gene1460')
+func_=partial(cv_auc,classifiers,names,data_exp.to_numpy(),labels,feature_name)
+# func_gene=partial(cv_auc,classifiers_gene,names,gene_exp.to_numpy(),labels,'Gene730')
+# func_combined=partial(cv_auc,classifiers_combined,names,combined_exp.to_numpy(),labels,'Combined')
+# func_gene2=partial(cv_auc,classifiers_gene2,names,gene_exp2.to_numpy(),labels,'Gene1460')
 
 pool=Pool(4) 
 ret=pool.map(func_,range(4))
-ret_gene=pool.map(func_gene,range(4))
-ret_combined=pool.map(func_combined,range(4))
-ret_gene2=pool.map(func_gene2,range(4))
+# ret_gene=pool.map(func_gene,range(4))
+# ret_combined=pool.map(func_combined,range(4))
+# ret_gene2=pool.map(func_gene2,range(4))
 pool.close()
 pool.join()
