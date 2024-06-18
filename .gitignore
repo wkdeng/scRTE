@@ -16,3 +16,4 @@ scripts/cache/*
 scripts/figures/*
 data_archive/
 www_archive/
+scripts/mysql_user.sql
