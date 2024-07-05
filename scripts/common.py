@@ -14,6 +14,7 @@ from matplotlib.colors import LinearSegmentedColormap
 
 import scipy
 from statsmodels.stats.multitest import multipletests
+from scipy.stats import zscore
 
 import scanpy as sc
 import anndata
@@ -129,3 +130,21 @@ def get_dataset_nomerge(dataset):
     cell_exp.columns=repl_colnames
     print(f'Done loading: {dataset} \n')
     return [cell_exp,dataset,cell_umap]
+
+pool=Pool(15)
+datasets=[x.replace('.cell_exp.txt','') for x in file_list]
+results=pool.map(get_dataset_nomerge,datasets)                                                                                                                                                                    
+pool.close()
+pool.join()
+all_dfs={}
+all_cell_umaps={}
+def load_sc_data():
+    for ret in results: 
+        df,dataset,cell_umap=ret
+        cell_umaps=df.iloc[:,-2:]
+        df=np.expm1(df.iloc[:,:-2])
+        df=pd.concat([df,cell_umaps],axis=1)
+        all_dfs[dataset]=df.copy()
+        all_cell_umaps[dataset]=cell_umap.copy()
+
+    results=None
