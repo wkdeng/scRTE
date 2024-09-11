@@ -81,6 +81,8 @@ genes=list(gene_type.keys())
 genes_rep=[x.replace('_','.').replace('-','.') for x in genes]
 file_list=[x for x in os.listdir(input_path) if x.endswith('.cell_exp.txt')]
 
+
+
 def get_dataset(dataset):
     print(f'loading data: {dataset} \n')
     dt_ls=[x for x in file_list if x.startswith(dataset)]
@@ -138,20 +140,18 @@ def get_dataset_nomerge(dataset):
     print(f'Done loading: {dataset} \n')
     return [cell_exp,dataset,cell_umap]
 
-pool=Pool(15)
-datasets=[x.replace('.cell_exp.txt','') for x in file_list]
-results=pool.map(get_dataset_nomerge,datasets)                                                                                                                                                                    
-pool.close()
-pool.join()
-all_dfs={}
-all_cell_umaps={}
-def load_sc_data():
-    for ret in results: 
-        df,dataset,cell_umap=ret
-        cell_umaps=df.iloc[:,-2:]
-        df=np.expm1(df.iloc[:,:-2])
-        df=pd.concat([df,cell_umaps],axis=1)
-        all_dfs[dataset]=df.copy()
-        all_cell_umaps[dataset]=cell_umap.copy()
 
-    results=None
+# def load_sc_data():
+#     pool=Pool(15)
+#     datasets=[x.replace('.cell_exp.txt','') for x in file_list]
+#     results=pool.map(get_dataset_nomerge,datasets)
+#     pool.close()
+#     pool.join()
+#     for ret in results: 
+#         df,dataset,cell_umap=ret
+#         cell_umaps=df.iloc[:,-2:]
+#         df=np.expm1(df.iloc[:,:-2])
+#         df=pd.concat([df,cell_umaps],axis=1)
+#         all_dfs[dataset]=df.copy()
+#         all_cell_umaps[dataset]=cell_umap.copy()
+#     results=None
