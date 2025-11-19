@@ -22,7 +22,7 @@ scTE_REF=config['scTE_ref']
 soloTE_ANNOTATION=config['solote_annotation']
 soloTE_SCRIPT=config['soloTE_script']
 # READ_TAIL='' if LIB_TYPE=='single' else '_1'
-
+ 
 
 rule all:
     input:

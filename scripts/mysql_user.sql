@@ -1,2 +1,2 @@
-CREATE USER 'scare_app'@'localhost' IDENTIFIED BY 'wV86*$5s%ntW';
-GRANT SELECT ON scARE.* TO 'scare_app'@'localhost';
+CREATE USER 'sqluser'@'localhost' IDENTIFIED BY 'yourpass';
+GRANT SELECT ON scARE.* TO 'sqluser'@'localhost';

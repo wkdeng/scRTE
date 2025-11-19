@@ -1,0 +1,10 @@
+nohup python3 analysis_ml_rfe.py 50 100 > rfe_50_100.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 100 100 > rfe_100_100.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 100 200 > rfe_100_200.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 200 200 > rfe_200_200.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 200 300 > rfe_200_300.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 300 300 > rfe_300_300.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 300 400 > rfe_300_400.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 400 400 > rfe_400_400.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 400 500 > rfe_400_500.log 2>&1 &
+nohup python3 analysis_ml_rfe.py 500 500 > rfe_500_500.log 2>&1 &
